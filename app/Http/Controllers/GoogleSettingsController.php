@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Services\GoogleSettingsService;
+use App\Http\Requests\GoogleSettingsRequest;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class GoogleSettingsController extends Controller
+{
+    protected GoogleSettingsService $googleSettingsService;
+
+    public function __construct(GoogleSettingsService $googleSettingsService)
+    {
+        $this->googleSettingsService = $googleSettingsService;
+    }
+
+    /**
+     * Show Google settings form
+     *
+     * @return Response
+     */
+    public function show(): Response
+    {
+        $status = $this->googleSettingsService->getStatus();
+
+        return Inertia::render('Settings/Integrations/GoogleSettings', [
+            'status' => $status,
+        ]);
+    }
+
+    /**
+     * Update Google settings
+     *
+     * @param GoogleSettingsRequest $request
+     * @return RedirectResponse
+     */
+    public function update(GoogleSettingsRequest $request): RedirectResponse
+    {
+        $credentials = [
+            'enabled' => $request->boolean('enabled'),
+            'client_id' => $request->input('client_id'),
+            'client_secret' => $request->input('client_secret'),
+            'redirect_uri' => $request->input('redirect_uri'),
+        ];
+
+        // Validate credentials
+        if (!$this->googleSettingsService->validateCredentials($credentials)) {
+            return back()->withErrors(['credentials' => 'Invalid Google credentials']);
+        }
+
+        // Save credentials
+        $this->googleSettingsService->saveCredentials($credentials);
+
+        return back()->with('success', 'Google login settings updated successfully');
+    }
+
+    /**
+     * Test Google credentials
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function testCredentials(Request $request): JsonResponse
+    {
+        $credentials = [
+            'client_id' => $request->input('client_id'),
+            'client_secret' => $request->input('client_secret'),
+            'redirect_uri' => $request->input('redirect_uri'),
+        ];
+
+        $isValid = $this->googleSettingsService->testConnection($credentials);
+
+        return response()->json([
+            'success' => $isValid,
+            'message' => $isValid ? 'Google credentials validated successfully' : 'Invalid Google credentials',
+        ]);
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.0.0",
+        "axios": "^1.11.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^2.0.0",
+        "tailwindcss": "^4.0.0",
+        "vite": "^7.0.7"
+    },
+    "dependencies": {
+        "@heroicons/vue": "^2.2.0",
+        "@inertiajs/vue3": "^1.0.0",
+        "@tiptap/extension-image": "^3.22.3",
+        "@tiptap/extension-link": "^3.22.3",
+        "@tiptap/extension-mention": "^3.23.1",
+        "@tiptap/extension-placeholder": "^3.22.3",
+        "@tiptap/extension-task-item": "^3.22.3",
+        "@tiptap/extension-task-list": "^3.22.3",
+        "@tiptap/extension-underline": "^3.22.3",
+        "@tiptap/pm": "^3.22.3",
+        "@tiptap/starter-kit": "^3.22.3",
+        "@tiptap/suggestion": "^3.23.1",
+        "@tiptap/vue-3": "^3.22.3",
+        "@vitejs/plugin-vue": "^6.0.5",
+        "pinia": "^3.0.4",
+        "tippy.js": "^6.3.7",
+        "vue": "^3.5.30",
+        "vue3-tags-input": "^1.0.12",
+        "vue3-toastify": "^0.2.9"
+    }
+}
