@@ -3,27 +3,36 @@ import { ref } from 'vue'
 const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content
 
 /**
- * Composable for managing project custom fields and task field values.
- * Shared state per project via a module-level cache.
+ * Composable for managing custom fields.
+ * Supports both project-scoped and personal-scoped (My Tasks) fields.
+ * Shared state via a module-level cache.
  */
 const cache = {}
 
 export function useCustomFields(projectId) {
-    if (!cache[projectId]) {
-        cache[projectId] = {
+    // Cache key: 'project-{projectId}' or 'personal'
+    const cacheKey = projectId ? `project-${projectId}` : 'personal'
+    
+    if (!cache[cacheKey]) {
+        cache[cacheKey] = {
             fields: ref([]),
             loading: ref(false),
             fetched: ref(false),
         }
     }
 
-    const { fields, loading, fetched } = cache[projectId]
+    const { fields, loading, fetched } = cache[cacheKey]
 
     async function fetchFields() {
         if (fetched.value) return
         loading.value = true
         try {
-            const res = await fetch(`/api/projects/${projectId}/custom-fields`)
+            // Determine endpoint based on scope
+            const endpoint = projectId 
+                ? `/api/projects/${projectId}/custom-fields`
+                : `/api/my-tasks/custom-fields`
+            
+            const res = await fetch(endpoint)
             if (!res.ok) throw new Error('Failed to fetch custom fields')
             const data = await res.json()
             fields.value = data.data ?? []
@@ -36,7 +45,12 @@ export function useCustomFields(projectId) {
     }
 
     async function createField(payload) {
-        const res = await fetch(`/api/projects/${projectId}/custom-fields`, {
+        // Determine endpoint based on scope
+        const endpoint = projectId 
+            ? `/api/projects/${projectId}/custom-fields`
+            : `/api/my-tasks/custom-fields`
+        
+        const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
             body: JSON.stringify(payload),
@@ -67,7 +81,7 @@ export function useCustomFields(projectId) {
     }
 
     async function toggleFieldActive(fieldId) {
-        // Optimistic
+        // Optimistic update
         const idx = fields.value.findIndex(f => f.id === fieldId)
         if (idx !== -1) fields.value[idx] = { ...fields.value[idx], is_active: !fields.value[idx].is_active }
 
@@ -76,7 +90,7 @@ export function useCustomFields(projectId) {
             headers: { 'X-CSRF-TOKEN': csrfToken() },
         })
         if (!res.ok) {
-            // Revert
+            // Revert on error
             if (idx !== -1) fields.value[idx] = { ...fields.value[idx], is_active: !fields.value[idx].is_active }
             return
         }

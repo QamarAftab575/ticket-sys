@@ -67,6 +67,18 @@
           />
         </div>
 
+        <!-- Project name -->
+        <div v-else-if="column.id === 'project_name'" class="w-full flex items-center gap-2">
+          <span
+            v-if="task.project"
+            class="w-3 h-3 rounded-sm flex-shrink-0"
+            :style="{ backgroundColor: task.project.color || '#6366f1' }"
+          />
+          <span class="truncate text-gray-700 text-[13px]">
+            {{ task.project?.name || '—' }}
+          </span>
+        </div>
+
         <!-- Custom field -->
         <div v-else-if="column.isCustom" class="w-full" @click.stop>
           <CustomFieldCell

@@ -6,6 +6,7 @@ use App\Models\CustomField;
 use App\Models\CustomFieldValue;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -29,16 +30,18 @@ class CustomFieldService
         $this->validateName($data['name'] ?? '');
         $this->validateType($data['field_type'] ?? '');
         $options  = $this->normalizeOptions($data['field_type'], $data['options'] ?? null);
-        $position = CustomField::where('project_id', $project->id)->max('position') + 1;
+        $position = CustomField::forProject($project->id)->max('position') + 1;
 
         return CustomField::create([
             'project_id' => $project->id,
+            'user_id'    => null,
             'name'       => $data['name'],
             'field_type' => $data['field_type'],
             'options'    => $options,
             'is_global'  => false,
             'is_active'  => $data['is_active'] ?? true,
             'position'   => $position,
+            'field_scope' => CustomField::SCOPE_PROJECT,
         ]);
     }
 
@@ -50,12 +53,37 @@ class CustomFieldService
 
         return CustomField::create([
             'project_id' => null,
+            'user_id'    => null,
             'name'       => $data['name'],
             'field_type' => $data['field_type'],
             'options'    => $options,
             'is_global'  => true,
             'is_active'  => $data['is_active'] ?? true,
             'position'   => 0,
+            'field_scope' => CustomField::SCOPE_WORKSPACE,
+        ]);
+    }
+
+    /**
+     * Create a personal-scoped custom field for a user (visible only in My Tasks)
+     */
+    public function createPersonalCustomField(\App\Models\User $user, array $data): CustomField
+    {
+        $this->validateName($data['name'] ?? '');
+        $this->validateType($data['field_type'] ?? '');
+        $options = $this->normalizeOptions($data['field_type'], $data['options'] ?? null);
+        $position = CustomField::forUser($user->id)->max('position') + 1;
+
+        return CustomField::create([
+            'project_id'  => null,
+            'user_id'     => $user->id,
+            'name'        => $data['name'],
+            'field_type'  => $data['field_type'],
+            'options'     => $options,
+            'is_global'   => false,
+            'is_active'   => $data['is_active'] ?? true,
+            'position'    => $position,
+            'field_scope' => CustomField::SCOPE_PERSONAL,
         ]);
     }
 

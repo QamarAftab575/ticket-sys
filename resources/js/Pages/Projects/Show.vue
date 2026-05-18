@@ -120,16 +120,30 @@
           </button>
         </div>
 
-        <!-- Toolbar actions (Filter / Sort / Group) -->
-        <ViewToolbar
-          v-if="activeView !== 'dashboard'"
-          :filters="filters"
-          :sort="sort"
-          :grouping="grouping"
-          @filter-changed="updateFilters"
-          @sort-changed="updateSort"
-          @grouping-changed="updateGrouping"
-        />
+        <!-- Toolbar actions (Filter / Sort / Group + Columns) -->
+        <div v-if="activeView !== 'dashboard'" class="flex items-center gap-2">
+          <ViewToolbar
+            :filters="filters"
+            :sort="sort"
+            :grouping="grouping"
+            @filter-changed="updateFilters"
+            @sort-changed="updateSort"
+            @grouping-changed="updateGrouping"
+          />
+
+          <!-- Columns button (List View only) -->
+          <button
+            v-if="activeView === 'list'"
+            @click="showColumnsPanel = !showColumnsPanel"
+            class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            title="Show/Hide columns"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+            </svg>
+            Columns
+          </button>
+        </div>
       </div>
     </div>
 
@@ -225,16 +239,30 @@
           :stats="stats"
         />
 
-        <!-- Task Detail Panel -->
-        <TaskDetailPanel
-          v-if="selectedTask"
-          :task="selectedTask"
-          :project="project"
-          :current-user="currentUser"
-          @close="closeTaskPanel"
-          @update="syncTaskFromPanel"
-          @open-task="openTaskPanel"
-        />
+        <!-- Panels container -->
+        <div class="fixed inset-y-0 right-0 flex z-40">
+          <!-- Columns Visibility Panel (List View only) -->
+          <ColumnsVisibilityPanel
+            v-if="activeView === 'list' && showColumnsPanel"
+            :all-columns="listViewAllColumns"
+            :hidden-columns="listViewHiddenColumns"
+            @close="showColumnsPanel = false"
+            @toggle-column="toggleColumnVisibility"
+            @show-all="showAllColumns"
+            @hide-all="hideAllColumns"
+          />
+
+          <!-- Task Detail Panel -->
+          <TaskDetailPanel
+            v-if="selectedTask"
+            :task="selectedTask"
+            :project="project"
+            :current-user="currentUser"
+            @close="closeTaskPanel"
+            @update="syncTaskFromPanel"
+            @open-task="openTaskPanel"
+          />
+        </div>
     </div>
     <!-- Share / Invite Modal -->
     <InviteModal
@@ -256,9 +284,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick, watch } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import InviteModal from '@/Components/InviteProjectModal.vue'
+import ColumnsVisibilityPanel from '@/Components/Projects/ColumnsVisibilityPanel.vue'
 import ListView from '@/Components/Projects/Views/ListView.vue'
 import BoardView from '@/Components/Projects/Views/BoardView.vue'
 import TimelineView from '@/Components/Projects/Views/TimelineView.vue'
@@ -303,12 +332,18 @@ const setQueryParams = (params) => {
 const availableViews = ['list', 'board', 'timeline', 'calendar', 'files', 'dashboard']
 const activeView = ref(getQueryParam('view') || 'list')
 const showShareModal = ref(false)
+const showColumnsPanel = ref(false)
 const selectedTask = ref(null)
 const listViewRef = ref(null)
 const isLoading = ref(false)
 const error = ref(null)
 const tasks = ref([])
 const sections = ref(props.project.sections || [])
+
+// Columns visibility state - synced from ListView component
+const listViewAllColumns = ref([])
+const listViewVisibleColumns = ref([])
+const listViewHiddenColumns = ref([])
 const files = ref([])
 const stats = ref({})
 
@@ -349,6 +384,11 @@ const switchView = (view) => {
   setQueryParams({ view })
   localStorage.setItem(`project_${props.project.id}_view`, view)
   loadViewData()
+  
+  // If switching to list view, sync columns from ListView
+  if (view === 'list') {
+    nextTick(() => syncColumnsFromListView())
+  }
 }
 
 const loadViewData = async () => {
@@ -873,6 +913,22 @@ onMounted(() => {
   loadViewData()
 })
 
+// Sync columns state from ListView whenever it updates
+const syncColumnsFromListView = () => {
+  if (listViewRef.value) {
+    listViewAllColumns.value = listViewRef.value.allColumns
+    listViewVisibleColumns.value = listViewRef.value.visibleColumns
+    listViewHiddenColumns.value = listViewRef.value.hiddenColumns
+  }
+}
+
+// Watch for changes to ListView columns
+watch(
+  () => listViewRef.value?.allColumns,
+  () => syncColumnsFromListView(),
+  { deep: true }
+)
+
 const handleFileUploaded = (uploadedFiles) => {
   // Add newly uploaded files to the files list
   if (uploadedFiles && Array.isArray(uploadedFiles)) {
@@ -901,6 +957,42 @@ const navigateToTask = (taskId) => {
         showError('Failed to load task')
         console.error('Failed to load task:', err)
       })
+  }
+}
+
+// Column visibility methods
+const toggleColumnVisibility = (columnId) => {
+  if (listViewRef.value) {
+    // Check if the column is currently hidden
+    const isHidden = listViewRef.value.hiddenColumns.find(c => c.id === columnId)
+    if (isHidden) {
+      listViewRef.value.showColumn(columnId)
+    } else {
+      listViewRef.value.hideColumn(columnId)
+    }
+    // Sync the state after the change
+    nextTick(() => syncColumnsFromListView())
+  }
+}
+
+const showAllColumns = () => {
+  if (listViewRef.value) {
+    // Show all hidden columns
+    listViewRef.value.hiddenColumns.forEach(col => {
+      listViewRef.value.showColumn(col.id)
+    })
+    nextTick(() => syncColumnsFromListView())
+  }
+}
+
+const hideAllColumns = () => {
+  if (listViewRef.value) {
+    // Hide all non-required columns
+    const nonRequired = listViewRef.value.visibleColumns.filter(col => !col.required)
+    nonRequired.forEach(col => {
+      listViewRef.value.hideColumn(col.id)
+    })
+    nextTick(() => syncColumnsFromListView())
   }
 }
 </script>

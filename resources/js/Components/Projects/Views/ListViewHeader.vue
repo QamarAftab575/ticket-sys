@@ -82,7 +82,7 @@ import AddFieldModal from '@/Components/CustomFields/AddFieldModal.vue'
 import { useCustomFields } from '@/Composables/useCustomFields'
 
 const props = defineProps({
-  projectId:       { type: String, required: true },
+  projectId:       { type: [String, null], default: null },
   visibleColumns:  Array,
   columnWidths:    Object,
   sortRules:       Array,

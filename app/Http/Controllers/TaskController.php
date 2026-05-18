@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MoveTaskRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\CustomField;
 use App\Models\Project;
 use App\Models\Section;
 use App\Models\Task;
+use App\Services\CustomFieldService;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,10 +19,12 @@ use Illuminate\Validation\ValidationException;
 class TaskController extends Controller
 {
     protected TaskService $taskService;
+    protected CustomFieldService $customFieldService;
 
-    public function __construct(TaskService $taskService)
+    public function __construct(TaskService $taskService, CustomFieldService $customFieldService)
     {
         $this->taskService = $taskService;
+        $this->customFieldService = $customFieldService;
     }
 
     /**
@@ -356,6 +360,41 @@ class TaskController extends Controller
             ], 201);
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
+        }
+    }
+
+    /**
+     * Set a custom field value for a task.
+     */
+    public function setCustomFieldValue(Request $request, Task $task, CustomField $customField): JsonResponse
+    {
+        $this->authorize('update', $task);
+
+        $request->validate([
+            'value' => 'nullable',
+        ]);
+
+        try {
+            // Check that the custom field belongs to the same project as the task
+            if ($customField->project_id !== $task->project_id) {
+                return response()->json(['error' => 'Custom field does not belong to this project'], 403);
+            }
+
+            // Use the service to set the field value with proper validation
+            $this->customFieldService->setFieldValue($task, $customField, $request->input('value'));
+
+            return response()->json([
+                'message' => 'Custom field value updated successfully',
+                'data' => [
+                    'task_id' => $task->id,
+                    'custom_field_id' => $customField->id,
+                    'value' => $request->input('value'),
+                ],
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to update custom field value: ' . $e->getMessage()], 500);
         }
     }
 }

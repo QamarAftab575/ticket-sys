@@ -21,7 +21,7 @@ class CustomFieldController extends Controller
      */
     public function index(Project $project): JsonResponse
     {
-        $fields = $project->customFields()->get();
+        $fields = CustomField::forProject($project->id)->get();
 
         return response()->json(['data' => $fields]);
     }
@@ -82,6 +82,32 @@ class CustomFieldController extends Controller
         try {
             $cfv = $this->customFieldService->setFieldValue($task, $customField, $request->input('value'));
             return response()->json(['data' => $cfv]);
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+    }
+
+    /**
+     * List personal custom fields for the authenticated user (My Tasks).
+     */
+    public function indexPersonal(): JsonResponse
+    {
+        $fields = CustomField::forUser(auth()->user()->id)->get();
+        return response()->json(['data' => $fields]);
+    }
+
+    /**
+     * Create a personal custom field for the authenticated user (My Tasks).
+     */
+    public function storePersonal(StoreCustomFieldRequest $request): JsonResponse
+    {
+        try {
+            $field = $this->customFieldService->createPersonalCustomField(
+                auth()->user(),
+                $request->validated()
+            );
+
+            return response()->json(['data' => $field], 201);
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         }

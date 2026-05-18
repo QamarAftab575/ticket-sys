@@ -1,8 +1,8 @@
 // Task Priority Levels
-export type TaskPriority = 'none' | 'low' | 'medium' | 'high' | 'urgent';
+export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
 
 // Task Status
-export type TaskStatus = 'todo' | 'in_progress' | 'done';
+export type TaskStatus = 'to_do' | 'in_progress' | 'blocked' | 'in_review' | 'complete';
 
 // Task Visibility
 export type TaskVisibility = 'everyone' | 'only_me';
@@ -147,6 +147,16 @@ export interface Task {
   assignee?: User;
   creator?: User;
   completedBy?: User;
+  project?: {
+    id: string;
+    name: string;
+    color?: string;
+    icon?: string;
+  };
+  section?: {
+    id: string;
+    name: string;
+  };
   tags?: Tag[];
   subtasks?: Subtask[];
   dependencies?: TaskDependency[];
@@ -182,12 +192,12 @@ export interface TaskFilter {
 
 // Sort Options
 export interface TaskSort {
-  field: 'name' | 'due_date' | 'priority' | 'created_at' | 'assignee' | 'status';
+  field: 'name' | 'due_date' | 'priority' | 'created_at' | 'assignee' | 'status' | 'project_name';
   direction: 'asc' | 'desc';
 }
 
 // Grouping Options
-export type TaskGroupBy = 'assignee' | 'due_date' | 'priority' | 'section' | 'project' | 'status' | null;
+export type TaskGroupBy = 'assignee' | 'due_date' | 'priority' | 'section' | 'project' | 'status' | '' | null;
 
 // Column Configuration
 export interface TaskColumn {

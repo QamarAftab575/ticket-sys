@@ -229,6 +229,12 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     Route::post('/projects/{project}/views/preferences', [ProjectViewController::class, 'saveViewPreferences'])->name('projects.views.preferences.save');
     Route::get('/projects/{project}/views/preferences/{viewType}', [ProjectViewController::class, 'getViewPreferences'])->name('projects.views.preferences.get');
 
+    // My Tasks routes
+    Route::get('/my-tasks', [\App\Http\Controllers\MyTasksController::class, 'index'])->name('my-tasks.index');
+    Route::get('/my-tasks/api/tasks', [\App\Http\Controllers\MyTasksController::class, 'getTasks'])->name('my-tasks.api.tasks');
+    Route::post('/my-tasks/api/preferences', [\App\Http\Controllers\MyTasksController::class, 'saveViewPreferences'])->name('my-tasks.api.preferences.save');
+    Route::get('/my-tasks/api/preferences/{viewType}', [\App\Http\Controllers\MyTasksController::class, 'getViewPreferences'])->name('my-tasks.api.preferences.get');
+
     // Attachment routes
     Route::post('/tasks/{task}/attachments', [AttachmentController::class, 'store'])->name('attachments.store');
     Route::get('/attachments/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');

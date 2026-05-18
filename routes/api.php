@@ -64,6 +64,9 @@ Route::middleware(['web', 'auth:web'])->group(function () {
 
         // Attachment routes
         Route::post('/attachments', [AttachmentController::class, 'store'])->name('attachments.store');
+
+        // Custom field value routes
+        Route::post('/custom-fields/{customField}/value', [TaskController::class, 'setCustomFieldValue'])->name('tasks.custom-fields.set-value');
     });
 
     // Comment routes
@@ -116,6 +119,12 @@ Route::middleware(['web', 'auth:web'])->group(function () {
         Route::put('/', [CustomFieldController::class, 'update'])->name('custom-fields.update');
         Route::delete('/', [CustomFieldController::class, 'destroy'])->name('custom-fields.destroy');
         Route::post('/toggle-active', [CustomFieldController::class, 'toggleActive'])->name('custom-fields.toggle-active');
+    });
+
+    // Personal/My Tasks custom fields routes
+    Route::prefix('/my-tasks/custom-fields')->group(function () {
+        Route::get('/', [CustomFieldController::class, 'indexPersonal'])->name('custom-fields.personal.index');
+        Route::post('/', [CustomFieldController::class, 'storePersonal'])->name('custom-fields.personal.store');
     });
 
     // Project appearance (color + icon) — lightweight PATCH used from project header

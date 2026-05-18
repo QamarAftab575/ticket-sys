@@ -2,61 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
-use App\Services\TaskService;
+use App\Http\Requests\GetTasksRequest;
+use App\Http\Requests\SaveViewPreferencesRequest;
+use App\Services\MyTasksService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class MyTasksController extends Controller
 {
-    protected TaskService $taskService;
-
-    public function __construct(TaskService $taskService)
+    public function __construct(private MyTasksService $myTasksService)
     {
-        $this->taskService = $taskService;
     }
 
     /**
-     * Get all tasks assigned to the current user across all projects.
+     * Display the My Tasks page.
      */
-    public function index(Request $request): JsonResponse
+    public function index(): Response
     {
-        $user = auth()->user();
+        return Inertia::render('MyTasks/Index');
+    }
 
-        // Get all tasks assigned to the current user
-        $query = Task::where('assignee_id', $user->id)
-            ->whereHas('project', function ($q) use ($user) {
-                // Only include tasks from projects the user is a member of
-                $q->whereHas('members', function ($q2) use ($user) {
-                    $q2->where('user_id', $user->id);
-                });
-            });
+    /**
+     * Get user's tasks with filters, sort, and grouping.
+     */
+    public function getTasks(GetTasksRequest $request): JsonResponse
+    {
+        $filters = $request->validated('filters') ? json_decode($request->validated('filters'), true) : [];
+        $sort = $request->validated('sort') ? json_decode($request->validated('sort'), true) : [];
+        $grouping = $request->validated('grouping');
+        $page = $request->validated('page', 1);
+        $perPage = $request->validated('per_page', 50);
 
-        // Apply filters if provided
-        $filters = $request->query('filters', []);
-        if (!empty($filters)) {
-            $query = $this->taskService->applyFilters($query, $filters);
-        }
+        $tasks = $this->myTasksService->getUserTasks(
+            auth()->user(),
+            $filters,
+            $sort,
+            $grouping,
+            $page,
+            $perPage
+        );
 
-        // Apply sorting if provided
-        $sortCriteria = $request->query('sort', []);
-        if (!empty($sortCriteria)) {
-            $query = $this->taskService->applySortCriteria($query, $sortCriteria);
-        }
+        return response()->json($tasks);
+    }
 
-        $tasks = $query->with([
-            'project:id,name',
-            'assignee:id,name,email',
-            'creator:id,name,email',
-            'section:id,name',
-            'tags:id,name,color',
-            'subtasks',
-            'dependencies',
-            'dependents',
-        ])->get();
+    /**
+     * Save view preferences for My Tasks.
+     */
+    public function saveViewPreferences(SaveViewPreferencesRequest $request): JsonResponse
+    {
+        $preference = $this->myTasksService->saveViewPreferences(
+            auth()->user(),
+            $request->validated()
+        );
 
-        return response()->json([
-            'data' => $tasks,
-        ]);
+        return response()->json(['success' => true, 'preference' => $preference]);
+    }
+
+    /**
+     * Get view preferences for My Tasks.
+     */
+    public function getViewPreferences(string $viewType): JsonResponse
+    {
+        $preference = $this->myTasksService->getViewPreferences(
+            auth()->user(),
+            $viewType
+        );
+
+        return response()->json($preference ?? []);
     }
 }

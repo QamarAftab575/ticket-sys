@@ -436,5 +436,14 @@ const startCreatingInFirstSection = () => {
   }
 }
 
-defineExpose({ startCreatingInFirstSection })
+// Expose column state for parent (Show.vue)
+defineExpose({ 
+  startCreatingInFirstSection,
+  allColumns,
+  visibleColumns,
+  hiddenColumns,
+  columnWidths,
+  showColumn,
+  hideColumn,
+})
 </script>

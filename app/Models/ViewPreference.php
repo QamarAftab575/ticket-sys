@@ -19,6 +19,7 @@ class ViewPreference extends Model
         'user_id',
         'project_id',
         'view_type',
+        'context',
         'filters',
         'sort',
         'grouping',

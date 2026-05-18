@@ -240,7 +240,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useCustomFields } from '@/Composables/useCustomFields'
 
 const props = defineProps({
-  projectId:   { type: String, required: true },
+  projectId:   { type: [String, null], default: null },
   /** Pass an existing field object to open in edit mode */
   editField:   { type: Object, default: null },
 })
@@ -407,7 +407,12 @@ async function submit() {
       const data = await res.json()
       emit('updated', data.data)
     } else {
-      const res = await fetch(`/api/projects/${props.projectId}/custom-fields`, {
+      // Determine endpoint based on whether projectId is provided
+      const endpoint = props.projectId
+        ? `/api/projects/${props.projectId}/custom-fields`
+        : `/api/my-tasks/custom-fields`
+      
+      const res = await fetch(endpoint, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf() },
         body:    JSON.stringify(payload),
