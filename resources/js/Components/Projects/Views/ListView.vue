@@ -170,12 +170,17 @@ const props = defineProps({
   sort: Array,
   grouping: String,
   isLoading: Boolean,
+  initialCollapsed: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const emit = defineEmits([
   'select-task', 'task-created', 'task-completed', 'update-preferences',
   'sort-changed', 'task-move', 'add-section', 'rename-section', 'delete-section',
   'sections-reordered', 'update-dates', 'update-assignee', 'update-custom-field',
+  'section-collapsed',
 ])
 // ── local section state (for optimistic reorder) ─────────────────────────
 const localSections = ref([...(props.sections || [])])
@@ -185,7 +190,7 @@ watch(
   { deep: true, immediate: true }
 )
 
-const collapsed = ref(new Set())
+const collapsed = ref(new Set(props.initialCollapsed || []))
 const groupRefs = ref({})
 const unsectionedGroupRef = ref(null)
 const sortRules = ref(props.sort || [])
@@ -293,6 +298,7 @@ const onCreateField = (field) => {
 
 const toggleCollapse = (id) => {
   collapsed.value.has(id) ? collapsed.value.delete(id) : collapsed.value.add(id)
+  emit('section-collapsed', id)
 }
 
 const tasksForSection = (sectionId) => {

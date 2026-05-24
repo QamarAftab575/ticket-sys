@@ -232,8 +232,15 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     // My Tasks routes
     Route::get('/my-tasks', [\App\Http\Controllers\MyTasksController::class, 'index'])->name('my-tasks.index');
     Route::get('/my-tasks/api/tasks', [\App\Http\Controllers\MyTasksController::class, 'getTasks'])->name('my-tasks.api.tasks');
+    Route::post('/my-tasks/api/tasks', [\App\Http\Controllers\MyTasksController::class, 'storeTask'])->name('my-tasks.api.tasks.store');
     Route::post('/my-tasks/api/preferences', [\App\Http\Controllers\MyTasksController::class, 'saveViewPreferences'])->name('my-tasks.api.preferences.save');
     Route::get('/my-tasks/api/preferences/{viewType}', [\App\Http\Controllers\MyTasksController::class, 'getViewPreferences'])->name('my-tasks.api.preferences.get');
+    // My Tasks section management
+    Route::get('/my-tasks/api/sections', [\App\Http\Controllers\MyTasksController::class, 'getSections'])->name('my-tasks.api.sections.index');
+    Route::post('/my-tasks/api/sections', [\App\Http\Controllers\MyTasksController::class, 'storeSection'])->name('my-tasks.api.sections.store');
+    Route::put('/my-tasks/api/sections/{sectionId}', [\App\Http\Controllers\MyTasksController::class, 'updateSection'])->name('my-tasks.api.sections.update');
+    Route::delete('/my-tasks/api/sections/{sectionId}', [\App\Http\Controllers\MyTasksController::class, 'destroySection'])->name('my-tasks.api.sections.destroy');
+    Route::post('/my-tasks/api/sections/reorder', [\App\Http\Controllers\MyTasksController::class, 'reorderSections'])->name('my-tasks.api.sections.reorder');
 
     // Attachment routes
     Route::post('/tasks/{task}/attachments', [AttachmentController::class, 'store'])->name('attachments.store');
@@ -251,3 +258,58 @@ Route::get('/test-mail', function () {
 
     return 'Mail sent!';
 });
+
+// Debug routes (local only)
+if (app()->isLocal()) {
+    Route::get('/run-migration', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate');
+            return response()->json([
+                'success' => true,
+                'message' => 'Migration completed successfully',
+                'output' => \Illuminate\Support\Facades\Artisan::output(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    });
+
+    Route::get('/debug/my-tasks', function () {
+        $user = auth()->user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Not authenticated'], 401);
+        }
+
+        // Get raw query
+        $query = \App\Models\Task::where('assignee_id', $user->id);
+        
+        return response()->json([
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'query' => $query->toSql(),
+            'bindings' => $query->getBindings(),
+            'total_tasks' => $query->count(),
+            'tasks' => $query->limit(10)->get(['id', 'name', 'assignee_id', 'project_id', 'status', 'created_at']),
+        ]);
+    });
+
+    Route::get('/debug/my-tasks-api', function () {
+        $user = auth()->user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Not authenticated'], 401);
+        }
+
+        $service = new \App\Services\MyTasksService();
+        $tasks = $service->getUserTasks($user, [], [], null, 1, 50);
+        
+        return response()->json([
+            'user_id' => $user->id,
+            'user_email' => $user->email,
+            'api_response' => $tasks,
+        ]);
+    });
+}

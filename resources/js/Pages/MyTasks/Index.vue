@@ -1,21 +1,39 @@
 <template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace">
-    <MyTasksLayout />
+    <MyTasksLayout
+      :saved-preferences="savedPreferences"
+      :my-tasks-sections="myTasksSections"
+    />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import MyTasksLayout from '@/Components/MyTasks/Layout/MyTasksLayout.vue';
+
+interface MyTasksSection {
+  id: string;
+  name: string;
+  position: number;
+}
 
 interface Props {
   userWorkspaces?: any[];
   currentWorkspace?: any;
+  savedPreferences?: {
+    sort?: any[];
+    grouping?: string;
+    section_order?: string[];
+    collapsed_sections?: string[];
+    filters?: any;
+  } | null;
+  myTasksSections?: MyTasksSection[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   userWorkspaces: () => [],
   currentWorkspace: null,
+  savedPreferences: null,
+  myTasksSections: () => [],
 });
 </script>

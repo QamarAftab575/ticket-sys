@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GetTasksRequest;
-use App\Http\Requests\SaveViewPreferencesRequest;
 use App\Services\MyTasksService;
+use App\Services\MyTasksSectionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,8 +12,10 @@ use Inertia\Response;
 
 class MyTasksController extends Controller
 {
-    public function __construct(private MyTasksService $myTasksService)
-    {
+    public function __construct(
+        private MyTasksService $myTasksService,
+        private MyTasksSectionService $sectionService,
+    ) {
     }
 
     /**
@@ -21,7 +23,24 @@ class MyTasksController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('MyTasks/Index');
+        $user       = auth()->user();
+        $preference = $this->myTasksService->getViewPreferences($user, 'list');
+        $sections   = $this->sectionService->getOrCreateSections($user);
+
+        return Inertia::render('MyTasks/Index', [
+            'savedPreferences' => $preference ? [
+                'sort'               => $preference->sort,
+                'grouping'           => $preference->grouping,
+                'section_order'      => $preference->section_order,
+                'collapsed_sections' => $preference->collapsed_sections,
+                'filters'            => $preference->filters,
+            ] : null,
+            'myTasksSections' => $sections->map(fn($s) => [
+                'id'       => $s->id,
+                'name'     => $s->name,
+                'position' => $s->position,
+            ])->values(),
+        ]);
     }
 
     /**
@@ -50,11 +69,20 @@ class MyTasksController extends Controller
     /**
      * Save view preferences for My Tasks.
      */
-    public function saveViewPreferences(SaveViewPreferencesRequest $request): JsonResponse
+    public function saveViewPreferences(Request $request): JsonResponse
     {
+        $validated = $request->validate([
+            'view_type'          => 'required|in:list,board,timeline,calendar,files',
+            'sort'               => 'nullable|string',
+            'grouping'           => 'nullable|string',
+            'section_order'      => 'nullable|string',
+            'collapsed_sections' => 'nullable|string',
+            'filters'            => 'nullable|string',
+        ]);
+
         $preference = $this->myTasksService->saveViewPreferences(
             auth()->user(),
-            $request->validated()
+            $validated
         );
 
         return response()->json(['success' => true, 'preference' => $preference]);
@@ -71,5 +99,106 @@ class MyTasksController extends Controller
         );
 
         return response()->json($preference ?? []);
+    }
+
+    /**
+     * Create a task for My Tasks.
+     */
+    public function storeTask(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'section_id'  => 'nullable|uuid|exists:sections,id',
+            'status'      => 'nullable|string|in:to_do,in_progress,in_review,complete,blocked',
+            'priority'    => 'nullable|string|in:low,medium,high,urgent',
+            'due_date'    => 'nullable|date',
+            'description' => 'nullable|string',
+        ]);
+
+        try {
+            if (!isset($validated['priority']) || $validated['priority'] === null) {
+                $validated['priority'] = 'medium';
+            }
+
+            // If no section given, assign to the user's first My Tasks section
+            if (empty($validated['section_id'])) {
+                $firstSection = $this->sectionService->getOrCreateSections(auth()->user())->first();
+                $validated['section_id'] = $firstSection?->id;
+            }
+
+            $task = $this->myTasksService->createTask(auth()->user(), $validated);
+
+            return response()->json(['data' => $task], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
+    }
+
+    // ── My Tasks Sections ────────────────────────────────────────────────────
+
+    /**
+     * List all My Tasks sections for the authenticated user.
+     */
+    public function getSections(): JsonResponse
+    {
+        $sections = $this->sectionService->getOrCreateSections(auth()->user());
+
+        return response()->json(['data' => $sections->values()]);
+    }
+
+    /**
+     * Create a new My Tasks section.
+     */
+    public function storeSection(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+        ]);
+
+        $section = $this->sectionService->createSection(auth()->user(), $validated['name']);
+
+        return response()->json(['data' => $section], 201);
+    }
+
+    /**
+     * Rename a My Tasks section.
+     */
+    public function updateSection(Request $request, string $sectionId): JsonResponse
+    {
+        $section = \App\Models\Section::findOrFail($sectionId);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+        ]);
+
+        $section = $this->sectionService->renameSection(auth()->user(), $section, $validated['name']);
+
+        return response()->json(['data' => $section]);
+    }
+
+    /**
+     * Delete a My Tasks section.
+     */
+    public function destroySection(string $sectionId): JsonResponse
+    {
+        $section = \App\Models\Section::findOrFail($sectionId);
+        $this->sectionService->deleteSection(auth()->user(), $section);
+
+        return response()->json(null, 204);
+    }
+
+    /**
+     * Reorder My Tasks sections.
+     */
+    public function reorderSections(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'section_ids'   => 'required|array',
+            'section_ids.*' => 'uuid|exists:sections,id',
+        ]);
+
+        $sections = $this->sectionService->reorderSections(auth()->user(), $validated['section_ids']);
+
+        return response()->json(['data' => $sections->values()]);
     }
 }

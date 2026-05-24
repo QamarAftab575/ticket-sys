@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\MyTaskViewPreference;
 use App\Models\Task;
 use App\Models\User;
-use App\Models\ViewPreference;
 
 class MyTasksService
 {
@@ -201,40 +201,56 @@ class MyTasksService
     /**
      * Save view preferences for My Tasks.
      */
-    public function saveViewPreferences(User $user, array $data): ViewPreference
+    public function saveViewPreferences(User $user, array $data): MyTaskViewPreference
     {
-        $preference = ViewPreference::updateOrCreate(
+        return MyTaskViewPreference::updateOrCreate(
             [
-                'user_id' => $user->id,
-                'project_id' => null, // My Tasks is not project-specific
+                'user_id'   => $user->id,
                 'view_type' => $data['view_type'],
-                'context' => 'my_tasks', // Add context to differentiate from project views
             ],
             [
-                'filters' => $data['filters'] ?? null,
-                'sort' => $data['sort'] ?? null,
-                'grouping' => $data['grouping'] ?? null,
-                'column_widths' => $data['column_widths'] ?? null,
-                'hidden_columns' => $data['hidden_columns'] ?? null,
-                'collapsed_sections' => $data['collapsed_sections'] ?? null,
-                'card_fields' => $data['card_fields'] ?? null,
-                'zoom_level' => $data['zoom_level'] ?? null,
+                'sort'               => isset($data['sort']) ? json_decode($data['sort'], true) : null,
+                'grouping'           => $data['grouping'] ?? null,
+                'section_order'      => isset($data['section_order']) ? json_decode($data['section_order'], true) : null,
+                'collapsed_sections' => isset($data['collapsed_sections']) ? json_decode($data['collapsed_sections'], true) : null,
+                'filters'            => isset($data['filters']) ? json_decode($data['filters'], true) : null,
             ]
         );
-
-        return $preference;
     }
 
     /**
      * Get view preferences for My Tasks.
      */
-    public function getViewPreferences(User $user, string $viewType): ?ViewPreference
+    public function getViewPreferences(User $user, string $viewType): ?MyTaskViewPreference
     {
-        return ViewPreference::where([
-            'user_id' => $user->id,
-            'project_id' => null,
+        return MyTaskViewPreference::where([
+            'user_id'   => $user->id,
             'view_type' => $viewType,
-            'context' => 'my_tasks',
         ])->first();
+    }
+
+    /**
+     * Create a task for My Tasks.
+     */
+    public function createTask(User $user, array $data): Task
+    {
+        $task = Task::create([
+            'name'        => $data['name'],
+            'status'      => $data['status'] ?? 'to_do',
+            'priority'    => $data['priority'] ?? null,
+            'due_date'    => $data['due_date'] ?? null,
+            'description' => $data['description'] ?? null,
+            'section_id'  => $data['section_id'] ?? null,
+            'assignee_id' => $user->id,
+            'creator_id'  => $user->id,
+            'project_id'  => null,
+        ]);
+
+        return $task->load([
+            'assignee:id,name,email,avatar',
+            'creator:id,name,email,avatar',
+            'section:id,name',
+            'project:id,name,color,icon',
+        ]);
     }
 }

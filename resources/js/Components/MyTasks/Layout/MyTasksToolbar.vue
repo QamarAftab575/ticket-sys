@@ -266,30 +266,31 @@
         </div>
       </div>
 
-      <!-- Right side: View controls -->
-      <div class="flex items-center gap-2">
-        <!-- View Type Toggle (for future Board/Calendar views) -->
-        <div class="flex items-center bg-gray-100 rounded-lg p-1">
-          <button
-            class="px-3 py-1.5 text-sm font-medium bg-white text-gray-900 rounded-md shadow-sm"
-          >
-            <Bars3Icon class="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+      <!-- Right side: Empty for now (view controls moved to header) -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import {
   FunnelIcon,
   ArrowsUpDownIcon,
   Squares2X2Icon,
-  Bars3Icon,
 } from '@heroicons/vue/24/outline';
 import type { TaskFilter, TaskSort, TaskGroupBy } from '@/Types/tasks';
+
+interface Props {
+  initialSort?: TaskSort[];
+  initialGroup?: string;
+  initialFilters?: any;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  initialSort: () => [],
+  initialGroup: '',
+  initialFilters: () => ({}),
+});
 
 const emit = defineEmits<{
   'filter-change': [filters: TaskFilter];
@@ -314,6 +315,42 @@ const localSort = ref({
 });
 
 const localGroup = ref('');
+
+// Initialize from saved preferences on mount
+onMounted(() => {
+  // Restore sort
+  if (props.initialSort?.length) {
+    const first = props.initialSort[0];
+    localSort.value.field = first.field || 'due_date';
+    localSort.value.descending = first.direction === 'desc';
+  }
+
+  // Restore grouping
+  if (props.initialGroup) {
+    localGroup.value = props.initialGroup;
+  }
+
+  // Restore filters
+  if (props.initialFilters && typeof props.initialFilters === 'object') {
+    const filtersArr = Array.isArray(props.initialFilters)
+      ? props.initialFilters
+      : Object.values(props.initialFilters);
+
+    for (const f of filtersArr as any[]) {
+      if (f?.field === 'status') localFilters.value.status = f.value || '';
+      if (f?.field === 'priority') localFilters.value.priority = f.value || '';
+      if (f?.field === 'due_date') {
+        // Reverse-map operator back to select value
+        if (f.operator === 'is_empty') localFilters.value.due_date = 'no_due_date';
+        else if (f.operator === 'equals') localFilters.value.due_date = 'today';
+        else if (f.operator === 'less_than') {
+          const today = new Date().toISOString().split('T')[0];
+          localFilters.value.due_date = f.value === today ? 'overdue' : 'this_week';
+        }
+      }
+    }
+  }
+});
 
 // Computed
 const hasActiveFilters = computed(() => {
@@ -399,6 +436,7 @@ function updateSort() {
     });
   }
   
+  console.log('Emitting sort-change:', sortRules);
   emit('sort-change', sortRules);
 }
 

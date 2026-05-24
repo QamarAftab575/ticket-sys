@@ -16,6 +16,14 @@ export const useMyTasksStore = defineStore('myTasks', () => {
   const sort = ref<TaskSort[]>([]);
   const groupBy = ref<TaskGroupBy>('');
 
+  // Section ordering (for list view virtual sections)
+  const sectionOrder = ref<string[]>([]);
+  const collapsedSections = ref<Set<string>>(new Set());
+
+  // My Tasks real sections (from DB)
+  interface MyTasksSection { id: string; name: string; position: number }
+  const sections = ref<MyTasksSection[]>([]);
+
   // Pagination
   const currentPage = ref(1);
   const totalPages = ref(1);
@@ -96,6 +104,8 @@ export const useMyTasksStore = defineStore('myTasks', () => {
       
       const data = await response.json();
       
+      console.log('Fetched tasks data:', data);
+      
       if (groupBy.value && typeof data.tasks === 'object' && !Array.isArray(data.tasks)) {
         // Tasks are grouped
         tasks.value = data.tasks;
@@ -103,6 +113,8 @@ export const useMyTasksStore = defineStore('myTasks', () => {
         // Tasks are flat array
         tasks.value = data.tasks || [];
       }
+      
+      console.log('Tasks after assignment:', tasks.value);
       
       totalTasks.value = data.total || 0;
       totalPages.value = data.pages || 1;
@@ -239,6 +251,251 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     currentPage.value = page;
   }
 
+  function setSectionOrder(order: string[]) {
+    sectionOrder.value = order;
+  }
+
+  function toggleCollapseSection(sectionId: string) {
+    if (collapsedSections.value.has(sectionId)) {
+      collapsedSections.value.delete(sectionId);
+    } else {
+      collapsedSections.value.add(sectionId);
+    }
+  }
+
+  function setSections(newSections: Array<{ id: string; name: string; position: number }>) {
+    sections.value = newSections;
+    // If no saved section_order, default to the sections' natural order
+    if (sectionOrder.value.length === 0) {
+      sectionOrder.value = newSections.map(s => s.id);
+    }
+  }
+
+  async function createSection(name: string): Promise<void> {
+    const response = await fetch('/my-tasks/api/sections', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+      },
+      body: JSON.stringify({ name }),
+    });
+    if (!response.ok) throw new Error('Failed to create section');
+    const data = await response.json();
+    sections.value.push(data.data);
+    sectionOrder.value.push(data.data.id);
+  }
+
+  async function renameSection(sectionId: string, name: string): Promise<void> {
+    const response = await fetch(`/my-tasks/api/sections/${sectionId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+      },
+      body: JSON.stringify({ name }),
+    });
+    if (!response.ok) throw new Error('Failed to rename section');
+    const data = await response.json();
+    const idx = sections.value.findIndex(s => s.id === sectionId);
+    if (idx !== -1) sections.value[idx] = data.data;
+  }
+
+  async function deleteSection(sectionId: string): Promise<void> {
+    const response = await fetch(`/my-tasks/api/sections/${sectionId}`, {
+      method: 'DELETE',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+      },
+    });
+    if (!response.ok) throw new Error('Failed to delete section');
+    sections.value = sections.value.filter(s => s.id !== sectionId);
+    sectionOrder.value = sectionOrder.value.filter(id => id !== sectionId);
+    await fetchTasks();
+  }
+
+  async function reorderSectionsRemote(orderedIds: string[]): Promise<void> {
+    sectionOrder.value = orderedIds;
+    // Persist to backend
+    await fetch('/my-tasks/api/sections/reorder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+      },
+      body: JSON.stringify({ section_ids: orderedIds }),
+    });
+    savePreferences();
+  }
+
+  /** Persist current sort/grouping/section_order/collapsed_sections to the backend */
+  async function savePreferences() {
+    try {
+      const params: Record<string, string> = {
+        view_type: 'list',
+      };
+
+      if (sort.value.length > 0) {
+        params.sort = JSON.stringify(sort.value);
+      }
+      if (groupBy.value) {
+        params.grouping = groupBy.value;
+      }
+      if (sectionOrder.value.length > 0) {
+        params.section_order = JSON.stringify(sectionOrder.value);
+      }
+      if (collapsedSections.value.size > 0) {
+        params.collapsed_sections = JSON.stringify([...collapsedSections.value]);
+      }
+      if (Object.keys(filters.value).length > 0) {
+        params.filters = JSON.stringify(Object.values(filters.value));
+      }
+
+      await fetch('/my-tasks/api/preferences', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        },
+        body: JSON.stringify(params),
+      });
+    } catch (err) {
+      console.error('Failed to save my-tasks preferences:', err);
+    }
+  }
+
+  /** Hydrate store from saved preferences (called on mount with Inertia page props) */
+  function loadPreferences(prefs: {
+    sort?: TaskSort[] | null;
+    grouping?: string | null;
+    section_order?: string[] | null;
+    collapsed_sections?: string[] | null;
+    filters?: any | null;
+  }) {
+    if (prefs.sort?.length) {
+      sort.value = prefs.sort;
+    }
+    if (prefs.grouping) {
+      groupBy.value = prefs.grouping as TaskGroupBy;
+    }
+    if (prefs.section_order?.length) {
+      sectionOrder.value = prefs.section_order;
+    }
+    if (prefs.collapsed_sections?.length) {
+      collapsedSections.value = new Set(prefs.collapsed_sections);
+    }
+    if (prefs.filters && Object.keys(prefs.filters).length > 0) {
+      filters.value = prefs.filters;
+    }
+  }
+  async function updateTask(taskId: string, updates: any) {
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Update the task in local state
+      const taskIndex = tasks.value.findIndex(t => t.id === taskId);
+      if (taskIndex > -1) {
+        tasks.value[taskIndex] = { ...tasks.value[taskIndex], ...data.data };
+      }
+
+      // Update selected task if it's the one being updated
+      if (selectedTaskId.value === taskId) {
+        selectedTask.value = { ...selectedTask.value, ...data.data };
+      }
+
+      return data.data;
+    } catch (err: any) {
+      error.value = err.message || 'Failed to update task';
+      console.error('Error updating task:', err);
+      throw err;
+    }
+  }
+
+  async function moveTask(taskId: string, toSectionId: string, position: number = 0) {
+    try {
+      const task = tasks.value.find(t => t.id === taskId);
+      if (!task) return;
+
+      // Save original state for rollback
+      const originalSectionId = task.section_id;
+      const originalPosition = task.position;
+
+      // Get tasks in the target section (before the move)
+      const targetSectionTasks = tasks.value
+        .filter((t) => t.section_id === toSectionId && t.id !== taskId)
+        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+      // Optimistic update: move the task
+      task.section_id = toSectionId;
+      task.position = position;
+
+      // Update positions of other tasks in the target section
+      targetSectionTasks.forEach((t, index) => {
+        if (index >= position) {
+          t.position = index + 1;
+        } else {
+          t.position = index;
+        }
+      });
+
+      try {
+        const response = await fetch(`/api/tasks/${taskId}/move`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+          },
+          body: JSON.stringify({ section_id: toSectionId, position }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to move task');
+        }
+
+        const result = await response.json();
+        if (result.data) {
+          // Update task with server response to ensure consistency
+          Object.assign(task, result.data);
+        }
+      } catch (err) {
+        // Revert on error
+        task.section_id = originalSectionId;
+        task.position = originalPosition;
+
+        // Revert other tasks' positions
+        targetSectionTasks.forEach((t, index) => {
+          t.position = index;
+        });
+
+        throw err;
+      }
+    } catch (err: any) {
+      error.value = err.message || 'Failed to move task';
+      console.error('Error moving task:', err);
+      throw err;
+    }
+  }
+
   // Helper functions
   function formatStatus(status: string): string {
     const statusMap: Record<string, string> = {
@@ -303,6 +560,9 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     filters,
     sort,
     groupBy,
+    sectionOrder,
+    collapsedSections,
+    sections,
     currentPage,
     totalPages,
     totalTasks,
@@ -316,11 +576,22 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     fetchTask,
     completeTask,
     deleteTask,
+    updateTask,
+    moveTask,
     selectTask,
     deselectTask,
     setFilters,
     setSort,
     setGroupBy,
     setPage,
+    setSectionOrder,
+    toggleCollapseSection,
+    setSections,
+    createSection,
+    renameSection,
+    deleteSection,
+    reorderSectionsRemote,
+    savePreferences,
+    loadPreferences,
   };
 });

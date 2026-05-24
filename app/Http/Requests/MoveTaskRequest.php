@@ -23,7 +23,7 @@ class MoveTaskRequest extends FormRequest
         return [
             'section_id' => 'nullable|exists:sections,id',
             'project_id' => 'nullable|exists:projects,id',
-            'position' => 'nullable|integer|min:0',
+            'position'   => 'nullable|integer|min:0',
         ];
     }
 
