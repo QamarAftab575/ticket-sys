@@ -438,7 +438,7 @@ const openTaskPanel = (task) => {
 
 const closeTaskPanel = () => {
   selectedTask.value = null
-  setQueryParams({ task: null })
+  setQueryParams({ task: undefined })
 }
 
 const updateTask = async (taskId, data) => {
@@ -901,16 +901,29 @@ const handleCalendarUpdateDueDate = async (data) => {
   }
 }
 
-onMounted(() => {
-  // Check for task in URL
-  const taskId = new URLSearchParams(window.location.search).get('task')
+onMounted(async () => {
+  // Load view data first
+  await loadViewData()
+  
+  // Then check for task in URL
+  const taskId = getQueryParam('task')
   if (taskId) {
     const task = tasks.value.find((t) => t.id === taskId)
     if (task) {
       selectedTask.value = task
+    } else {
+      // If task not in current list, fetch it
+      try {
+        const response = await fetch(`/api/tasks/${taskId}`)
+        if (response.ok) {
+          const taskData = await response.json()
+          openTaskPanel(taskData.data || taskData)
+        }
+      } catch (err) {
+        console.error('Failed to load task from URL:', err)
+      }
     }
   }
-  loadViewData()
 })
 
 // Sync columns state from ListView whenever it updates
@@ -928,6 +941,21 @@ watch(
   () => syncColumnsFromListView(),
   { deep: true }
 )
+
+// Handle browser back/forward buttons
+const handlePopState = () => {
+  const taskId = getQueryParam('task')
+  if (taskId) {
+    const task = tasks.value.find((t) => t.id === taskId)
+    if (task) {
+      selectedTask.value = task
+    }
+  } else {
+    selectedTask.value = null
+  }
+}
+
+window.addEventListener('popstate', handlePopState)
 
 const handleFileUploaded = (uploadedFiles) => {
   // Add newly uploaded files to the files list

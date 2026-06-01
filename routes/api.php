@@ -3,6 +3,7 @@
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CustomFieldController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\MyTasksController;
 use App\Http\Controllers\ProjectMemberController;
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 // All API routes require authentication
 Route::middleware(['web', 'auth:web'])->group(function () {
+    // Global search route
+    Route::get('/search', [GlobalSearchController::class, 'search'])->name('search');
+
     // User routes
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     // My Tasks routes

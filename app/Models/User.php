@@ -29,6 +29,7 @@ class User extends Authenticatable
         'email_verified_at',
         'avatar',
         'timezone',
+        'utc_offset_minutes',
         'is_suspended',
         'last_login_at',
         'must_set_password',

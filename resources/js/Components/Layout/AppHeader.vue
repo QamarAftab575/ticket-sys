@@ -11,13 +11,7 @@
         </svg>
       </button>
       <!-- Search -->
-      <div class="flex-1 max-w-md">
-        <input
-          type="text"
-          placeholder="Search..."
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-        />
-      </div>
+      <SearchDropdown />
 
       <!-- Right Actions -->
       <div class="flex items-center gap-4">
@@ -81,6 +75,7 @@
 import { ref, computed } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import Avatar from '@/Components/Avatar.vue'
+import SearchDropdown from '@/Components/GlobalSearch/SearchDropdown.vue'
 
 defineEmits(['toggle-sidebar'])
 
