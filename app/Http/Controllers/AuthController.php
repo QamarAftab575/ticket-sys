@@ -327,7 +327,7 @@ class AuthController extends Controller
     public function showProfile()
     {
         $user = auth()->user();
-        
+
         // Get user workspaces (only active workspaces where user is active)
         $userWorkspaces = $user->organizations()
             ->where('organizations.is_active', true)
@@ -335,29 +335,50 @@ class AuthController extends Controller
             ->whereNull('organization_memberships.deleted_at')
             ->select('organizations.id', 'organizations.name', 'organizations.avatar_color')
             ->get();
-        
+
         return Inertia::render('Profile/ManageAccount', [
             'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'avatar' => $user->avatar,
-                'email_verified_at' => $user->email_verified_at,
-                'created_at' => $user->created_at,
+                'id'                 => $user->id,
+                'name'               => $user->name,
+                'email'              => $user->email,
+                'avatar'             => $user->avatar,
+                'timezone'           => $user->timezone,
+                'utc_offset_minutes' => $user->utc_offset_minutes,
+                'email_verified_at'  => $user->email_verified_at,
+                'created_at'         => $user->created_at,
             ],
-            'userWorkspaces' => $userWorkspaces,
+            'timezones'       => config('timezones'),
+            'userWorkspaces'  => $userWorkspaces,
             'currentWorkspace' => null,
-            'userRole' => 'member',
+            'userRole'        => 'member',
         ]);
     }
 
     public function updateProfile(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'     => 'required|string|max:255',
+            'timezone' => ['nullable', 'string', 'max:100', function ($attribute, $value, $fail) {
+                if ($value && !in_array($value, array_column(config('timezones'), 'timezone'))) {
+                    $fail('The selected timezone is invalid.');
+                }
+            }],
         ]);
 
-        auth()->user()->update($validated);
+        $user = auth()->user();
+
+        $updateData = ['name' => $validated['name']];
+
+        // Resolve utc_offset_minutes from the central config when timezone is provided
+        if (!empty($validated['timezone'])) {
+            $timezones = config('timezones');
+            $match = collect($timezones)->firstWhere('timezone', $validated['timezone']);
+
+            $updateData['timezone']           = $validated['timezone'];
+            $updateData['utc_offset_minutes'] = $match ? $match['offset_minutes'] : null;
+        }
+
+        $user->update($updateData);
 
         return back()->with('status', 'Profile updated successfully!');
     }

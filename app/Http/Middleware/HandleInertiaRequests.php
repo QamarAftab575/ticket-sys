@@ -30,12 +30,14 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $user ? [
-                    'id'                => $user->id,
-                    'name'              => $user->name,
-                    'email'             => $user->email,
-                    'avatar'            => $user->avatar,
-                    'email_verified_at' => $user->email_verified_at,
-                    'is_admin'          => $user->is_admin ?? false,
+                    'id'                 => $user->id,
+                    'name'               => $user->name,
+                    'email'              => $user->email,
+                    'avatar'             => $user->avatar,
+                    'timezone'           => $user->timezone,
+                    'utc_offset_minutes' => $user->utc_offset_minutes,
+                    'email_verified_at'  => $user->email_verified_at,
+                    'is_admin'           => $user->is_admin ?? false,
                 ] : null,
             ],
             'sidebarProjects' => $user ? \App\Models\Project::visibleTo($user)

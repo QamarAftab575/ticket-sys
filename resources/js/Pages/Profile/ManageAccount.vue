@@ -96,6 +96,26 @@
               <p class="mt-1 text-xs text-gray-500">Email cannot be changed</p>
             </div>
 
+            <!-- Timezone -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Timezone</label>
+              <SearchableSelect
+                v-model="form.timezone"
+                :options="timezoneOptions"
+                value-key="timezone"
+                label-key="label"
+                placeholder="— Select Timezone —"
+                search-placeholder="Search timezone..."
+                clearable
+                clear-label="— No timezone —"
+                class="mt-1"
+              />
+              <p v-if="errors.timezone" class="mt-1 text-sm text-red-600">{{ errors.timezone }}</p>
+              <p class="mt-1 text-xs text-gray-500">
+                Dates and times will be displayed in your selected timezone.
+              </p>
+            </div>
+
             <button
               @click="updateProfile"
               :disabled="isUpdating"
@@ -260,6 +280,7 @@
 import { ref, reactive, computed } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import SearchableSelect from '@/Components/SearchableSelect.vue'
 
 const page = usePage()
 
@@ -268,13 +289,21 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
+  timezones: {
+    type: Array,
+    default: () => []
+  },
   userWorkspaces: Array,
   currentWorkspace: Object,
   userRole: String
 })
 
+// Flatten timezones for the SearchableSelect (already has timezone + label keys)
+const timezoneOptions = computed(() => props.timezones)
+
 const form = reactive({
-  name: props.user?.name || ''
+  name: props.user?.name || '',
+  timezone: props.user?.timezone || ''
 })
 
 const passwordForm = reactive({
@@ -290,6 +319,7 @@ const deleteForm = reactive({
 const errors = reactive({
   name: '',
   avatar: '',
+  timezone: '',
   password: '',
   password_confirmation: '',
   deleteEmail: '',
@@ -417,6 +447,7 @@ const formatRole = (role) => {
 
 const updateProfile = () => {
   errors.name = ''
+  errors.timezone = ''
   
   if (!form.name.trim()) {
     errors.name = 'Name is required'
@@ -433,6 +464,7 @@ const updateProfile = () => {
     },
     onError: (pageErrors) => {
       if (pageErrors.name) errors.name = pageErrors.name
+      if (pageErrors.timezone) errors.timezone = pageErrors.timezone
     },
     onFinish: () => {
       isUpdating.value = false
