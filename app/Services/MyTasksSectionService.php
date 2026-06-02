@@ -59,13 +59,13 @@ class MyTasksSectionService
      */
     public function createSection(User $user, string $name): Section
     {
-        $maxPosition = Section::myTasks($user->id)->max('position') ?? -1;
+        $maxPosition = Section::myTasks($user->id)->max('position');
 
         return Section::create([
             'user_id'     => $user->id,
             'project_id'  => null,
             'name'        => $name,
-            'position'    => $maxPosition + 1,
+            'position'    => $maxPosition !== null ? $maxPosition + 1 : 0,
             'is_my_tasks' => true,
         ]);
     }

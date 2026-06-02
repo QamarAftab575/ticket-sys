@@ -26,6 +26,40 @@ class MyTasksController extends Controller
         $user       = auth()->user();
         $preference = $this->myTasksService->getViewPreferences($user, 'list');
         $sections   = $this->sectionService->getOrCreateSections($user);
+        
+        // Get workspace members for assigning tasks
+        // Try to get organization from session first
+        $organizationId = session('current_organization_id');
+        
+        // If no session organization, get user's first active organization
+        if (!$organizationId) {
+            $organization = $user->organizations()
+                ->wherePivot('is_active', true)
+                ->where('organizations.is_active', true)
+                ->first();
+            
+            if ($organization) {
+                $organizationId = $organization->id;
+                session(['current_organization_id' => $organizationId]);
+            }
+        }
+        
+        // Get workspace members
+        $workspaceMembers = collect();
+        if ($organizationId) {
+            $organization = \App\Models\Organization::find($organizationId);
+            if ($organization) {
+                $workspaceMembers = $organization->members()
+                    ->select('users.id', 'users.name', 'users.email', 'users.avatar')
+                    ->get()
+                    ->map(fn($member) => [
+                        'id'     => $member->id,
+                        'name'   => $member->name,
+                        'email'  => $member->email,
+                        'avatar' => $member->avatar,
+                    ]);
+            }
+        }
 
         return Inertia::render('MyTasks/Index', [
             'savedPreferences' => $preference ? [
@@ -40,6 +74,7 @@ class MyTasksController extends Controller
                 'name'     => $s->name,
                 'position' => $s->position,
             ])->values(),
+            'workspaceMembers' => $workspaceMembers,
         ]);
     }
 

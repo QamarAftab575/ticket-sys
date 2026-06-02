@@ -3,6 +3,7 @@
     <MyTasksLayout
       :saved-preferences="savedPreferences"
       :my-tasks-sections="myTasksSections"
+      :workspace-members="workspaceMembers"
     />
   </AppLayout>
 </template>
@@ -28,6 +29,7 @@ interface Props {
     filters?: any;
   } | null;
   myTasksSections?: MyTasksSection[];
+  workspaceMembers?: any[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -35,5 +37,6 @@ const props = withDefaults(defineProps<Props>(), {
   currentWorkspace: null,
   savedPreferences: null,
   myTasksSections: () => [],
+  workspaceMembers: () => [],
 });
 </script>

@@ -13,6 +13,8 @@
       :grouping="grouping"
       :is-loading="isLoading"
       :initial-collapsed="collapsedSectionsArray"
+      :is-my-tasks="true"
+      :members="allMembers"
       @select-task="$emit('select-task', $event)"
       @task-completed="$emit('task-completed', $event)"
       @task-created="$emit('task-created', $event)"
@@ -49,12 +51,14 @@ interface Props {
   sections?: Section[];          // real DB sections from the store
   sectionOrder?: string[];       // saved order of section IDs
   collapsedSections?: Set<string>;
+  workspaceMembers?: any[];      // workspace members for tasks without project
 }
 
 const props = withDefaults(defineProps<Props>(), {
   sections: () => [],
   sectionOrder: () => [],
   collapsedSections: () => new Set(),
+  workspaceMembers: () => [],
 });
 
 const emit = defineEmits<{
@@ -104,6 +108,45 @@ const collapsedSectionsArray = computed(() => {
 
 // Tasks already have a real section_id from the DB — no mapping needed
 const processedTasks = computed(() => props.tasks);
+
+// Compute members map: task.id -> members array
+// Logic: If task has project, use project.members; otherwise use workspace members
+const taskMembersMap = computed(() => {
+  const map: Record<string, any[]> = {};
+  
+  props.tasks.forEach(task => {
+    if (task.project?.members && task.project.members.length > 0) {
+      // Task belongs to a project - use project members
+      map[task.id] = task.project.members;
+    } else {
+      // Task doesn't belong to a project - use workspace members
+      map[task.id] = props.workspaceMembers;
+    }
+  });
+  
+  return map;
+});
+
+// Get all unique members across all tasks for the ListView
+const allMembers = computed(() => {
+  const membersSet = new Map();
+  
+  // Add all workspace members first
+  props.workspaceMembers.forEach(member => {
+    membersSet.set(member.id, member);
+  });
+  
+  // Add project members from all tasks
+  props.tasks.forEach(task => {
+    if (task.project?.members) {
+      task.project.members.forEach((member: any) => {
+        membersSet.set(member.id, member);
+      });
+    }
+  });
+  
+  return Array.from(membersSet.values());
+});
 
 function handleSectionsReordered(sectionIds: string[]) {
   emit('section-order-change', sectionIds);

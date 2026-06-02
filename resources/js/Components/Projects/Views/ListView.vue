@@ -174,6 +174,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  isMyTasks: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits([
@@ -302,9 +306,16 @@ const toggleCollapse = (id) => {
 }
 
 const tasksForSection = (sectionId) => {
-  const sectionTasks = Array.isArray(props.tasks) ? props.tasks.filter((t) => t.section_id === sectionId) : []
+  // Use my_tasks_section_id for My Tasks view, section_id for project view
+  const sectionField = props.isMyTasks ? 'my_tasks_section_id' : 'section_id';
+  const positionField = props.isMyTasks ? 'my_tasks_position' : 'position';
+  
+  const sectionTasks = Array.isArray(props.tasks) 
+    ? props.tasks.filter((t) => t[sectionField] === sectionId) 
+    : [];
+  
   // Sort by position to maintain order
-  return sectionTasks.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+  return sectionTasks.sort((a, b) => (a[positionField] ?? 0) - (b[positionField] ?? 0));
 }
 
 const handleSort = (sortData) => {

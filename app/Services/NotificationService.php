@@ -62,6 +62,11 @@ class NotificationService
                 continue;
             }
 
+            // Skip if task has no project (personal task)
+            if ($task->project === null) {
+                continue;
+            }
+
             try {
                 Notification::create([
                     'organization_id' => $task->project->organization_id,
@@ -121,6 +126,11 @@ class NotificationService
                 continue;
             }
 
+            // Skip if task has no project (personal task)
+            if ($task->project === null) {
+                continue;
+            }
+
             try {
                 Notification::create([
                     'organization_id' => $task->project->organization_id,
@@ -166,6 +176,11 @@ class NotificationService
             ->exists();
 
         if ($exists) {
+            return;
+        }
+
+        // Skip if task has no project (personal task)
+        if ($task->project === null) {
             return;
         }
 

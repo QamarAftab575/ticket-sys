@@ -205,7 +205,14 @@ class TaskController extends Controller
      */
     public function duplicate(Task $task): JsonResponse
     {
-        $this->authorize('create', [Task::class, $task->project]);
+        // For personal tasks (no project), check if user owns the task
+        if ($task->project === null) {
+            if ($task->creator_id !== auth()->id() && $task->assignee_id !== auth()->id()) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+        } else {
+            $this->authorize('create', [Task::class, $task->project]);
+        }
 
         try {
             $duplicatedTask = $this->taskService->duplicateTask($task);
@@ -235,6 +242,32 @@ class TaskController extends Controller
         $validated = $request->validated();
 
         try {
+            // Check if this is a My Tasks move (has my_tasks_section_id)
+            if (isset($validated['my_tasks_section_id'])) {
+                $myTasksSection = \App\Models\Section::findOrFail($validated['my_tasks_section_id']);
+                
+                // Verify it's a My Tasks section
+                if (!$myTasksSection->is_my_tasks || $myTasksSection->user_id !== auth()->id()) {
+                    return response()->json(['message' => 'Invalid My Tasks section'], 422);
+                }
+                
+                $movedTask = $this->taskService->moveTaskInMyTasks(
+                    $task, 
+                    $myTasksSection, 
+                    $validated['my_tasks_position'] ?? null
+                );
+                
+                return response()->json([
+                    'data' => $movedTask->load([
+                        'assignee:id,name,email,avatar',
+                        'section:id,name',
+                        'myTasksSection:id,name',
+                        'tags:id,name,color',
+                    ]),
+                ]);
+            }
+            
+            // Otherwise, it's a project section move
             if (isset($validated['section_id'])) {
                 $section = \App\Models\Section::findOrFail($validated['section_id']);
                 $movedTask = $this->taskService->moveTask($task, $section, $validated['position'] ?? null);
@@ -247,6 +280,7 @@ class TaskController extends Controller
                 'data' => $movedTask->load([
                     'assignee:id,name,email,avatar',
                     'section:id,name',
+                    'myTasksSection:id,name',
                     'tags:id,name,color',
                 ]),
             ]);

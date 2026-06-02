@@ -333,7 +333,7 @@ export const useMyTasksStore = defineStore('myTasks', () => {
   }
 
   /** Persist current sort/grouping/section_order/collapsed_sections to the backend */
-  async function savePreferences() {
+  const savePreferencesDebounced = debounce(async () => {
     try {
       const params: Record<string, string> = {
         view_type: 'list',
@@ -367,6 +367,19 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     } catch (err) {
       console.error('Failed to save my-tasks preferences:', err);
     }
+  }, 500);
+
+  function savePreferences() {
+    savePreferencesDebounced();
+  }
+
+  // Debounce helper
+  function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+    return function(...args: Parameters<T>) {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
   }
 
   /** Hydrate store from saved preferences (called on mount with Inertia page props) */
@@ -431,65 +444,71 @@ export const useMyTasksStore = defineStore('myTasks', () => {
   }
 
   async function moveTask(taskId: string, toSectionId: string, position: number = 0) {
+    const taskIndex = tasks.value.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) return;
+
+    const task = tasks.value[taskIndex];
+    const originalMyTasksSectionId = task.my_tasks_section_id;
+    const originalMyTasksPosition = task.my_tasks_position;
+    const originalTasksState = JSON.parse(JSON.stringify(tasks.value));
+
     try {
-      const task = tasks.value.find(t => t.id === taskId);
-      if (!task) return;
+      // Optimistic update: remove task from current position
+      tasks.value.splice(taskIndex, 1);
 
-      // Save original state for rollback
-      const originalSectionId = task.section_id;
-      const originalPosition = task.position;
+      // Update task properties (My Tasks specific)
+      task.my_tasks_section_id = toSectionId;
+      task.my_tasks_position = position;
 
-      // Get tasks in the target section (before the move)
-      const targetSectionTasks = tasks.value
-        .filter((t) => t.section_id === toSectionId && t.id !== taskId)
-        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+      // Find insertion point in target section
+      const targetSectionTasks = tasks.value.filter(t => t.my_tasks_section_id === toSectionId);
+      const insertIndex = targetSectionTasks.findIndex(t => (t.my_tasks_position ?? 0) >= position);
+      
+      if (insertIndex === -1) {
+        // Append to end of section
+        const lastTaskIndex = tasks.value.findIndex(t => t.my_tasks_section_id === toSectionId && t === targetSectionTasks[targetSectionTasks.length - 1]);
+        tasks.value.splice(lastTaskIndex + 1, 0, task);
+      } else {
+        // Insert before the found task
+        const targetTask = targetSectionTasks[insertIndex];
+        const targetIndex = tasks.value.findIndex(t => t === targetTask);
+        tasks.value.splice(targetIndex, 0, task);
+      }
 
-      // Optimistic update: move the task
-      task.section_id = toSectionId;
-      task.position = position;
+      // Update positions of tasks in target section
+      tasks.value
+        .filter(t => t.my_tasks_section_id === toSectionId)
+        .sort((a, b) => (a.my_tasks_position ?? 0) - (b.my_tasks_position ?? 0))
+        .forEach((t, idx) => {
+          t.my_tasks_position = idx;
+        });
 
-      // Update positions of other tasks in the target section
-      targetSectionTasks.forEach((t, index) => {
-        if (index >= position) {
-          t.position = index + 1;
-        } else {
-          t.position = index;
-        }
+      // Make API call with My Tasks specific fields
+      const response = await fetch(`/api/tasks/${taskId}/move`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        },
+        body: JSON.stringify({ 
+          my_tasks_section_id: toSectionId, 
+          my_tasks_position: position 
+        }),
       });
 
-      try {
-        const response = await fetch(`/api/tasks/${taskId}/move`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-          },
-          body: JSON.stringify({ section_id: toSectionId, position }),
-        });
+      if (!response.ok) {
+        throw new Error('Failed to move task');
+      }
 
-        if (!response.ok) {
-          throw new Error('Failed to move task');
-        }
-
-        const result = await response.json();
-        if (result.data) {
-          // Update task with server response to ensure consistency
-          Object.assign(task, result.data);
-        }
-      } catch (err) {
-        // Revert on error
-        task.section_id = originalSectionId;
-        task.position = originalPosition;
-
-        // Revert other tasks' positions
-        targetSectionTasks.forEach((t, index) => {
-          t.position = index;
-        });
-
-        throw err;
+      const result = await response.json();
+      if (result.data) {
+        // Update task with server response
+        Object.assign(task, result.data);
       }
     } catch (err: any) {
+      // Rollback to original state
+      tasks.value = originalTasksState;
       error.value = err.message || 'Failed to move task';
       console.error('Error moving task:', err);
       throw err;
@@ -550,6 +569,38 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     return 'Later';
   }
 
+  async function createTask(data: { name: string; section_id?: string | null; [key: string]: any }) {
+    try {
+      const response = await fetch('/my-tasks/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      // Add new task to local state optimistically
+      if (result.data) {
+        tasks.value.push(result.data);
+        totalTasks.value += 1;
+      }
+
+      return result.data;
+    } catch (err: any) {
+      error.value = err.message || 'Failed to create task';
+      console.error('Error creating task:', err);
+      throw err;
+    }
+  }
+
   return {
     // State
     tasks,
@@ -578,6 +629,7 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     deleteTask,
     updateTask,
     moveTask,
+    createTask,
     selectTask,
     deselectTask,
     setFilters,

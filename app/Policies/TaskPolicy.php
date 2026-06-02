@@ -39,8 +39,13 @@ class TaskPolicy
         return $cache[$key];
     }
 
-    private function canEdit(User $user, Project $project): bool
+    private function canEdit(User $user, ?Project $project): bool
     {
+        // If no project (My Tasks personal task), user can edit their own tasks
+        if ($project === null) {
+            return true;
+        }
+
         return in_array($this->memberRole($user, $project), [
             ProjectMember::ROLE_PROJECT_ADMIN,
             ProjectMember::ROLE_EDITOR,
@@ -50,6 +55,11 @@ class TaskPolicy
     /** View: any member with access can view tasks */
     public function view(User $user, Task $task): bool
     {
+        // Personal tasks (no project): only assignee or creator can view
+        if ($task->project === null) {
+            return $user->id === $task->assignee_id || $user->id === $task->creator_id;
+        }
+
         return $this->memberService->canAccess($task->project, $user);
     }
 
@@ -65,27 +75,47 @@ class TaskPolicy
         return $this->canEdit($user, $project);
     }
 
-    /** Update: project_admin or editor only */
+    /** Update: project_admin or editor only, or task owner for personal tasks */
     public function update(User $user, Task $task): bool
     {
+        // Personal tasks (no project): only assignee or creator can update
+        if ($task->project === null) {
+            return $user->id === $task->assignee_id || $user->id === $task->creator_id;
+        }
+
         return $this->canEdit($user, $task->project);
     }
 
-    /** Delete: project_admin or editor only */
+    /** Delete: project_admin or editor only, or task owner for personal tasks */
     public function delete(User $user, Task $task): bool
     {
+        // Personal tasks (no project): only creator can delete
+        if ($task->project === null) {
+            return $user->id === $task->creator_id;
+        }
+
         return $this->canEdit($user, $task->project);
     }
 
-    /** Complete/reopen: project_admin or editor only */
+    /** Complete/reopen: project_admin or editor only, or task owner for personal tasks */
     public function complete(User $user, Task $task): bool
     {
+        // Personal tasks (no project): only assignee or creator can complete
+        if ($task->project === null) {
+            return $user->id === $task->assignee_id || $user->id === $task->creator_id;
+        }
+
         return $this->canEdit($user, $task->project);
     }
 
     /** Comment: project_admin, editor, or commenter */
     public function comment(User $user, Task $task): bool
     {
+        // Personal tasks (no project): only assignee or creator can comment
+        if ($task->project === null) {
+            return $user->id === $task->assignee_id || $user->id === $task->creator_id;
+        }
+
         return in_array($this->memberRole($user, $task->project), [
             ProjectMember::ROLE_PROJECT_ADMIN,
             ProjectMember::ROLE_EDITOR,

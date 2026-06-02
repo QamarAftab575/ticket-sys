@@ -30,7 +30,8 @@ class CustomFieldService
         $this->validateName($data['name'] ?? '');
         $this->validateType($data['field_type'] ?? '');
         $options  = $this->normalizeOptions($data['field_type'], $data['options'] ?? null);
-        $position = CustomField::forProject($project->id)->max('position') + 1;
+        $maxPosition = CustomField::forProject($project->id)->max('position');
+        $position = $maxPosition !== null ? $maxPosition + 1 : 0;
 
         return CustomField::create([
             'project_id' => $project->id,
@@ -72,7 +73,8 @@ class CustomFieldService
         $this->validateName($data['name'] ?? '');
         $this->validateType($data['field_type'] ?? '');
         $options = $this->normalizeOptions($data['field_type'], $data['options'] ?? null);
-        $position = CustomField::forUser($user->id)->max('position') + 1;
+        $maxPosition = CustomField::forUser($user->id)->max('position');
+        $position = $maxPosition !== null ? $maxPosition + 1 : 0;
 
         return CustomField::create([
             'project_id'  => null,

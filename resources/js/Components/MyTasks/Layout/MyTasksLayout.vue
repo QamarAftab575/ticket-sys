@@ -30,13 +30,7 @@
               </button>
             </div>
           </div>
-          <button
-            @click="showCreateForm = true"
-            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            <PlusIcon class="w-5 h-5 mr-2" />
-            Add Task
-          </button>
+          <!-- Removed Add Task button - use inline creation in sections instead -->
         </div>
       </div>
 
@@ -64,6 +58,7 @@
             :sections="myTasksStore.sections"
             :collapsed-sections="myTasksStore.collapsedSections"
             :is-loading="myTasksStore.loading"
+            :workspace-members="workspaceMembers"
             @select-task="handleTaskSelect"
             @task-completed="handleTaskComplete"
             @task-created="handleTaskCreatedInline"
@@ -117,13 +112,7 @@
       @task-update="handleTaskUpdate"
     />
 
-    <!-- Create Task Modal -->
-    <TaskCreateForm
-      v-if="showCreateForm"
-      :project-id="null"
-      @close="showCreateForm = false"
-      @task-created="handleTaskCreated"
-    />
+    <!-- Removed Task Create Modal - use inline creation instead -->
   </div>
 </template>
 
@@ -139,7 +128,7 @@ import MyTasksBoardView from '@/Components/MyTasks/Views/MyTasksBoardView.vue';
 import MyTasksCalendarView from '@/Components/MyTasks/Views/MyTasksCalendarView.vue';
 import MyTasksFilesView from '@/Components/MyTasks/Views/MyTasksFilesView.vue';
 import TaskDetailSidebar from '@/Components/Tasks/Sidebar/TaskDetailSidebar.vue';
-import TaskCreateForm from '@/Components/Tasks/Forms/TaskCreateForm.vue';
+// Removed TaskCreateForm import - using inline creation only
 
 interface Props {
   savedPreferences?: {
@@ -150,15 +139,16 @@ interface Props {
     filters?: any | null;
   } | null;
   myTasksSections?: Array<{ id: string; name: string; position: number }>;
+  workspaceMembers?: any[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   savedPreferences: null,
   myTasksSections: () => [],
+  workspaceMembers: () => [],
 });
 
 const myTasksStore = useMyTasksStore();
-const showCreateForm = ref(false);
 const currentView = ref<'list' | 'board' | 'calendar' | 'files'>('list');
 
 // View options with icons
@@ -270,9 +260,16 @@ async function handleTaskDelete(taskId: string) {
 
 async function handleTaskMove(data: any) {
   try {
-    await myTasksStore.moveTask(data.taskId, data.toSectionId || data.sectionId || 'to_do', data.position || 0);
+    const sectionId = data.toSectionId || data.sectionId;
+    if (!sectionId) {
+      console.error('No section ID provided for task move');
+      return;
+    }
+    await myTasksStore.moveTask(data.taskId, sectionId, data.position ?? 0);
   } catch (err) {
     console.error('Error moving task:', err);
+    // Refresh tasks on error to ensure consistency
+    await myTasksStore.fetchTasks();
   }
 }
 
@@ -310,31 +307,14 @@ async function handleTaskUpdate() {
   }
 }
 
-async function handleTaskCreated() {
-  showCreateForm.value = false;
-  await myTasksStore.fetchTasks();
-}
+// Removed handleTaskCreated - using inline creation only
 
 async function handleTaskCreatedInline(data: any) {
   try {
-    const response = await fetch('/my-tasks/api/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-      },
-      body: JSON.stringify({
-        name: data.name,
-        status: data.section_id || 'to_do',
-      }),
+    await myTasksStore.createTask({
+      name: data.name,
+      section_id: data.section_id,
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    await myTasksStore.fetchTasks();
   } catch (err) {
     console.error('Error creating task:', err);
   }

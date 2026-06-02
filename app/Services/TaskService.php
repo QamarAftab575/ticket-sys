@@ -36,21 +36,51 @@ class TaskService
         }
 
         return DB::transaction(function () use ($project, $data, $creator) {
+            // Determine assignee
+            $assigneeId = $data['assignee_id'] ?? $creator->id;
+            
+            // For project tasks, my_tasks_section_id should be NULL initially
+            // It will be auto-assigned when the assignee visits My Tasks
+            $myTasksSectionId = null;
+            $myTasksPosition = null;
+            
+            // Only set My Tasks section if explicitly provided (e.g., from My Tasks page)
+            // Otherwise, leave NULL for auto-assignment
+            if (isset($data['my_tasks_section_id'])) {
+                $myTasksSectionId = $data['my_tasks_section_id'];
+                $myTasksPosition = $data['my_tasks_position'] ?? 0;
+            }
+            
+            // Calculate position if not provided (zero-based indexing)
+            $position = $data['position'] ?? null;
+            if ($position === null) {
+                $sectionId = $data['section_id'] ?? null;
+                if ($sectionId !== null) {
+                    $maxPosition = Task::where('section_id', $sectionId)->max('position');
+                    $position = $maxPosition !== null ? $maxPosition + 1 : 0;
+                } else {
+                    // No section specified, use 0
+                    $position = 0;
+                }
+            }
+            
             $task = Task::create([
-                'project_id'     => $project->id,
-                'name'           => $data['name'],
-                'description'    => $data['description'] ?? null,
-                'assignee_id'    => $data['assignee_id'] ?? $creator->id,
-                'creator_id'     => $creator->id,
-                'status'         => $data['status'] ?? 'to_do',
-                'priority'       => $data['priority'] ?? 'medium',
-                'visibility'     => $data['visibility'] ?? 'everyone',
-                'section_id'     => $data['section_id'] ?? null,
-                'parent_task_id' => $data['parent_task_id'] ?? null,
-                'start_date'     => $data['start_date'] ?? null,
-                'due_date'       => $data['due_date'] ?? null,
-                'is_milestone'   => $data['is_milestone'] ?? false,
-                'position'       => $data['position'] ?? 0,
+                'project_id'          => $project->id,
+                'name'                => $data['name'],
+                'description'         => $data['description'] ?? null,
+                'assignee_id'         => $assigneeId,
+                'creator_id'          => $creator->id,
+                'status'              => $data['status'] ?? 'to_do',
+                'priority'            => $data['priority'] ?? 'medium',
+                'visibility'          => $data['visibility'] ?? 'everyone',
+                'section_id'          => $data['section_id'] ?? null,
+                'parent_task_id'      => $data['parent_task_id'] ?? null,
+                'start_date'          => $data['start_date'] ?? null,
+                'due_date'            => $data['due_date'] ?? null,
+                'is_milestone'        => $data['is_milestone'] ?? false,
+                'position'            => $position,
+                'my_tasks_section_id' => $myTasksSectionId,
+                'my_tasks_position'   => $myTasksPosition,
             ]);
 
             // Log task creation activity
@@ -306,8 +336,8 @@ class TaskService
      */
     public function assignTask(Task $task, ?User $assignee): Task
     {
-        // Validate that assignee is a member of the task's project (if assignee is not null)
-        if ($assignee !== null) {
+        // Validate that assignee is a member of the task's project (if task has a project and assignee is not null)
+        if ($assignee !== null && $task->project !== null) {
             $isMember = $task->project->hasMember($assignee);
             
             if (!$isMember) {
@@ -656,46 +686,53 @@ class TaskService
     public function moveTask(Task $task, Section $section, ?int $position = null): Task
     {
         return DB::transaction(function () use ($task, $section, $position) {
-            // Store old section for activity logging
             $oldSectionId = $task->section_id;
             $oldPosition = $task->position;
+            $isSameSection = $oldSectionId === $section->id;
 
-            // If moving to a different section or changing position
-            if ($oldSectionId !== $section->id || ($position !== null && $position !== $oldPosition)) {
-                // Get all tasks in the target section (excluding the current task)
-                $targetSectionTasks = Task::where('section_id', $section->id)
-                    ->where('id', '!=', $task->id)
-                    ->orderBy('position')
-                    ->get();
+            // If no position specified, append to end (zero-based indexing)
+            if ($position === null) {
+                $maxPosition = Task::where('section_id', $section->id)->max('position');
+                $position = $maxPosition !== null ? $maxPosition + 1 : 0;
+            }
 
-                // If position is specified, shift other tasks
-                if ($position !== null) {
-                    // Shift tasks at or after the target position
-                    foreach ($targetSectionTasks as $index => $otherTask) {
-                        if ($index >= $position) {
-                            $otherTask->update(['position' => $index + 1]);
-                        } else {
-                            $otherTask->update(['position' => $index]);
-                        }
-                    }
-                } else {
-                    // No position specified, append to end
-                    $position = $targetSectionTasks->count();
+            // If moving within the same section, shift affected tasks
+            if ($isSameSection && $oldPosition !== null) {
+                if ($position < $oldPosition) {
+                    // Moving up: increment positions between new and old position
+                    Task::where('section_id', $section->id)
+                        ->where('id', '!=', $task->id)
+                        ->whereBetween('position', [$position, $oldPosition - 1])
+                        ->increment('position');
+                } elseif ($position > $oldPosition) {
+                    // Moving down: decrement positions between old and new position
+                    Task::where('section_id', $section->id)
+                        ->where('id', '!=', $task->id)
+                        ->whereBetween('position', [$oldPosition + 1, $position])
+                        ->decrement('position');
                 }
+            } else {
+                // Moving to a different section
+                if ($oldSectionId !== null && $oldPosition !== null) {
+                    // Decrement positions in old section for tasks after the moved task
+                    Task::where('section_id', $oldSectionId)
+                        ->where('id', '!=', $task->id)
+                        ->where('position', '>', $oldPosition)
+                        ->decrement('position');
+                }
+
+                // Increment positions in new section for tasks at or after the new position
+                Task::where('section_id', $section->id)
+                    ->where('id', '!=', $task->id)
+                    ->where('position', '>=', $position)
+                    ->increment('position');
             }
 
-            // Prepare update data
-            $updateData = [
+            // Update the task with new section and position
+            $task->update([
                 'section_id' => $section->id,
-            ];
-
-            // Add position if provided or calculated
-            if ($position !== null) {
-                $updateData['position'] = $position;
-            }
-
-            // Update the task
-            $task->update($updateData);
+                'position' => $position,
+            ]);
 
             // Log section change activity if section changed
             if ($oldSectionId !== $section->id) {
@@ -714,6 +751,82 @@ class TaskService
     }
 
     /**
+     * Move a task within My Tasks view (independent from project section).
+     */
+    public function moveTaskInMyTasks(Task $task, Section $myTasksSection, ?int $position = null): Task
+    {
+        return DB::transaction(function () use ($task, $myTasksSection, $position) {
+            $oldMyTasksSectionId = $task->my_tasks_section_id;
+            $oldPosition = $task->my_tasks_position;
+            $isSameSection = $oldMyTasksSectionId === $myTasksSection->id;
+
+            // If no position specified, append to end (zero-based indexing)
+            if ($position === null) {
+                $maxPosition = Task::where('my_tasks_section_id', $myTasksSection->id)
+                    ->where('assignee_id', $task->assignee_id)
+                    ->max('my_tasks_position');
+                $position = $maxPosition !== null ? $maxPosition + 1 : 0;
+            }
+
+            // If moving within the same section, shift affected tasks
+            if ($isSameSection && $oldPosition !== null) {
+                if ($position < $oldPosition) {
+                    // Moving up: increment positions between new and old position
+                    Task::where('my_tasks_section_id', $myTasksSection->id)
+                        ->where('assignee_id', $task->assignee_id)
+                        ->where('id', '!=', $task->id)
+                        ->whereBetween('my_tasks_position', [$position, $oldPosition - 1])
+                        ->increment('my_tasks_position');
+                } elseif ($position > $oldPosition) {
+                    // Moving down: decrement positions between old and new position
+                    Task::where('my_tasks_section_id', $myTasksSection->id)
+                        ->where('assignee_id', $task->assignee_id)
+                        ->where('id', '!=', $task->id)
+                        ->whereBetween('my_tasks_position', [$oldPosition + 1, $position])
+                        ->decrement('my_tasks_position');
+                }
+            } else {
+                // Moving to a different section
+                if ($oldMyTasksSectionId !== null && $oldPosition !== null) {
+                    // Decrement positions in old section for tasks after the moved task
+                    Task::where('my_tasks_section_id', $oldMyTasksSectionId)
+                        ->where('assignee_id', $task->assignee_id)
+                        ->where('id', '!=', $task->id)
+                        ->where('my_tasks_position', '>', $oldPosition)
+                        ->decrement('my_tasks_position');
+                }
+
+                // Increment positions in new section for tasks at or after the new position
+                Task::where('my_tasks_section_id', $myTasksSection->id)
+                    ->where('assignee_id', $task->assignee_id)
+                    ->where('id', '!=', $task->id)
+                    ->where('my_tasks_position', '>=', $position)
+                    ->increment('my_tasks_position');
+            }
+
+            // Update the task with new section and position
+            $task->update([
+                'my_tasks_section_id' => $myTasksSection->id,
+                'my_tasks_position' => $position,
+            ]);
+
+            // Log My Tasks section change activity if section changed
+            if ($oldMyTasksSectionId !== $myTasksSection->id) {
+                TaskActivity::create([
+                    'task_id' => $task->id,
+                    'user_id' => auth()->id(),
+                    'activity_type' => 'updated',
+                    'field_name' => 'my_tasks_section_id',
+                    'old_value' => $oldMyTasksSectionId,
+                    'new_value' => $myTasksSection->id,
+                ]);
+            }
+
+            return $task->fresh();
+        });
+    }
+
+    /**
      * Reposition a task within the same section.
      */
     public function repositionTask(Task $task, ?int $position = null): Task
@@ -723,21 +836,25 @@ class TaskService
         }
 
         return DB::transaction(function () use ($task, $position) {
-            // Get all tasks in the same section (excluding current task)
-            $sectionTasks = Task::where('section_id', $task->section_id)
-                ->where('id', '!=', $task->id)
-                ->orderBy('position')
-                ->get();
-            
-            // Shift other tasks
-            foreach ($sectionTasks as $index => $otherTask) {
-                if ($index >= $position) {
-                    $otherTask->update(['position' => $index + 1]);
-                } else {
-                    $otherTask->update(['position' => $index]);
+            $oldPosition = $task->position;
+
+            // Only shift if position actually changed
+            if ($oldPosition !== null && $oldPosition !== $position) {
+                if ($position < $oldPosition) {
+                    // Moving up: increment positions between new and old position
+                    Task::where('section_id', $task->section_id)
+                        ->where('id', '!=', $task->id)
+                        ->whereBetween('position', [$position, $oldPosition - 1])
+                        ->increment('position');
+                } elseif ($position > $oldPosition) {
+                    // Moving down: decrement positions between old and new position
+                    Task::where('section_id', $task->section_id)
+                        ->where('id', '!=', $task->id)
+                        ->whereBetween('position', [$oldPosition + 1, $position])
+                        ->decrement('position');
                 }
             }
-            
+
             // Update the task position
             $task->update(['position' => $position]);
             

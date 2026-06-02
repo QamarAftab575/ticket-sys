@@ -132,9 +132,14 @@ class CommentService
             return true;
         }
 
-        // User is a project manager
+        // User is a project manager (only for project tasks)
         $task = $comment->task;
         $project = $task->project;
+
+        // Personal tasks (no project): only task owner can delete comments
+        if ($project === null) {
+            return $task->creator_id === $user->id || $task->assignee_id === $user->id;
+        }
 
         return $project->isManager($user);
     }

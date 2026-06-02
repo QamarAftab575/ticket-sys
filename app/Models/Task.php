@@ -31,6 +31,8 @@ class Task extends Model
         'completed_by',
         'is_milestone',
         'position',
+        'my_tasks_section_id',
+        'my_tasks_position',
     ];
 
     protected $casts = [
@@ -39,6 +41,7 @@ class Task extends Model
         'completed_at' => 'datetime',
         'is_milestone' => 'boolean',
         'position' => 'integer',
+        'my_tasks_position' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -53,11 +56,19 @@ class Task extends Model
     }
 
     /**
-     * Get the section that owns the task.
+     * Get the section that owns the task (project section).
      */
     public function section(): BelongsTo
     {
         return $this->belongsTo(Section::class);
+    }
+
+    /**
+     * Get the My Tasks section for this task.
+     */
+    public function myTasksSection(): BelongsTo
+    {
+        return $this->belongsTo(Section::class, 'my_tasks_section_id');
     }
 
     /**

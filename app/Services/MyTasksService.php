@@ -19,32 +19,126 @@ class MyTasksService
         int $page = 1,
         int $perPage = 50
     ): array {
-        $query = Task::where('assignee_id', $user->id)
+        // Get user's My Tasks section IDs
+        $myTasksSectionIds = \App\Models\Section::myTasks($user->id)->pluck('id')->toArray();
+
+        // Show tasks that are either:
+        // 1. Assigned to the user (from any project or My Tasks)
+        // 2. Created by the user in My Tasks sections (even if not assigned)
+        $query = Task::where(function ($q) use ($user, $myTasksSectionIds) {
+                // Condition 1: All tasks assigned to the user
+                $q->where('assignee_id', $user->id)
+                  // Condition 2: Tasks created by user in My Tasks sections
+                  ->orWhere(function ($subQ) use ($user, $myTasksSectionIds) {
+                      $subQ->where('creator_id', $user->id)
+                           ->whereIn('my_tasks_section_id', $myTasksSectionIds)
+                           ->whereNotNull('my_tasks_section_id');
+                  });
+            })
+            ->select([
+                'tasks.id',
+                'tasks.name',
+                'tasks.description',
+                'tasks.status',
+                'tasks.priority',
+                'tasks.section_id',
+                'tasks.my_tasks_section_id',
+                'tasks.project_id',
+                'tasks.assignee_id',
+                'tasks.creator_id',
+                'tasks.completed_by',
+                'tasks.start_date',
+                'tasks.due_date',
+                'tasks.completed_at',
+                'tasks.position',
+                'tasks.my_tasks_position',
+                'tasks.is_milestone',
+                'tasks.created_at',
+                'tasks.updated_at',
+            ])
             ->with([
                 'assignee:id,name,email,avatar',
                 'creator:id,name,email,avatar',
                 'completedBy:id,name,email,avatar',
                 'project:id,name,color,icon',
+                'project.members' => function ($query) {
+                    $query->select('users.id', 'users.name', 'users.email', 'users.avatar');
+                },
                 'section:id,name',
-                'dependencies:id,name,status',
-                'dependents:id,name,status',
-                'customFieldValues:id,task_id,custom_field_id,value',
+                'myTasksSection:id,name',
             ])
             ->withCount('subtasks');
 
         $query = $this->applyFilters($query, $filters);
         $query = $this->applySortRules($query, $sort);
 
-        // Default sort by due date if no sort specified
+        // Default sort by My Tasks section and position if no sort specified
+        // Tasks without my_tasks_section_id (project tasks) go to "Recently Assigned" section
         if (empty($sort)) {
-            $query->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
-                  ->orderBy('due_date', 'asc')
-                  ->orderBy('created_at', 'desc');
+            // Get the "Recently Assigned" section ID for this user (or first section)
+            $recentlyAssignedSection = \App\Models\Section::myTasks($user->id)
+                ->where(function($q) {
+                    $q->where('name', 'Recently Assigned')
+                      ->orWhere('position', 0);
+                })
+                ->orderBy('position')
+                ->first();
+            
+            if ($recentlyAssignedSection) {
+                $recentlyAssignedId = $recentlyAssignedSection->id;
+                
+                // Sort: NULL my_tasks_section_id treated as "Recently Assigned"
+                $query->orderByRaw("COALESCE(my_tasks_section_id, '{$recentlyAssignedId}') ASC")
+                      ->orderByRaw('COALESCE(my_tasks_position, 999999) ASC')
+                      ->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
+                      ->orderBy('due_date', 'asc')
+                      ->orderBy('created_at', 'desc');
+            } else {
+                // Fallback if no sections exist yet
+                $query->orderByRaw('COALESCE(my_tasks_position, 999999) ASC')
+                      ->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
+                      ->orderBy('due_date', 'asc')
+                      ->orderBy('created_at', 'desc');
+            }
         }
 
         $paginated = $query->paginate($perPage, ['*'], 'page', $page);
 
         $items = $paginated->items();
+        
+        // Auto-assign My Tasks section for tasks that don't have one
+        // First, ensure the user has My Tasks sections (create defaults if needed)
+        $myTasksSections = \App\Models\Section::myTasks($user->id)->orderBy('position')->get();
+        
+        if ($myTasksSections->isEmpty()) {
+            // Create default sections if they don't exist
+            $sectionService = app(\App\Services\MyTasksSectionService::class);
+            $myTasksSections = $sectionService->createDefaultSections($user);
+        }
+        
+        // Get the "Recently Assigned" section (or first section as fallback)
+        $recentlyAssignedSection = $myTasksSections->first();
+        
+        if ($recentlyAssignedSection) {
+            foreach ($items as $task) {
+                if (!$task->my_tasks_section_id && $task->assignee_id === $user->id) {
+                    // Get max position in Recently Assigned section
+                    $maxPosition = Task::where('my_tasks_section_id', $recentlyAssignedSection->id)
+                        ->where('assignee_id', $user->id)
+                        ->max('my_tasks_position');
+                    
+                    // Update task with My Tasks section
+                    $task->update([
+                        'my_tasks_section_id' => $recentlyAssignedSection->id,
+                        'my_tasks_position' => $maxPosition !== null ? $maxPosition + 1 : 0,
+                    ]);
+                    
+                    // Reload the relationship
+                    $task->load('myTasksSection:id,name');
+                }
+            }
+        }
+        
         $grouped = $grouping ? $this->groupTasks($items, $grouping) : null;
 
         return [
@@ -234,22 +328,49 @@ class MyTasksService
      */
     public function createTask(User $user, array $data): Task
     {
+        // Get the target My Tasks section
+        $myTasksSectionId = $data['section_id'] ?? null;
+        $myTasksPosition = 0;
+
+        if ($myTasksSectionId) {
+            // Get the highest position in the My Tasks section (zero-based indexing)
+            $maxPosition = Task::where('my_tasks_section_id', $myTasksSectionId)
+                ->where('assignee_id', $user->id)
+                ->max('my_tasks_position');
+            $myTasksPosition = $maxPosition !== null ? $maxPosition + 1 : 0;
+        } else {
+            // If no section given, assign to first My Tasks section
+            $firstSection = \App\Models\Section::myTasks($user->id)->orderBy('position')->first();
+            $myTasksSectionId = $firstSection?->id;
+            
+            if ($myTasksSectionId) {
+                $maxPosition = Task::where('my_tasks_section_id', $myTasksSectionId)
+                    ->where('assignee_id', $user->id)
+                    ->max('my_tasks_position');
+                $myTasksPosition = $maxPosition !== null ? $maxPosition + 1 : 0;
+            }
+        }
+
         $task = Task::create([
-            'name'        => $data['name'],
-            'status'      => $data['status'] ?? 'to_do',
-            'priority'    => $data['priority'] ?? null,
-            'due_date'    => $data['due_date'] ?? null,
-            'description' => $data['description'] ?? null,
-            'section_id'  => $data['section_id'] ?? null,
-            'assignee_id' => $user->id,
-            'creator_id'  => $user->id,
-            'project_id'  => null,
+            'name'                 => $data['name'],
+            'status'               => $data['status'] ?? 'to_do',
+            'priority'             => $data['priority'] ?? null,
+            'due_date'             => $data['due_date'] ?? null,
+            'description'          => $data['description'] ?? null,
+            'section_id'           => null,  // No project section initially
+            'my_tasks_section_id'  => $myTasksSectionId,
+            'assignee_id'          => $user->id,
+            'creator_id'           => $user->id,
+            'project_id'           => $data['project_id'] ?? null,
+            'position'             => 0,  // Default position (zero-based indexing)
+            'my_tasks_position'    => $myTasksPosition,
         ]);
 
         return $task->load([
             'assignee:id,name,email,avatar',
             'creator:id,name,email,avatar',
             'section:id,name',
+            'myTasksSection:id,name',
             'project:id,name,color,icon',
         ]);
     }

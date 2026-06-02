@@ -18,9 +18,9 @@ class SectionService
         $this->validateSectionName($data['name'] ?? '');
 
         return DB::transaction(function () use ($project, $data) {
-            // Get the next position for this project
-            $maxPosition = $project->sections()->max('position') ?? -1;
-            $nextPosition = $maxPosition + 1;
+            // Get the next position for this project (zero-based indexing)
+            $maxPosition = $project->sections()->max('position');
+            $nextPosition = $maxPosition !== null ? $maxPosition + 1 : 0;
 
             $section = Section::create([
                 'project_id' => $project->id,
