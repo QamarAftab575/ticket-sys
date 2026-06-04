@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
                     'utc_offset_minutes' => $user->utc_offset_minutes,
                     'email_verified_at'  => $user->email_verified_at,
                     'is_admin'           => $user->is_admin ?? false,
+                    'active_workspace_id' => $user->active_workspace_id,
                 ] : null,
             ],
             'sidebarProjects' => $user ? \App\Models\Project::visibleTo($user)

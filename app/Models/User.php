@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -33,6 +34,7 @@ class User extends Authenticatable
         'is_suspended',
         'last_login_at',
         'must_set_password',
+        'active_workspace_id',
     ];
 
     /**
@@ -341,5 +343,13 @@ class User extends Authenticatable
     public function scopeUnverified($query)
     {
         return $query->whereNull('email_verified_at');
+    }
+
+    /**
+     * Get API tokens for this user
+     */
+    public function apiTokens(): HasMany
+    {
+        return $this->hasMany(ApiToken::class);
     }
 }

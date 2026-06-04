@@ -1,0 +1,666 @@
+openapi: 3.1.0
+info:
+  title: Asana-like Project Management API
+  version: 1.0.0
+  description: |
+    Complete REST API for project management system with workspaces, projects, tasks, custom fields, and more.
+    
+    ## Authentication
+    
+    This API uses API token authentication. Include your token in requests using one of these methods:
+    
+    1. **Bearer Token** (recommended): `Authorization: Bearer {token}`
+    2. **Custom Header**: `X-API-Token: {token}`
+    3. **Query Parameter**: `?api_token={token}`
+    
+    ## Rate Limiting
+    
+    - Login endpoints: 5 attempts per 15 minutes
+    - Other endpoints: Standard Laravel throttling applies
+    
+    ## Invitation-Only Registration
+    
+    **Important**: Users cannot self-register via the API. Users can only join through:
+    - Workspace invitations
+    - Project invitations
+    
+    ## Error Responses
+    
+    All error responses follow this format:
+    ```json
+    {
+      "message": "Error description",
+      "errors": {
+        "field": ["Error details"]
+      }
+    }
+    ```
+    
+  contact:
+    name: API Support
+    email: support@yourapp.com
+  license:
+    name: MIT
+    
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development
+  - url: https://api.yourapp.com/v1
+    description: Production
+
+tags:
+  - name: Authentication
+    description: User authentication and token management
+  - name: SSO
+    description: Single Sign-On with JWT tokens
+  - name: Users
+    description: User profile and search operations
+  - name: Workspaces
+    description: Workspace (Organization) management and member invitations
+  - name: Projects
+    description: Project creation, management, and member operations
+  - name: Tasks
+    description: Task CRUD, dependencies, subtasks, and activities
+  - name: Custom Fields
+    description: Custom field management for projects
+  - name: Comments
+    description: Task comments
+  - name: Attachments
+    description: File uploads and attachments
+
+security:
+  - BearerAuth: []
+  - ApiKeyAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Token
+      description: API token obtained from login endpoint
+      
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Token
+      description: Alternative API token authentication
+      
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "9d3e4b1a-7f8c-4d2e-9a1b-3c4d5e6f7a8b"
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+        avatar:
+          type: string
+          nullable: true
+          example: "https://avatar.example.com/john.jpg"
+        timezone:
+          type: string
+          nullable: true
+          example: "America/New_York"
+        email_verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_login_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Engineering Team"
+        description:
+          type: string
+          nullable: true
+          example: "Main engineering workspace"
+        types:
+          type: string
+          nullable: true
+        avatar_color:
+          type: string
+          example: "#3B82F6"
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Website Redesign"
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [on_track, at_risk, off_track, complete]
+        visibility:
+          type: string
+          enum: [public_to_team, public_to_organization, private]
+        privacy:
+          type: string
+          enum: [public_to_team, private, specific_members]
+        color:
+          type: string
+          nullable: true
+        icon:
+          type: string
+          nullable: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        target_date:
+          type: string
+          format: date
+          nullable: true
+        archived_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Design homepage mockup"
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [not_started, in_progress, completed]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          nullable: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        position:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    CustomField:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        project_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Priority Level"
+        type:
+          type: string
+          enum: [text, number, date, dropdown, checkbox, url]
+        description:
+          type: string
+          nullable: true
+        options:
+          type: array
+          items:
+            type: string
+          nullable: true
+          example: ["Low", "Medium", "High"]
+        is_required:
+          type: boolean
+        is_active:
+          type: boolean
+        order:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        task_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        task_id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+          example: "design-mockup.pdf"
+        mime_type:
+          type: string
+          example: "application/pdf"
+        size:
+          type: integer
+          example: 1024000
+        url:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+          
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Validation failed"
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email: ["The email field is required."]
+            password: ["The password must be at least 8 characters."]
+
+  responses:
+    Unauthorized:
+      description: Unauthenticated - Invalid or missing API token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthenticated"
+              error:
+                type: string
+                example: "Missing or invalid API token"
+                
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Forbidden"
+                
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Resource not found"
+                
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+            
+    TooManyRequests:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Too many requests. Please try again later."
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register (Disabled)
+      description: |
+        **This endpoint is disabled.** Users cannot self-register via API.
+        
+        Users can only join through workspace or project invitations.
+      security: []
+      responses:
+        '403':
+          description: Registration disabled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Registration is not available via API"
+                  error:
+                    type: string
+                    example: "Users can only join through workspace or project invitations"
+                    
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login
+      description: |
+        Authenticate with email and password to receive an API token.
+        
+        The token should be used in all subsequent requests via the `Authorization: Bearer {token}` header.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "john@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "Password123"
+                  minLength: 8
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Login successful"
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid credentials"
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+          
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout
+      description: Revoke the current API token
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logout successful"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+          
+  /auth/refresh-token:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh Token
+      description: |
+        Revoke the current token and generate a new one.
+        
+        Use this to rotate tokens periodically for security.
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Token refreshed successfully"
+                  token:
+                    type: string
+                    example: "new-token-here"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+          
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Get Current User
+      description: Retrieve the authenticated user's profile
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+          
+    put:
+      tags:
+        - Users
+      summary: Update Profile
+      description: Update the authenticated user's profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                avatar:
+                  type: string
+                  format: uri
+                  nullable: true
+                timezone:
+                  type: string
+                  nullable: true
+                  example: "America/New_York"
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Profile updated successfully"
+                  data:
+                    $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+          
+  /workspaces:
+    get:
+      tags:
+        - Workspaces
+      summary: List Workspaces
+      description: Get all workspaces the authenticated user is a member of
+      responses:
+        '200':
+          description: List of workspaces
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Workspace'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+          
+    post:
+      tags:
+        - Workspaces
+      summary: Create Workspace
+      description: Create a new workspace. The creator is automatically added as owner.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: "Engineering Team"
+                description:
+                  type: string
+                  nullable: true
+                types:
+                  type: string
+                  nullable: true
+                avatar_color:
+                  type: string
+                  example: "#3B82F6"
+                  pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+      responses:
+        '201':
+          description: Workspace created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Workspace created successfully"
+                  data:
+                    $ref: '#/components/schemas/Workspace'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+# Note: This is a partial OpenAPI spec showing the structure.
+# The complete spec would include all 71 endpoints with full documentation.
+# Scramble will auto-generate the complete spec from the controllers.

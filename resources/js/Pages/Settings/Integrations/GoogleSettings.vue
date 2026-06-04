@@ -1,9 +1,5 @@
 <template>
-  <AuthenticatedLayout>
-    <template #header>
-      <h2 class="text-2xl font-bold">Google Social Login Settings</h2>
-    </template>
-
+  <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace" :user-role="userRole">
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -34,6 +30,17 @@
                   ]"
                 >
                   Google Social Login
+                </Link>
+                <Link
+                  href="/settings/integrations/tokens"
+                  :class="[
+                    'block px-4 py-2 rounded-lg font-medium transition-colors ml-2',
+                    isActive('/settings/integrations/tokens') 
+                      ? 'bg-blue-50 text-blue-600' 
+                      : 'text-gray-700 hover:bg-gray-50'
+                  ]"
+                >
+                  Access Tokens
                 </Link>
               </div>
             </div>
@@ -193,19 +200,22 @@
         </div>
       </div>
     </div>
-  </AuthenticatedLayout>
+  </AppLayout>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
 import { Link } from '@inertiajs/vue3'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 
 const page = usePage()
 
 const props = defineProps({
-  status: Object
+  status: Object,
+  userWorkspaces: Array,
+  currentWorkspace: Object,
+  userRole: String,
 })
 
 const callbackUrl = computed(() => {

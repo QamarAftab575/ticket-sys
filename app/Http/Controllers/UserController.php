@@ -37,4 +37,37 @@ class UserController extends Controller
             'data' => $users
         ]);
     }
+
+    /**
+     * Store the user's active workspace preference.
+     */
+    public function setActiveWorkspace(Request $request)
+    {
+        $request->validate([
+            'workspace_id' => 'required|exists:organizations,id',
+        ]);
+
+        $user = auth()->user();
+        
+        // Verify user has access to this workspace
+        $hasAccess = $user->organizationMemberships()
+            ->where('organization_id', $request->workspace_id)
+            ->exists();
+
+        if (!$hasAccess) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        // Store in user metadata
+        $user->update([
+            'active_workspace_id' => $request->workspace_id,
+        ]);
+
+        return response()->json([
+            'message' => 'Active workspace updated successfully',
+            'workspace_id' => $request->workspace_id,
+        ]);
+    }
 }

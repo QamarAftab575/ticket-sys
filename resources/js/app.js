@@ -6,6 +6,7 @@ import { createPinia } from 'pinia';
 import Vue3Toastify from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import 'tippy.js/dist/tippy.css';
+import { setupCacheInvalidation } from '@/Composables/useCacheInvalidation';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Asira';
 
@@ -24,6 +25,9 @@ createInertiaApp({
                 theme: 'light',
             })
             .mount(el);
+        
+        // Initialize cache invalidation on app start
+        setupCacheInvalidation();
     },
     progress: {
         color: '#4f46e5',

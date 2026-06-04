@@ -277,26 +277,6 @@
           </div>
         </div>
 
-        <!-- Work Tab -->
-        <div v-if="activeTab === 'work'" class="bg-white rounded-lg shadow p-6">
-          <p class="text-gray-600">Work view coming soon...</p>
-        </div>
-
-        <!-- Messages Tab -->
-        <div v-if="activeTab === 'messages'" class="bg-white rounded-lg shadow p-6">
-          <p class="text-gray-600">Messages coming soon...</p>
-        </div>
-
-        <!-- Calendar Tab -->
-        <div v-if="activeTab === 'calendar'" class="bg-white rounded-lg shadow p-6">
-          <p class="text-gray-600">Calendar coming soon...</p>
-        </div>
-
-        <!-- Knowledge Tab -->
-        <div v-if="activeTab === 'knowledge'" class="bg-white rounded-lg shadow p-6">
-          <p class="text-gray-600">Knowledge base coming soon...</p>
-        </div>
-
         <!-- Settings Tab -->
         <div v-if="activeTab === 'settings'" class="space-y-6">
           <!-- Danger Zone -->
@@ -455,10 +435,6 @@ const confirmDelete = () => {
 const tabs = [
   { id: 'overview', label: 'Overview' },
   { id: 'members', label: 'Members' },
-  { id: 'work', label: 'Work' },
-  { id: 'messages', label: 'Messages' },
-  { id: 'calendar', label: 'Calendar' },
-  { id: 'knowledge', label: 'Knowledge' },
   ...(props.userRole === 'owner' ? [{ id: 'settings', label: 'Settings' }] : []),
 ]
 

@@ -11,6 +11,7 @@
     <AppSidebar
       :current-route="currentRoute"
       :user-workspaces="userWorkspaces"
+      :current-workspace-id="currentWorkspaceId"
       :user-role="userRole"
       :mobile-open="mobileOpen"
       @close="mobileOpen = false"
@@ -41,16 +42,21 @@ import { usePage } from '@inertiajs/vue3'
 import AppSidebar from '@/Components/Layout/AppSidebar.vue'
 import AppHeader from '@/Components/Layout/AppHeader.vue'
 import InviteModal from '@/Components/Workspace/InviteModal.vue'
+import { useSidebarData } from '@/Composables/useSidebarData'
 
 const page = usePage()
 const showInviteModal = ref(false)
 const mobileOpen = ref(false)
 
+// Optional props for backward compatibility
 defineProps({
   userWorkspaces: Array,
   currentWorkspace: Object,
   userRole: String,
 })
+
+// Use composable for independent data loading
+const { userWorkspaces, currentWorkspaceId, currentWorkspace } = useSidebarData()
 
 const currentRoute = computed(() => {
   const url = page.url

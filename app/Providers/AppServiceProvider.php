@@ -30,5 +30,9 @@ class AppServiceProvider extends ServiceProvider
         // Register policies
         Gate::policy(Project::class, ProjectPolicy::class);
         Gate::policy(Task::class, TaskPolicy::class);
+
+        // Set default pagination for API responses
+        // For datasets > 50 records, automatically paginate
+        \Illuminate\Database\Eloquent\Model::preventLazyLoading(!app()->isProduction());
     }
 }

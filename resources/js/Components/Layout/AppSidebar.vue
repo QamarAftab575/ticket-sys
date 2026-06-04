@@ -45,30 +45,13 @@
     <div v-if="userWorkspaces && userWorkspaces.length > 0"
       :class="['border-b border-gray-100 py-3 transition-all duration-300', collapsed ? 'px-2' : 'px-3']"
     >
-      <p v-if="!collapsed" class="px-2 mb-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Workspace</p>
-      <div class="space-y-0.5">
-        <Link
-          v-for="ws in userWorkspaces" :key="ws.id"
-          :href="`/workspace/${ws.id}/dashboard`"
-          @click="$emit('close')"
-          :title="collapsed ? ws.name : ''"
-          :class="[
-            'group relative flex items-center gap-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all duration-150',
-            collapsed ? 'justify-center p-2.5' : 'px-2.5 py-2'
-          ]"
-        >
-          <span class="shrink-0 w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-xs font-bold uppercase shadow-sm">
-            {{ ws.name?.charAt(0) }}
-          </span>
-          <span v-if="!collapsed" class="truncate">{{ ws.name }}</span>
-          <span v-if="collapsed"
-            class="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-50 shadow-lg"
-          >
-            {{ ws.name }}
-            <span class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900"/>
-          </span>
-        </Link>
-      </div>
+      <p v-if="!collapsed" class="px-2 mb-2.5 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Workspace</p>
+      <WorkspaceSwitcher
+        :user-workspaces="userWorkspaces"
+        :current-workspace-id="currentWorkspaceId"
+        :collapsed="collapsed"
+        @close="$emit('close')"
+      />
     </div>
 
     <!-- ── Scrollable nav area ── -->
@@ -252,7 +235,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import SidebarNavItem from '@/Components/Layout/SidebarNavItem.vue'
+import WorkspaceSwitcher from '@/Components/Layout/WorkspaceSwitcher.vue'
 import { api } from '@/Services/api'
+import { useSidebarData } from '@/Composables/useSidebarData'
 
 const STORAGE_KEY      = 'asira_sidebar_collapsed'
 const PROJECTS_KEY     = 'asira_projects_expanded'
@@ -260,7 +245,8 @@ const INITIAL_SHOW     = 5
 
 const props = defineProps({
   currentRoute:   String,
-  userWorkspaces: Array,
+  userWorkspaces: Array, // Optional, will use composable
+  currentWorkspaceId: String, // Optional, will use composable
   userRole:       String,
   mobileOpen:     Boolean,
 })
@@ -271,6 +257,9 @@ const page             = usePage()
 const collapsed        = ref(false)
 const projectsExpanded = ref(true)
 const unreadCount      = ref(0)
+
+// Use composable for independent workspace data loading
+const { userWorkspaces, currentWorkspaceId } = useSidebarData()
 
 onMounted(() => {
   collapsed.value        = localStorage.getItem(STORAGE_KEY)  === 'true'
@@ -296,12 +285,6 @@ const toggleCollapse = () => {
   collapsed.value = !collapsed.value
   localStorage.setItem(STORAGE_KEY, String(collapsed.value))
   emit('collapsed-change', collapsed.value)
-}
-
-// Watch projectsExpanded to persist
-const toggleProjects = () => {
-  projectsExpanded.value = !projectsExpanded.value
-  localStorage.setItem(PROJECTS_KEY, String(projectsExpanded.value))
 }
 
 // Projects from shared Inertia props (set by HandleInertiaRequests middleware)

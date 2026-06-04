@@ -4,36 +4,7 @@
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <!-- Sidebar Navigation -->
-          <div class="md:col-span-1">
-            <div class="bg-white rounded-lg shadow p-4 space-y-2">
-              <Link
-                href="/settings"
-                :class="[
-                  'block px-4 py-2 rounded-lg font-medium transition-colors',
-                  isActive('/settings') 
-                    ? 'bg-blue-50 text-blue-600' 
-                    : 'text-gray-700 hover:bg-gray-50'
-                ]"
-              >
-                Workspace Settings
-              </Link>
-
-              <div class="mt-4 pt-4 border-t">
-                <h3 class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Integrations</h3>
-                <Link
-                  href="/settings/integrations/google"
-                  :class="[
-                    'block px-4 py-2 rounded-lg font-medium transition-colors ml-2',
-                    isActive('/settings/integrations/google') 
-                      ? 'bg-blue-50 text-blue-600' 
-                      : 'text-gray-700 hover:bg-gray-50'
-                  ]"
-                >
-                  Google Social Login
-                </Link>
-              </div>
-            </div>
-          </div>
+          <SettingsSidebar />
 
           <!-- Main Content -->
           <div class="md:col-span-3">
@@ -128,8 +99,9 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
-import { Link } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import SettingsSidebar from '@/Components/Settings/SettingsSidebar.vue'
+import { Link } from '@inertiajs/vue3'
 
 const page = usePage()
 

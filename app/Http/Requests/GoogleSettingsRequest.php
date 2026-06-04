@@ -13,7 +13,22 @@ class GoogleSettingsRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check() && auth()->user()->isAdmin();
+        if (!auth()->check()) {
+            return false;
+        }
+
+        $user = auth()->user();
+
+        // Global admins always have access
+        if ($user->hasRole(['super-admin', 'admin'])) {
+            return true;
+        }
+
+        // Allow if user is owner or admin in any of their workspaces
+        return $user->organizations()
+            ->wherePivot('is_active', true)
+            ->wherePivotIn('role', ['owner', 'admin'])
+            ->exists();
     }
 
     /**

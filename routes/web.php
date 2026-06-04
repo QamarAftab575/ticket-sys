@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailVerificationController;
@@ -150,12 +151,18 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     })->name('settings');
     Route::post('/settings/save', [AuthController::class, 'saveSettings'])->name('settings.save');
 
-    // Google settings routes (admin only)
-    Route::middleware('role:admin|super-admin')->group(function () {
-        Route::get('/settings/integrations/google', [GoogleSettingsController::class, 'show'])->name('settings.google.show');
-        Route::post('/settings/integrations/google', [GoogleSettingsController::class, 'update'])->name('settings.google.update');
-        Route::post('/settings/integrations/google/test', [GoogleSettingsController::class, 'testCredentials'])->name('settings.google.test');
-    });
+    // Google settings routes (workspace owner/admin or global admin)
+    Route::get('/settings/integrations/google', [GoogleSettingsController::class, 'show'])->name('settings.google.show');
+    Route::post('/settings/integrations/google', [GoogleSettingsController::class, 'update'])->name('settings.google.update');
+    Route::post('/settings/integrations/google/test', [GoogleSettingsController::class, 'testCredentials'])->name('settings.google.test');
+
+    // API Token routes (workspace owner/admin or global admin)
+    Route::get('/settings/integrations/tokens', [ApiTokenController::class, 'show'])->name('settings.api-tokens.show');
+    Route::post('/settings/integrations/tokens', [ApiTokenController::class, 'store'])->name('settings.api-tokens.store');
+    Route::delete('/settings/integrations/tokens/{tokenId}', [ApiTokenController::class, 'destroy'])->name('settings.api-tokens.destroy');
+    Route::delete('/settings/integrations/tokens/{tokenId}/delete', [ApiTokenController::class, 'delete'])->name('settings.api-tokens.delete');
+    Route::post('/settings/integrations/tokens/revoke-all', [ApiTokenController::class, 'revokeAll'])->name('settings.api-tokens.revoke-all');
+    Route::get('/api/tokens', [ApiTokenController::class, 'list'])->name('api.tokens.list');
 });
 
 // Email verification routes

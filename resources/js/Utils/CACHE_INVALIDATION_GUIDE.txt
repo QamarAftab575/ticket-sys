@@ -1,0 +1,130 @@
+CACHE INVALIDATION GUIDE
+========================
+
+The sidebar workspace data is now cached with automatic invalidation on relevant operations.
+
+HOW IT WORKS:
+=============
+
+1. AUTOMATIC INVALIDATION (No code changes needed)
+   - Cache automatically clears when Inertia navigates to these routes:
+     * /workspace/create
+     * /workspace/*/edit
+     * /workspace/*/delete
+     * /projects/create
+     * /projects/*/edit
+     * /projects/*/delete
+     * /members (any member-related route)
+
+2. MANUAL INVALIDATION IN COMPONENTS
+   Use these in your Vue components when performing actions:
+
+   import { dispatchWorkspaceEvent, dispatchProjectEvent, dispatchMemberEvent } from '@/Composables/useCacheInvalidation'
+
+   // When creating/updating/deleting workspace
+   dispatchWorkspaceEvent('created')
+   dispatchWorkspaceEvent('updated')
+   dispatchWorkspaceEvent('deleted')
+
+   // When switching workspace
+   dispatchWorkspaceEvent('switched')
+
+   // When creating/updating/deleting project
+   dispatchProjectEvent('created')
+   dispatchProjectEvent('updated')
+   dispatchProjectEvent('deleted')
+
+   // When adding/removing/updating members
+   dispatchMemberEvent('added')
+   dispatchMemberEvent('removed')
+
+3. MANUAL INVALIDATION WITH UTILITY FUNCTIONS
+   import { onWorkspaceModified, onProjectModified, onWorkspaceSwitched, onWorkspaceMemberModified } from '@/Utils/cacheManager'
+
+   onWorkspaceModified('created')      // Clears cache: workspace-created
+   onWorkspaceModified('updated')      // Clears cache: workspace-updated
+   onWorkspaceModified('deleted')      // Clears cache: workspace-deleted
+   onWorkspaceSwitched()               // Clears cache: workspace-switched
+   onProjectModified('created')        // Clears cache: project-created
+   onProjectModified('updated')        // Clears cache: project-updated
+   onProjectModified('deleted')        // Clears cache: project-deleted
+   onWorkspaceMemberModified('added')  // Clears cache: member-added
+   onWorkspaceMemberModified('removed') // Clears cache: member-removed
+
+4. CACHE REFRESH IN COMPONENTS
+   import { useSidebarData } from '@/Composables/useSidebarData'
+
+   const { userWorkspaces, refreshWorkspaces } = useSidebarData()
+
+   // Force refresh cache (doesn't use cached data)
+   await refreshWorkspaces()
+
+EXAMPLE: Workspace Creation
+============================
+
+// In Create.vue
+import { dispatchWorkspaceEvent } from '@/Composables/useCacheInvalidation'
+
+const createWorkspace = async () => {
+  await router.post('/workspace/create', {
+    workspace: workspace.value,
+    invites,
+  }, {
+    onSuccess: () => {
+      // Clear cache when workspace is created
+      dispatchWorkspaceEvent('created')
+    }
+  })
+}
+
+EXAMPLE: Workspace Switch
+===========================
+
+// In WorkspaceSwitcher.vue
+import { onWorkspaceSwitched } from '@/Utils/cacheManager'
+
+const switchWorkspace = async (workspace) => {
+  if (workspace.id !== activeWorkspace.value?.id) {
+    // Clear cache before switching
+    onWorkspaceSwitched()
+    
+    // ... save and navigate
+    router.visit(`/workspace/${workspace.id}/dashboard`)
+  }
+}
+
+BACKEND INTEGRATION (Laravel):
+================================
+
+You don't need to do anything special on the backend. The cache clearing is handled
+by the frontend. However, if you want to add custom backend logging or tracking:
+
+1. You can dispatch Laravel events when operations happen
+2. The frontend will handle cache invalidation automatically
+
+CACHE INVALIDATION EVENTS:
+===========================
+
+These custom events are dispatched window-wide:
+- workspace:created
+- workspace:updated
+- workspace:deleted
+- workspace:switched
+- project:created
+- project:updated
+- project:deleted
+- member:added
+- member:removed
+
+You can listen to these events if needed:
+window.addEventListener('workspace:created', () => {
+  console.log('Workspace was created')
+})
+
+PERFORMANCE BENEFITS:
+====================
+
+- Minimal API requests: 1 request per 5 minutes when browsing
+- No prop drilling: Pages don't need to pass workspace data
+- Instant sidebar updates: Cache clears immediately on operations
+- Automatic synchronization: Other components get fresh data automatically

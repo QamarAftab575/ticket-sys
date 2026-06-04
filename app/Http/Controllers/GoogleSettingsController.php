@@ -22,14 +22,36 @@ class GoogleSettingsController extends Controller
     /**
      * Show Google settings form
      *
-     * @return Response
+     * @return Response|\Illuminate\Http\RedirectResponse
      */
-    public function show(): Response
+    public function show(): Response|\Illuminate\Http\RedirectResponse
     {
+        $user = auth()->user();
+
+        $canAccess = $user->hasRole(['super-admin', 'admin'])
+            || $user->organizations()
+                ->wherePivot('is_active', true)
+                ->wherePivotIn('role', ['owner', 'admin'])
+                ->exists();
+
+        if (!$canAccess) {
+            abort(403, 'You do not have permission to access Google settings.');
+        }
+
         $status = $this->googleSettingsService->getStatus();
+        
+        // Get user workspaces for sidebar
+        $userWorkspaces = $user->organizations()
+            ->where('organizations.is_active', true)
+            ->wherePivot('is_active', true)
+            ->select('organizations.id', 'organizations.name', 'organizations.avatar_color')
+            ->get();
 
         return Inertia::render('Settings/Integrations/GoogleSettings', [
             'status' => $status,
+            'userWorkspaces' => $userWorkspaces,
+            'currentWorkspace' => null,
+            'userRole' => 'member',
         ]);
     }
 

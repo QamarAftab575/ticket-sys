@@ -21,6 +21,7 @@ Route::middleware(['web', 'auth:web'])->group(function () {
 
     // User routes
     Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+    Route::post('/user/active-workspace', [UserController::class, 'setActiveWorkspace'])->name('user.set-active-workspace');
     // My Tasks routes
     Route::get('/my-tasks', [MyTasksController::class, 'index'])->name('my-tasks.index');
 
@@ -156,4 +157,13 @@ Route::middleware(['web', 'auth:web'])->group(function () {
         Route::put('/', [TaskTemplateController::class, 'update'])->name('task-templates.update');
         Route::delete('/', [TaskTemplateController::class, 'destroy'])->name('task-templates.destroy');
     });
+});
+
+// API routes protected by API token authentication (for external apps)
+Route::middleware(['api', 'auth.api-token'])->group(function () {
+    // Example: Get user's own tasks via API token
+    Route::get('/external/tasks', [\App\Http\Controllers\TaskController::class, 'index'])->name('external.tasks.index');
+    Route::get('/external/tasks/{task}', [\App\Http\Controllers\TaskController::class, 'show'])->name('external.tasks.show');
+    
+    // Add more external API endpoints as needed
 });

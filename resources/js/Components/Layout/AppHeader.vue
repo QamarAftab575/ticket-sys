@@ -15,34 +15,6 @@
 
       <!-- Right Actions -->
       <div class="flex items-center gap-4">
-        <!-- Create Button -->
-        <div class="relative">
-          <button
-            @click="showCreateMenu = !showCreateMenu"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition"
-          >
-            + Create
-          </button>
-          <div
-            v-if="showCreateMenu"
-            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
-          >
-            <Link href="/projects/create" class="block px-4 py-2 hover:bg-gray-50 text-sm">
-              New Project
-            </Link>
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm">
-              New Task
-            </button>
-          </div>
-        </div>
-
-        <!-- Help Icon -->
-        <button class="text-gray-600 hover:text-gray-900">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </button>
-
         <!-- User Profile -->
         <div class="relative">
           <button
@@ -79,7 +51,6 @@ import SearchDropdown from '@/Components/GlobalSearch/SearchDropdown.vue'
 
 defineEmits(['toggle-sidebar'])
 
-const showCreateMenu = ref(false)
 const showProfileMenu = ref(false)
 
 const page = usePage()
