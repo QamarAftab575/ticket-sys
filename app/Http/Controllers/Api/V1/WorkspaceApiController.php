@@ -25,7 +25,9 @@ class WorkspaceApiController extends Controller
     }
 
     /**
-     * Get all workspaces for authenticated user
+     * Get workspaces
+     * 
+     * Returns all workspaces the authenticated user belongs to.
      */
     public function index(): JsonResponse
     {
@@ -46,111 +48,6 @@ class WorkspaceApiController extends Controller
         });
 
         return response()->json(['data' => $data]);
-    }
-
-    /**
-     * Create a new workspace
-     */
-    public function store(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'types' => ['nullable', 'string'],
-            'avatar_color' => ['nullable', 'string', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
-        ]);
-
-        $user = Auth::user();
-        $workspace = $this->organizationService->createOrganization($validated, $user);
-
-        // Add creator as owner
-        $this->organizationService->addMember($workspace, $user, 'owner');
-
-        return response()->json([
-            'message' => 'Workspace created successfully',
-            'data' => [
-                'id' => $workspace->id,
-                'name' => $workspace->name,
-                'description' => $workspace->description,
-                'types' => $workspace->types,
-                'avatar_color' => $workspace->avatar_color,
-                'is_active' => $workspace->is_active,
-                'created_at' => $workspace->created_at->toIso8601String(),
-            ],
-        ], 201);
-    }
-
-    /**
-     * Get workspace details
-     */
-    public function show(Organization $organization): JsonResponse
-    {
-        $this->authorize('view', $organization);
-
-        $workspace = $organization->load(['creator:id,name,email,avatar']);
-
-        return response()->json([
-            'data' => [
-                'id' => $workspace->id,
-                'name' => $workspace->name,
-                'description' => $workspace->description,
-                'types' => $workspace->types,
-                'avatar_color' => $workspace->avatar_color,
-                'is_active' => $workspace->is_active,
-                'created_by' => $workspace->created_by,
-                'creator' => $workspace->creator ? [
-                    'id' => $workspace->creator->id,
-                    'name' => $workspace->creator->name,
-                    'email' => $workspace->creator->email,
-                    'avatar' => $workspace->creator->avatar,
-                ] : null,
-                'created_at' => $workspace->created_at->toIso8601String(),
-                'updated_at' => $workspace->updated_at->toIso8601String(),
-            ],
-        ]);
-    }
-
-    /**
-     * Update workspace
-     */
-    public function update(Request $request, Organization $organization): JsonResponse
-    {
-        $this->authorize('update', $organization);
-
-        $validated = $request->validate([
-            'name' => ['sometimes', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'types' => ['nullable', 'string'],
-            'avatar_color' => ['nullable', 'string', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
-        ]);
-
-        $workspace = $this->organizationService->updateOrganization($organization, $validated);
-
-        return response()->json([
-            'message' => 'Workspace updated successfully',
-            'data' => [
-                'id' => $workspace->id,
-                'name' => $workspace->name,
-                'description' => $workspace->description,
-                'types' => $workspace->types,
-                'avatar_color' => $workspace->avatar_color,
-                'updated_at' => $workspace->updated_at->toIso8601String(),
-            ],
-        ]);
-    }
-
-    /**
-     * Delete workspace
-     */
-    public function destroy(Organization $organization): JsonResponse
-    {
-        $this->authorize('delete', $organization);
-
-        $this->organizationService->deleteOrganization($organization);
-
-        return response()->json([
-            'message' => 'Workspace deleted successfully',
-        ], 204);
     }
 
     /**

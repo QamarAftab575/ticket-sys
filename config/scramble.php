@@ -4,123 +4,67 @@ return [
     /*
      * API path, where the documentation will be available.
      */
-    'path' => 'api/docs',
+    'path' => 'docs/api',
 
     /*
-     * API domain. By default, app domain is used. This is for the OpenAPI servers.
+     * Which routes to document. String or array form.
+     * This tells Scramble to scan all routes starting with 'api/v1'
      */
-    'api_domain' => env('APP_URL'),
+    'api_path' => 'api/v1',
 
     /*
-     * Customize the UI settings.
+     * Your API domain. By default, app domain is used.
      */
-    'ui' => 'scalar', // Use Scalar UI instead of default
+    'api_domain' => null,
 
     /*
-     * The list of route prefixes that should be documented.
+     * The path where your OpenAPI specification will be exported.
      */
-    'routes' => [
-        'prefix' => 'api/v1',
-        'middleware' => ['api'],
-    ],
+    'export_path' => 'api.json',
 
     /*
      * API information.
      */
     'info' => [
-        'title' => 'Asana-like Project Management API',
+        'title' => 'Asira Project Management API',
         'description' => 'Complete REST API for project management system with workspaces, projects, tasks, and more.',
         'version' => '1.0.0',
-        'contact' => [
-            'name' => 'API Support',
-            'email' => 'support@yourapp.com',
+    ],
+
+    /*
+     * UI renderer: 'elements' or 'scalar'
+     */
+    'renderer' => 'scalar',
+
+    /*
+     * Scalar API reference config options
+     */
+    'renderers' => [
+        'scalar' => [
+            'view' => 'scramble::scalar',
+            'cdn' => 'https://cdn.jsdelivr.net/npm/@scalar/api-reference',
+            'theme' => 'default',
+            'darkMode' => false,
+            'showDeveloperTools' => 'never',
+            'credentials' => 'include',
+            'hideModels' => true,
         ],
     ],
 
     /*
-     * Servers configuration.
+     * The list of servers of the API.
      */
-    'servers' => [
-        [
-            'url' => env('APP_URL') . '/api/v1',
-            'description' => 'Main API Server',
-        ],
+    'servers' => null,
+
+    /*
+     * Middleware for the documentation routes.
+     */
+    'middleware' => [
+        'web',
     ],
 
     /*
-     * Security schemes configuration.
+     * OpenAPI extensions.
      */
-    'security' => [
-        'BearerAuth' => [
-            'type' => 'http',
-            'scheme' => 'bearer',
-            'bearerFormat' => 'API Token',
-            'description' => 'Enter your API token (obtained from /auth/login or /auth/register)',
-        ],
-        'ApiKeyAuth' => [
-            'type' => 'apiKey',
-            'in' => 'header',
-            'name' => 'X-API-Token',
-            'description' => 'Alternative: Use X-API-Token header',
-        ],
-    ],
-
-    /*
-     * Tags for grouping endpoints.
-     */
-    'tags' => [
-        [
-            'name' => 'Authentication',
-            'description' => 'User authentication and token management',
-        ],
-        [
-            'name' => 'Users',
-            'description' => 'User profile and search operations',
-        ],
-        [
-            'name' => 'Workspaces',
-            'description' => 'Workspace (Organization) management',
-        ],
-        [
-            'name' => 'Projects',
-            'description' => 'Project creation and management',
-        ],
-        [
-            'name' => 'Tasks',
-            'description' => 'Task operations, dependencies, and subtasks',
-        ],
-        [
-            'name' => 'Custom Fields',
-            'description' => 'Custom field management for projects',
-        ],
-        [
-            'name' => 'Comments',
-            'description' => 'Task comments',
-        ],
-        [
-            'name' => 'Attachments',
-            'description' => 'File uploads and attachments',
-        ],
-        [
-            'name' => 'SSO',
-            'description' => 'Single Sign-On with JWT tokens',
-        ],
-    ],
-
-    /*
-     * Customize the OpenAPI specification.
-     */
-    'extensions' => [
-        'x-logo' => [
-            'url' => env('APP_URL') . '/logo.png',
-            'altText' => 'API Logo',
-        ],
-    ],
-
-    /*
-     * Exclude specific routes from documentation.
-     */
-    'ignore' => [
-        // Add routes to ignore here
-    ],
+    'extensions' => [],
 ];

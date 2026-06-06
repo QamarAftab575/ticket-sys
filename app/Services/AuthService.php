@@ -47,9 +47,10 @@ class AuthService
      *
      * @param string $email
      * @param string $password
+     * @param bool $remember
      * @return bool
      */
-    public function login(string $email, string $password): bool
+    public function login(string $email, string $password, bool $remember = true): bool
     {
         // Find user by email
         $user = User::where('email', $email)->first();
@@ -76,8 +77,8 @@ class AuthService
         Cache::forget("login_attempts:{$email}");
         Cache::forget("login_lockout:{$email}");
 
-        // Create session using Auth::login()
-        Auth::login($user);
+        // Create session using Auth::login() with remember me option
+        Auth::login($user, $remember);
 
         return true;
     }

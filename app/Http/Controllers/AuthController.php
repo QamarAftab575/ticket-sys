@@ -99,14 +99,15 @@ class AuthController extends Controller
     {
         $email = $request->validated('email');
         $password = $request->validated('password');
+        $remember = $request->input('remember', true); // Default to true for lengthy sessions
 
         // Check rate limiting
         if (!$this->authService->checkRateLimit($email)) {
             return back()->withErrors(['email' => 'Too many login attempts. Please try again later.']);
         }
 
-        // Attempt login
-        if ($this->authService->login($email, $password)) {
+        // Attempt login with remember me
+        if ($this->authService->login($email, $password, $remember)) {
             $request->session()->regenerate();
 
             $user = auth()->user();

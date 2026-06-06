@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\V1\AuthApiController;
 use App\Http\Controllers\Api\V1\WorkspaceApiController;
 use App\Http\Controllers\Api\V1\ProjectApiController;
 use App\Http\Controllers\Api\V1\TaskApiController;
-use App\Http\Controllers\Api\V1\CustomFieldApiController;
 use App\Http\Controllers\Api\V1\CommentApiController;
 use App\Http\Controllers\Api\V1\AttachmentApiController;
 use App\Http\Controllers\Api\V1\UserApiController;
@@ -23,12 +22,6 @@ use Illuminate\Support\Facades\Route;
 
 // Public routes (no authentication required)
 Route::prefix('v1')->group(function () {
-    // Registration disabled - users can only join via invitations
-    Route::post('/auth/register', [AuthApiController::class, 'register']); // Returns 403 with message
-    Route::post('/auth/login', [AuthApiController::class, 'login']);
-    Route::post('/auth/forgot-password', [AuthApiController::class, 'forgotPassword']);
-    Route::post('/auth/reset-password', [AuthApiController::class, 'resetPassword']);
-    
     // SSO token exchange (no auth required)
     Route::post('/sso/exchange', [SsoApiController::class, 'exchangeToken']);
     Route::post('/sso/validate', [SsoApiController::class, 'validateToken']);
@@ -36,15 +29,6 @@ Route::prefix('v1')->group(function () {
 
 // Protected routes (require API token authentication)
 Route::prefix('v1')->middleware(['api', 'auth.api-token'])->group(function () {
-    
-    // ========================================
-    // Authentication & User Management
-    // ========================================
-    Route::prefix('auth')->group(function () {
-        Route::post('/logout', [AuthApiController::class, 'logout']);
-        Route::post('/refresh-token', [AuthApiController::class, 'refreshToken']);
-        Route::get('/me', [UserApiController::class, 'me']);
-    });
     
     // ========================================
     // SSO (Single Sign-On) Routes
@@ -58,8 +42,6 @@ Route::prefix('v1')->middleware(['api', 'auth.api-token'])->group(function () {
     // User Routes
     // ========================================
     Route::prefix('users')->group(function () {
-        Route::get('/me', [UserApiController::class, 'me']);
-        Route::put('/me', [UserApiController::class, 'updateProfile']);
         Route::get('/{user}', [UserApiController::class, 'show']);
         Route::get('/search', [UserApiController::class, 'search']);
     });
@@ -69,10 +51,6 @@ Route::prefix('v1')->middleware(['api', 'auth.api-token'])->group(function () {
     // ========================================
     Route::prefix('workspaces')->group(function () {
         Route::get('/', [WorkspaceApiController::class, 'index']);
-        Route::post('/', [WorkspaceApiController::class, 'store']);
-        Route::get('/{organization}', [WorkspaceApiController::class, 'show']);
-        Route::put('/{organization}', [WorkspaceApiController::class, 'update']);
-        Route::delete('/{organization}', [WorkspaceApiController::class, 'destroy']);
         
         // Workspace members
         Route::get('/{organization}/members', [WorkspaceApiController::class, 'members']);
@@ -118,10 +96,6 @@ Route::prefix('v1')->middleware(['api', 'auth.api-token'])->group(function () {
         // Project tasks
         Route::get('/{project}/tasks', [TaskApiController::class, 'index']);
         Route::post('/{project}/tasks', [TaskApiController::class, 'store']);
-        
-        // Project custom fields
-        Route::get('/{project}/custom-fields', [CustomFieldApiController::class, 'index']);
-        Route::post('/{project}/custom-fields', [CustomFieldApiController::class, 'store']);
     });
 
     // ========================================
@@ -157,9 +131,6 @@ Route::prefix('v1')->middleware(['api', 'auth.api-token'])->group(function () {
         // Task attachments
         Route::get('/{task}/attachments', [AttachmentApiController::class, 'index']);
         Route::post('/{task}/attachments', [AttachmentApiController::class, 'store']);
-        
-        // Task custom field values
-        Route::post('/{task}/custom-fields/{customField}/value', [TaskApiController::class, 'setCustomFieldValue']);
     });
 
     // ========================================
@@ -178,15 +149,5 @@ Route::prefix('v1')->middleware(['api', 'auth.api-token'])->group(function () {
         Route::get('/{attachment}', [AttachmentApiController::class, 'show']);
         Route::get('/{attachment}/download', [AttachmentApiController::class, 'download']);
         Route::delete('/{attachment}', [AttachmentApiController::class, 'destroy']);
-    });
-
-    // ========================================
-    // Custom Field Routes
-    // ========================================
-    Route::prefix('custom-fields')->group(function () {
-        Route::get('/{customField}', [CustomFieldApiController::class, 'show']);
-        Route::put('/{customField}', [CustomFieldApiController::class, 'update']);
-        Route::delete('/{customField}', [CustomFieldApiController::class, 'destroy']);
-        Route::post('/{customField}/toggle-active', [CustomFieldApiController::class, 'toggleActive']);
     });
 });

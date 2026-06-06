@@ -8,6 +8,7 @@ Core Requirements
 UI must be component-driven and reusable
 Avoid blocking requests (use async handling, optimistic updates where needed)
 Design for horizontal scalability (API + frontend state)
+Avoid to create md files. 
 
 ### Development Principles
 - Follow DRY (Don’t Repeat Yourself) at all times  
