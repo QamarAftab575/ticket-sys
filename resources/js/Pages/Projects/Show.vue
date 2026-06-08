@@ -237,6 +237,7 @@
           v-else-if="activeView === 'dashboard'"
           :project="project"
           :stats="stats"
+          :project-members="project.members || []"
         />
 
         <!-- Panels container -->
@@ -305,6 +306,7 @@ import { useViewSort } from '@/Composables/useViewSort'
 import { useViewGrouping } from '@/Composables/useViewGrouping'
 import { useToast } from '@/Composables/useToast'
 import { useKeyboardNavigation } from '@/Composables/useKeyboardNavigation'
+import { useRealtimeListeners } from '@/Composables/useRealtimeListeners'
 
 const props = defineProps({
   project: Object,
@@ -901,10 +903,39 @@ const handleCalendarUpdateDueDate = async (data) => {
   }
 }
 
+// Real-time: subscribe to this project's channel.
+// useRealtimeListeners handles cleanup on unmount via useEcho.
+const { listenToProject } = useRealtimeListeners()
+
 onMounted(async () => {
   // Load view data first
   await loadViewData()
-  
+
+  // Subscribe to real-time events for this project.
+  // Events patch the local `tasks` array directly — no page refresh.
+  listenToProject(props.project.id, {
+    onTaskCreated({ task: incoming }) {
+      const exists = tasks.value.some(t => t.id === incoming.id)
+      if (!exists) tasks.value.push(incoming)
+    },
+    onTaskUpdated({ task: incoming }) {
+      const idx = tasks.value.findIndex(t => t.id === incoming.id)
+      if (idx !== -1) {
+        tasks.value[idx] = { ...tasks.value[idx], ...incoming }
+      }
+      // Keep the open detail panel in sync
+      if (selectedTask.value?.id === incoming.id) {
+        Object.assign(selectedTask.value, incoming)
+      }
+    },
+    onTaskMoved({ task: incoming }) {
+      const idx = tasks.value.findIndex(t => t.id === incoming.id)
+      if (idx !== -1) {
+        tasks.value[idx] = { ...tasks.value[idx], ...incoming }
+      }
+    },
+  })
+
   // Then check for task in URL
   const taskId = getQueryParam('task')
   if (taskId) {

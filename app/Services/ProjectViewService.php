@@ -166,11 +166,15 @@ class ProjectViewService
     }
 
     /**
-     * Get dashboard data.
+     * Get dashboard data with optional filters.
      */
-    public function getDashboardData(Project $project): array
-    {
-        $stats = $this->getProjectStats($project);
+    public function getDashboardData(
+        Project $project,
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
+        array $memberIds = []
+    ): array {
+        $stats = $this->getProjectStats($project, $dateFrom, $dateTo, $memberIds);
 
         return [
             'stats' => $stats,
@@ -187,25 +191,47 @@ class ProjectViewService
     }
 
     /**
-     * Get project statistics.
+     * Get project statistics with optional date range and member filters.
      */
-    private function getProjectStats(Project $project): array
-    {
-        $total = $project->tasks()->count();
-        $completed = $project->tasks()->where('status', 'complete')->count();
-        $overdue = $project->tasks()
+    public function getProjectStats(
+        Project $project,
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
+        array $memberIds = []
+    ): array {
+        $query = $project->tasks();
+
+        // Apply date range filters (to due_date)
+        if ($dateFrom) {
+            $query->whereDate('due_date', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('due_date', '<=', $dateTo);
+        }
+
+        // Apply member filter (to assignee_id)
+        if (!empty($memberIds)) {
+            $query->whereIn('assignee_id', $memberIds);
+        }
+
+        // Get base query for filtering
+        $baseQuery = clone $query;
+
+        $total = $baseQuery->count();
+        $completed = (clone $baseQuery)->where('status', 'complete')->count();
+        $overdue = (clone $baseQuery)
             ->where('due_date', '<', now()->toDateString())
             ->where('status', '!=', 'complete')
             ->count();
 
-        $byPriority = $project->tasks()
+        $byPriority = (clone $baseQuery)
             ->selectRaw('priority, count(*) as count')
             ->groupBy('priority')
             ->pluck('count', 'priority')
             ->toArray();
 
         // Get assignee stats with user details
-        $assigneeStats = $project->tasks()
+        $assigneeStats = (clone $baseQuery)
             ->selectRaw('assignee_id, count(*) as total, sum(case when status = "complete" then 1 else 0 end) as completed')
             ->groupBy('assignee_id')
             ->with('assignee:id,name,avatar')
@@ -222,13 +248,41 @@ class ProjectViewService
             ->values()
             ->toArray();
 
+        // Get upcoming milestones
+        $upcoming = (clone $baseQuery)
+            ->where('is_milestone', true)
+            ->where('due_date', '>=', now()->toDateString())
+            ->orderBy('due_date', 'asc')
+            ->limit(10)
+            ->get(['id', 'name', 'due_date', 'status', 'assignee_id']);
+
+        // Get overdue tasks
+        $overdueTasks = (clone $baseQuery)
+            ->where('due_date', '<', now()->toDateString())
+            ->where('status', '!=', 'complete')
+            ->orderBy('due_date', 'asc')
+            ->limit(10)
+            ->with('assignee:id,name,avatar')
+            ->get(['id', 'name', 'due_date', 'assignee_id']);
+
+        // Get recent activities
+        $activities = $project->activities()
+            ->orderBy('created_at', 'desc')
+            ->limit(15)
+            ->with('user:id,name,avatar')
+            ->get(['id', 'user_id', 'action', 'description', 'created_at']);
+
         return [
             'total_tasks'            => $total,
             'completed_tasks'        => $completed,
+            'incomplete_tasks'       => $total - $completed,
             'completion_percentage'  => $total > 0 ? round(($completed / $total) * 100) : 0,
             'overdue_count'          => $overdue,
             'tasks_by_priority'      => $byPriority,
             'tasks_by_assignee'      => $assigneeStats,
+            'upcoming_milestones'    => $upcoming,
+            'overdue_tasks'          => $overdueTasks,
+            'recent_activity'        => $activities,
         ];
     }
 

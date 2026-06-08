@@ -1,18 +1,25 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 export function useDashboardState(projectId) {
-  const DEFAULT_WIDGETS = [
+  // Default ordered layout: each column is an ordered array of widget ids
+  const DEFAULT_LEFT = [
     'project-status',
     'task-completion',
     'tasks-by-assignee',
-    'tasks-by-priority',
     'upcoming-milestones',
+  ]
+
+  const DEFAULT_RIGHT = [
+    'tasks-by-priority',
     'overdue-tasks',
     'recent-activity',
   ]
 
-  const visibleWidgets = ref([...DEFAULT_WIDGETS])
-  const widgetOrder = ref([...DEFAULT_WIDGETS])
+  const ALL_DEFAULT = [...DEFAULT_LEFT, ...DEFAULT_RIGHT]
+
+  const leftColumn = ref([...DEFAULT_LEFT])
+  const rightColumn = ref([...DEFAULT_RIGHT])
+  const hiddenWidgets = ref([])
 
   // Load from localStorage
   const loadState = () => {
@@ -21,12 +28,28 @@ export function useDashboardState(projectId) {
     if (stored) {
       try {
         const state = JSON.parse(stored)
-        visibleWidgets.value = state.visibleWidgets || [...DEFAULT_WIDGETS]
-        widgetOrder.value = state.widgetOrder || [...DEFAULT_WIDGETS]
+        if (state.leftColumn && Array.isArray(state.leftColumn)) {
+          leftColumn.value = state.leftColumn
+        }
+        if (state.rightColumn && Array.isArray(state.rightColumn)) {
+          rightColumn.value = state.rightColumn
+        }
+        if (state.hiddenWidgets && Array.isArray(state.hiddenWidgets)) {
+          hiddenWidgets.value = state.hiddenWidgets
+        }
       } catch (e) {
         console.error('Failed to load dashboard state:', e)
+        _resetToDefaults()
       }
+    } else {
+      _resetToDefaults()
     }
+  }
+
+  const _resetToDefaults = () => {
+    leftColumn.value = [...DEFAULT_LEFT]
+    rightColumn.value = [...DEFAULT_RIGHT]
+    hiddenWidgets.value = []
   }
 
   // Save to localStorage
@@ -35,53 +58,79 @@ export function useDashboardState(projectId) {
     localStorage.setItem(
       key,
       JSON.stringify({
-        visibleWidgets: visibleWidgets.value,
-        widgetOrder: widgetOrder.value,
+        leftColumn: leftColumn.value,
+        rightColumn: rightColumn.value,
+        hiddenWidgets: hiddenWidgets.value,
       })
     )
   }
 
-  // Remove a widget
-  const removeWidget = (widgetId) => {
-    visibleWidgets.value = visibleWidgets.value.filter((id) => id !== widgetId)
-    widgetOrder.value = widgetOrder.value.filter((id) => id !== widgetId)
+  // Check if widget is visible
+  const isWidgetVisible = (widgetId) => {
+    return !hiddenWidgets.value.includes(widgetId)
+  }
+
+  // Hide a widget (removes from columns, adds to hidden list)
+  const hideWidget = (widgetId) => {
+    leftColumn.value = leftColumn.value.filter((id) => id !== widgetId)
+    rightColumn.value = rightColumn.value.filter((id) => id !== widgetId)
+    if (!hiddenWidgets.value.includes(widgetId)) {
+      hiddenWidgets.value.push(widgetId)
+    }
     saveState()
   }
 
-  // Add a widget
+  // Show a hidden widget (appends to shorter column)
   const addWidget = (widgetId) => {
-    if (!visibleWidgets.value.includes(widgetId)) {
-      visibleWidgets.value.push(widgetId)
-      widgetOrder.value.push(widgetId)
+    if (hiddenWidgets.value.includes(widgetId)) {
+      hiddenWidgets.value = hiddenWidgets.value.filter((id) => id !== widgetId)
+      // Add to the shorter column
+      if (leftColumn.value.length <= rightColumn.value.length) {
+        leftColumn.value.push(widgetId)
+      } else {
+        rightColumn.value.push(widgetId)
+      }
       saveState()
     }
   }
 
-  // Reorder widgets
-  const reorderWidgets = (newOrder) => {
-    widgetOrder.value = newOrder
+  /**
+   * Reorder a widget within or across columns.
+   * @param {string} draggedId  - widget being dragged
+   * @param {string} targetId   - widget being dropped onto (null = end of column)
+   * @param {'left'|'right'} targetColumn - column being dropped into
+   */
+  const reorderWidget = (draggedId, targetId, targetColumn) => {
+    // Remove from wherever it currently lives
+    leftColumn.value = leftColumn.value.filter((id) => id !== draggedId)
+    rightColumn.value = rightColumn.value.filter((id) => id !== draggedId)
+
+    const col = targetColumn === 'left' ? leftColumn.value : rightColumn.value
+
+    if (!targetId || targetId === draggedId) {
+      // Drop at end of column
+      col.push(draggedId)
+    } else {
+      const idx = col.indexOf(targetId)
+      if (idx === -1) {
+        col.push(draggedId)
+      } else {
+        col.splice(idx, 0, draggedId)
+      }
+    }
+
     saveState()
   }
 
-  // Get ordered visible widgets
-  const orderedWidgets = computed(() => {
-    return widgetOrder.value.filter((id) => visibleWidgets.value.includes(id))
-  })
-
-  // Check if widget is visible
-  const isWidgetVisible = (widgetId) => {
-    return visibleWidgets.value.includes(widgetId)
-  }
-
   return {
-    visibleWidgets,
-    widgetOrder,
-    orderedWidgets,
+    leftColumn,
+    rightColumn,
+    hiddenWidgets,
     loadState,
     saveState,
-    removeWidget,
+    hideWidget,
     addWidget,
-    reorderWidgets,
     isWidgetVisible,
+    reorderWidget,
   }
 }

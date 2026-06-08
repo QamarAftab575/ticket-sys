@@ -15,6 +15,20 @@
 
       <!-- Right Actions -->
       <div class="flex items-center gap-4">
+        <!-- Inbox / Notifications -->
+        <Link href="/inbox" class="relative p-1.5 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+          </svg>
+          <span
+            v-if="unreadCount > 0"
+            class="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold leading-none"
+          >
+            {{ unreadCount > 99 ? '99+' : unreadCount }}
+          </span>
+        </Link>
+
         <!-- User Profile -->
         <div class="relative">
           <button
@@ -44,10 +58,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import Avatar from '@/Components/Avatar.vue'
 import SearchDropdown from '@/Components/GlobalSearch/SearchDropdown.vue'
+import { useNotificationStore } from '@/Stores/useNotificationStore'
+import { api } from '@/Services/api'
 
 defineEmits(['toggle-sidebar'])
 
@@ -56,4 +72,17 @@ const showProfileMenu = ref(false)
 const page = usePage()
 const userName = computed(() => page.props.auth?.user?.name || '')
 const userAvatar = computed(() => page.props.auth?.user?.avatar || null)
+
+const notificationStore = useNotificationStore()
+const unreadCount = computed(() => notificationStore.unreadCount)
+
+// Seed the store with the server-provided unread count on first load
+onMounted(async () => {
+  try {
+    const response = await api.get('/inbox/unread-count')
+    notificationStore.setUnreadCount(response.count ?? 0)
+  } catch {
+    // non-critical — badge simply stays at 0
+  }
+})
 </script>

@@ -17,6 +17,7 @@ use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\ProjectSettingsController;
 use App\Http\Controllers\ProjectActivityController;
 use App\Http\Controllers\ProjectViewController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\WorkspaceDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -235,6 +236,11 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     Route::get('/projects/{project}/views/dashboard', [ProjectViewController::class, 'getDashboardData'])->name('projects.views.dashboard');
     Route::post('/projects/{project}/views/preferences', [ProjectViewController::class, 'saveViewPreferences'])->name('projects.views.preferences.save');
     Route::get('/projects/{project}/views/preferences/{viewType}', [ProjectViewController::class, 'getViewPreferences'])->name('projects.views.preferences.get');
+
+    // Reporting Dashboard
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::post('/reports/data', [ReportController::class, 'getData'])->name('reports.data');
+    Route::get('/reports/assignees', [ReportController::class, 'getAssignees'])->name('reports.assignees');
 
     // My Tasks routes
     Route::get('/my-tasks', [\App\Http\Controllers\MyTasksController::class, 'index'])->name('my-tasks.index');

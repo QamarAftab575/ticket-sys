@@ -179,13 +179,21 @@ class ProjectController extends Controller
         Gate::authorize('changeStatus', $project);
 
         $request->validate([
-            'status' => 'required|in:on_track,at_risk,off_track,archived',
+            'status'        => 'required|in:on_track,at_risk,off_track,on_hold,complete',
+            'status_update' => 'nullable|string|max:1000',
         ]);
 
-        $this->projectService->updateStatus($project, $request->status);
+        $updated = $this->projectService->updateStatus(
+            $project,
+            $request->status,
+            $request->status_update
+        );
 
-        return redirect()->route('projects.show', $project)
-            ->with('success', 'Project status updated successfully.');
+        return response()->json([
+            'status'        => $updated->status,
+            'status_update' => $updated->status_update,
+            'updated_at'    => $updated->updated_at,
+        ]);
     }
 
     /**

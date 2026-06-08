@@ -37,19 +37,20 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import AppSidebar from '@/Components/Layout/AppSidebar.vue'
 import AppHeader from '@/Components/Layout/AppHeader.vue'
 import InviteModal from '@/Components/Workspace/InviteModal.vue'
 import { useSidebarData } from '@/Composables/useSidebarData'
+import { useRealtimeListeners } from '@/Composables/useRealtimeListeners'
 
 const page = usePage()
 const showInviteModal = ref(false)
 const mobileOpen = ref(false)
 
-// Optional props for backward compatibility
-defineProps({
+// Props passed from server (for backward compatibility)
+const props = defineProps({
   userWorkspaces: Array,
   currentWorkspace: Object,
   userRole: String,
@@ -58,6 +59,13 @@ defineProps({
 // Use composable for independent data loading
 const { userWorkspaces, currentWorkspaceId, currentWorkspace } = useSidebarData()
 
+// If props are passed, use them to pre-populate and override composable
+watch(() => props.userWorkspaces, (newVal) => {
+  if (newVal && newVal.length > 0 && userWorkspaces.value.length === 0) {
+    userWorkspaces.value = newVal
+  }
+}, { immediate: true })
+
 const currentRoute = computed(() => {
   const url = page.url
   if (url.includes('/dashboard')) return 'dashboard'
@@ -65,6 +73,8 @@ const currentRoute = computed(() => {
   if (url.includes('/projects')) return 'projects'
   if (url.includes('/profile')) return 'profile'
   if (url.includes('/settings')) return 'settings'
+  if (url.includes('/reports')) return 'reports'
+  if (url.includes('/my-tasks')) return 'my-tasks'
   return 'dashboard'
 })
 
@@ -72,4 +82,15 @@ const handleInviteSent = () => {
   showInviteModal.value = false
   window.location.reload()
 }
+
+// Subscribe to the authenticated user's private channel for notifications
+// and personal task updates. Runs once; channel is cleaned up on unmount.
+const { listenToUser } = useRealtimeListeners()
+
+onMounted(() => {
+  const userId = page.props.auth?.user?.id
+  if (userId) {
+    listenToUser(userId)
+  }
+})
 </script>

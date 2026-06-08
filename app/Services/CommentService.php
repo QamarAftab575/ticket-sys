@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\CommentCreated as CommentCreatedEvent;
 use App\Models\Comment;
 use App\Models\Task;
 use App\Models\User;
@@ -37,6 +38,9 @@ class CommentService
 
             // Trigger mention notifications
             $this->notificationService->notifyMentionsInComment($comment, $user);
+
+            // Broadcast real-time event
+            broadcast(new CommentCreatedEvent($comment->load('task')))->toOthers();
 
             return $comment;
         });

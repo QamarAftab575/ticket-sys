@@ -70,13 +70,22 @@ class ProjectViewController extends Controller
     }
 
     /**
-     * Get dashboard data.
+     * Get dashboard data with optional filters.
      */
-    public function getDashboardData(Project $project): JsonResponse
+    public function getDashboardData(Project $project, Request $request): JsonResponse
     {
         $this->authorize('view', $project);
 
-        $data = $this->projectViewService->getDashboardData($project);
+        $dateFrom = $request->query('date_from');
+        $dateTo = $request->query('date_to');
+        $memberIds = $request->query('member_ids') ? explode(',', $request->query('member_ids')) : [];
+
+        $data = $this->projectViewService->getDashboardData(
+            $project,
+            $dateFrom,
+            $dateTo,
+            $memberIds
+        );
 
         return response()->json($data);
     }

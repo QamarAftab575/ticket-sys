@@ -22,6 +22,7 @@ class Project extends Model
         'owner_id',
         'created_by',
         'status',
+        'status_update',
         'visibility',
         'workspace_member_role',
         'privacy',

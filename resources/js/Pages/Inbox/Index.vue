@@ -98,10 +98,13 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import NotificationItem from '@/Components/Inbox/NotificationItem.vue'
 import TaskDetailPanel from '@/Components/Projects/TaskDetailPanel.vue'
 import { api } from '@/Services/api'
+import { useNotificationStore } from '@/Stores/useNotificationStore'
 
 const props = defineProps({
   unreadCount: { type: Number, default: 0 },
 })
+
+const notificationStore = useNotificationStore()
 
 const notifications = ref([])
 const selectedNotification = ref(null)
@@ -109,7 +112,12 @@ const selectedTask = ref(null)
 const loading = ref(false)
 const hasMore = ref(false)
 const nextPage = ref(1)
-const unreadCount = ref(props.unreadCount)
+
+// Derive unread count from the global store (kept in sync by Echo via AppLayout)
+const unreadCount = computed({
+  get: () => notificationStore.unreadCount,
+  set: (v) => notificationStore.setUnreadCount(v),
+})
 
 // Group notifications by date
 const groupedNotifications = computed(() => {
@@ -158,7 +166,8 @@ async function loadNotifications(page = 1) {
     
     hasMore.value = response.has_more
     nextPage.value = response.next_page || page + 1
-    unreadCount.value = response.unread_count
+    // Sync the global store (Echo may already have updated it, take the max)
+    notificationStore.setUnreadCount(response.unread_count)
   } catch (error) {
     console.error('Failed to load notifications:', error)
   } finally {
@@ -202,7 +211,7 @@ async function markAsRead(notification, deselectIfCurrent = true) {
     const response = await api.post(`/notifications/${notification.id}/mark-read`)
     notification.is_read = true
     notification.read_at = new Date().toISOString()
-    unreadCount.value = response.unread_count
+    notificationStore.setUnreadCount(response.unread_count)
     
     if (deselectIfCurrent && selectedNotification.value?.id === notification.id) {
       selectedNotification.value = null
@@ -218,7 +227,7 @@ async function markAsUnread(notification) {
     const response = await api.post(`/notifications/${notification.id}/mark-unread`)
     notification.is_read = false
     notification.read_at = null
-    unreadCount.value = response.unread_count
+    notificationStore.setUnreadCount(response.unread_count)
   } catch (error) {
     console.error('Failed to mark as unread:', error)
   }
@@ -226,12 +235,12 @@ async function markAsUnread(notification) {
 
 async function markAllAsRead() {
   try {
-    const response = await api.post('/inbox/mark-all-read')
+    await api.post('/inbox/mark-all-read')
     notifications.value.forEach(n => {
       n.is_read = true
       n.read_at = new Date().toISOString()
     })
-    unreadCount.value = 0
+    notificationStore.setUnreadCount(0)
   } catch (error) {
     console.error('Failed to mark all as read:', error)
   }
@@ -243,7 +252,7 @@ async function deleteNotification(notification) {
   try {
     const response = await api.delete(`/notifications/${notification.id}`)
     notifications.value = notifications.value.filter(n => n.id !== notification.id)
-    unreadCount.value = response.unread_count
+    notificationStore.setUnreadCount(response.unread_count)
     
     if (selectedNotification.value?.id === notification.id) {
       selectedNotification.value = null
@@ -270,6 +279,8 @@ async function openRelatedTask(task) {
 }
 
 onMounted(() => {
+  // Seed the store from the server-rendered prop (first page load)
+  notificationStore.setUnreadCount(props.unreadCount)
   loadNotifications()
 })
 </script>

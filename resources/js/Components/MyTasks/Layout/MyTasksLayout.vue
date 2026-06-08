@@ -120,6 +120,7 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { PlusIcon, ListBulletIcon, Squares2X2Icon, CalendarIcon, PaperClipIcon } from '@heroicons/vue/24/outline';
 import { useMyTasksStore } from '@/Stores/useMyTasksStore';
+import { useRealtimeListeners } from '@/Composables/useRealtimeListeners';
 import type { Task, TaskFilter, TaskSort, TaskGroupBy } from '@/Types/tasks';
 import MyTasksToolbar from './MyTasksToolbar.vue';
 import MyTasksTable from './MyTasksTable.vue';
@@ -149,6 +150,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const myTasksStore = useMyTasksStore();
+const { listenToProject } = useRealtimeListeners();
 const currentView = ref<'list' | 'board' | 'calendar' | 'files'>('list');
 
 // View options with icons
@@ -181,6 +183,24 @@ onMounted(async () => {
     myTasksStore.setSections(props.myTasksSections);
   }
   await myTasksStore.fetchTasks();
+
+  // Subscribe to every project the loaded tasks belong to.
+  // This keeps My Tasks in sync when teammates update shared tasks.
+  // The user channel (in AppLayout) handles tasks assigned to this user directly.
+  const projectIds = [
+    ...new Set(
+      (myTasksStore.tasks as Task[])
+        .map((t: Task) => t.project_id)
+        .filter(Boolean) as string[]
+    ),
+  ];
+
+  projectIds.forEach((projectId) => {
+    listenToProject(projectId, {
+      onTaskUpdated({ task }) { myTasksStore.patchTask(task); },
+      onTaskMoved({ task })   { myTasksStore.patchTaskMove(task); },
+    });
+  });
 });
 
 // Handlers

@@ -1,11 +1,8 @@
 import { ref, computed, onMounted } from 'vue'
-import { usePage, router } from '@inertiajs/vue3'
-import { api } from '@/Services/api'
+import { usePage } from '@inertiajs/vue3'
 
 // Singleton cache
 let workspaceDataCache = null
-let cacheTimestamp = null
-const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 
 // Global event emitter for cache invalidation
 const cacheInvalidationCallbacks = []
@@ -17,7 +14,6 @@ export function onCacheInvalidation(callback) {
 export function invalidateCache(reason = 'unknown') {
   console.log(`Cache invalidated: ${reason}`)
   workspaceDataCache = null
-  cacheTimestamp = null
   cacheInvalidationCallbacks.forEach(cb => cb(reason))
 }
 
@@ -48,14 +44,9 @@ export function useSidebarData() {
     })
   })
 
-  const isCacheValid = () => {
-    if (!workspaceDataCache || !cacheTimestamp) return false
-    return Date.now() - cacheTimestamp < CACHE_DURATION
-  }
-
-  const fetchWorkspaces = async (forceRefresh = false) => {
-    // Return cached data if valid and not forcing refresh
-    if (!forceRefresh && isCacheValid()) {
+  const fetchWorkspaces = async () => {
+    // Use cached data if available
+    if (workspaceDataCache) {
       userWorkspaces.value = workspaceDataCache
       return
     }
@@ -64,20 +55,21 @@ export function useSidebarData() {
     error.value = null
 
     try {
-      const response = await api.get('/workspaces')
+      // Get workspaces from Inertia page props (passed by server)
+      const workspaces = page.props.userWorkspaces || page.props.workspaces || []
       
-      // Cache the data
-      workspaceDataCache = response.data || []
-      cacheTimestamp = Date.now()
-      userWorkspaces.value = workspaceDataCache
+      if (workspaces.length > 0) {
+        // Cache the data
+        workspaceDataCache = workspaces
+        userWorkspaces.value = workspaces
+      } else {
+        // If no workspaces in props, show empty state
+        userWorkspaces.value = []
+      }
     } catch (err) {
       error.value = err.message
       console.error('Failed to fetch workspaces:', err)
-      
-      // Fall back to page props if available
-      if (page.props.userWorkspaces) {
-        userWorkspaces.value = page.props.userWorkspaces
-      }
+      userWorkspaces.value = []
     } finally {
       isLoading.value = false
     }
@@ -85,7 +77,8 @@ export function useSidebarData() {
 
   const refreshWorkspaces = () => {
     // Force refresh by invalidating cache
-    return fetchWorkspaces(true)
+    invalidateCache('manual refresh')
+    return fetchWorkspaces()
   }
 
   // Listen for cache invalidation events
@@ -101,7 +94,7 @@ export function useSidebarData() {
 
     // Listen for cache invalidation from other operations
     handleCacheInvalidation(() => {
-      fetchWorkspaces(true)
+      fetchWorkspaces()
     })
   })
 

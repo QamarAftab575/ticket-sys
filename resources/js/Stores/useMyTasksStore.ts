@@ -233,6 +233,33 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     selectedTask.value = null;
   }
 
+  // ── Real-time helpers (called by Echo listeners) ──────────────────────────
+
+  /** Merge incoming task data into the flat tasks array. */
+  function patchTask(incoming: Partial<Task> & { id: string }) {
+    const idx = tasks.value.findIndex((t: Task) => t.id === incoming.id);
+    if (idx !== -1) {
+      tasks.value[idx] = { ...tasks.value[idx], ...incoming };
+    }
+    if (selectedTask.value?.id === incoming.id) {
+      Object.assign(selectedTask.value, incoming);
+    }
+  }
+
+  /** Insert a brand-new task assigned to the current user. */
+  function addTaskFromEvent(task: Task) {
+    const exists = tasks.value.some((t: Task) => t.id === task.id);
+    if (!exists) {
+      tasks.value.push(task);
+      totalTasks.value += 1;
+    }
+  }
+
+  /** Update section/position after a move event. */
+  function patchTaskMove(incoming: Partial<Task> & { id: string }) {
+    patchTask(incoming);
+  }
+
   function setFilters(newFilters: TaskFilter) {
     filters.value = newFilters;
     currentPage.value = 1; // Reset to first page when filtering
@@ -645,5 +672,10 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     reorderSectionsRemote,
     savePreferences,
     loadPreferences,
+
+    // Real-time
+    patchTask,
+    addTaskFromEvent,
+    patchTaskMove,
   };
 });

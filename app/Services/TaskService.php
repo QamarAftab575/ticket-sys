@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Events\TaskCreated as TaskCreatedEvent;
+use App\Events\TaskMoved as TaskMovedEvent;
+use App\Events\TaskUpdated as TaskUpdatedEvent;
 use App\Models\Project;
 use App\Models\Section;
 use App\Models\Task;
@@ -106,6 +109,9 @@ class TaskService
             if (!empty($task->description)) {
                 $this->notificationService->notifyMentionsInDescription($task->load('project'), $creator);
             }
+
+            // Broadcast real-time event
+            broadcast(new TaskCreatedEvent($task->fresh()->load('project')))->toOthers();
 
             return $task;
         });
@@ -212,7 +218,12 @@ class TaskService
                 $this->notificationService->notifyMentionsInDescription($task->load('project'), $actor);
             }
 
-            return $task->fresh();
+            $fresh = $task->fresh();
+
+            // Broadcast real-time event
+            broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+
+            return $fresh;
         });
     }
 
@@ -287,7 +298,10 @@ class TaskService
                 'new_value' => null,
             ]);
 
-            return $task->fresh();
+            $fresh = $task->fresh();
+            broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+
+            return $fresh;
         });
     }
 
@@ -327,7 +341,10 @@ class TaskService
                 'new_value' => null,
             ]);
 
-            return $task->fresh();
+            $fresh = $task->fresh();
+            broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+
+            return $fresh;
         });
     }
 
@@ -746,7 +763,10 @@ class TaskService
                 ]);
             }
 
-            return $task->fresh();
+            $fresh = $task->fresh();
+            broadcast(new TaskMovedEvent($fresh))->toOthers();
+
+            return $fresh;
         });
     }
 
@@ -822,7 +842,10 @@ class TaskService
                 ]);
             }
 
-            return $task->fresh();
+            $fresh = $task->fresh();
+            broadcast(new TaskMovedEvent($fresh))->toOthers();
+
+            return $fresh;
         });
     }
 

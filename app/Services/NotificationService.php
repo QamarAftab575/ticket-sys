@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\NotificationCreated as NotificationCreatedEvent;
 use App\Enums\NotificationType;
 use App\Models\Comment;
 use App\Models\Notification;
@@ -67,8 +68,8 @@ class NotificationService
                 continue;
             }
 
-            try {
-                Notification::create([
+                try {
+                $notification = Notification::create([
                     'organization_id' => $task->project->organization_id,
                     'user_id' => $userId,
                     'actor_user_id' => $actor->id,
@@ -83,6 +84,7 @@ class NotificationService
                         'task_name' => $task->name,
                     ],
                 ]);
+                $this->broadcastNotification($notification);
             } catch (\Exception $e) {
                 Log::error('Failed to create mention notification', [
                     'user_id' => $userId,
@@ -132,7 +134,7 @@ class NotificationService
             }
 
             try {
-                Notification::create([
+                $notification = Notification::create([
                     'organization_id' => $task->project->organization_id,
                     'user_id' => $userId,
                     'actor_user_id' => $actor->id,
@@ -147,6 +149,7 @@ class NotificationService
                         'task_name' => $task->name,
                     ],
                 ]);
+                $this->broadcastNotification($notification);
             } catch (\Exception $e) {
                 Log::error('Failed to create comment mention notification', [
                     'user_id' => $userId,
@@ -185,7 +188,7 @@ class NotificationService
         }
 
         try {
-            Notification::create([
+            $notification = Notification::create([
                 'organization_id' => $task->project->organization_id,
                 'user_id' => $assignee->id,
                 'actor_user_id' => $actor->id,
@@ -200,6 +203,7 @@ class NotificationService
                     'task_name' => $task->name,
                 ],
             ]);
+            $this->broadcastNotification($notification);
         } catch (\Exception $e) {
             Log::error('Failed to create task assignment notification', [
                 'user_id' => $assignee->id,
@@ -207,6 +211,25 @@ class NotificationService
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Broadcast a notification to the recipient in real time.
+     */
+    private function broadcastNotification(Notification $notification): void
+    {
+        $recipient = $notification->user;
+
+        if (!$recipient) {
+            return;
+        }
+
+        $unreadCount = $this->getUnreadCount(
+            $recipient,
+            $notification->organization_id
+        );
+
+        broadcast(new NotificationCreatedEvent($notification, $unreadCount));
     }
 
     /**

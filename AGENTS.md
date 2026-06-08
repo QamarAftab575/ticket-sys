@@ -40,4 +40,4 @@ Avoid to create md files.
 - First analyze existing implementation  
 - If already correct, leave it  
 - If not aligned, fix minimally  
-- Ensure backward compatibility  
+- Ensure backward compatibility

@@ -373,6 +373,32 @@ export const useTasksStore = defineStore('tasks', () => {
     selectedTask.value = null;
   }
 
+  // ── Real-time helpers (called by Echo listeners) ──────────────────────────
+
+  /** Merge incoming task data into the list without a network round-trip. */
+  function patchTask(incoming: Partial<Task> & { id: string }) {
+    const idx = tasks.value.findIndex(t => t.id === incoming.id);
+    if (idx !== -1) {
+      tasks.value[idx] = { ...tasks.value[idx], ...incoming };
+    }
+    if (selectedTask.value?.id === incoming.id) {
+      Object.assign(selectedTask.value, incoming);
+    }
+  }
+
+  /** Insert a brand-new task from a broadcast event. */
+  function addTaskFromEvent(task: Task) {
+    const exists = tasks.value.some(t => t.id === task.id);
+    if (!exists) {
+      tasks.value.unshift(task);
+    }
+  }
+
+  /** Update section/position after a move event. */
+  function patchTaskMove(incoming: Partial<Task> & { id: string }) {
+    patchTask(incoming);
+  }
+
   return {
     // State
     tasks,
@@ -408,5 +434,10 @@ export const useTasksStore = defineStore('tasks', () => {
     setColumnWidth,
     selectTask,
     deselectTask,
+
+    // Real-time
+    patchTask,
+    addTaskFromEvent,
+    patchTaskMove,
   };
 });

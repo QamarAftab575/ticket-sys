@@ -156,10 +156,13 @@ class ProjectService
     /**
      * Update project status.
      */
-    public function updateStatus(Project $project, string $status): Project
+    public function updateStatus(Project $project, string $status, ?string $statusUpdate = null): Project
     {
         $oldStatus = $project->status;
-        $project->update(['status' => $status]);
+        $project->update([
+            'status'        => $status,
+            'status_update' => $statusUpdate,
+        ]);
 
         // Record audit trail
         $this->recordActivity($project, 'status_changed', auth()->user(), ['status' => $oldStatus], ['status' => $status]);
