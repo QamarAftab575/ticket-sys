@@ -32,6 +32,12 @@ class User extends Authenticatable
         'timezone',
         'utc_offset_minutes',
         'is_suspended',
+        'is_super_admin',
+        'active_plan_id',
+        'trial_ends_at',
+        'plan_starts_at',
+        'stripe_customer_id',
+        'stripe_subscription_id',
         'last_login_at',
         'must_set_password',
         'active_workspace_id',
@@ -56,8 +62,11 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'trial_ends_at' => 'datetime',
+            'plan_starts_at' => 'datetime',
             'last_login_at' => 'datetime',
             'is_suspended' => 'boolean',
+            'is_super_admin' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -314,6 +323,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user is a super admin (script owner).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_super_admin;
+    }
+
+    /**
      * Scope to get only active (non-deleted) users.
      */
     public function scopeActive($query)
@@ -346,7 +363,34 @@ class User extends Authenticatable
     }
 
     /**
-     * Get API tokens for this user
+     * Get the user's active plan.
+     */
+    public function activePlan()
+    {
+        return $this->belongsTo(Plan::class, 'active_plan_id');
+    }
+
+    /**
+     * Get all subscriptions for this user.
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * Get the user's current active subscription.
+     */
+    public function currentSubscription()
+    {
+        return $this->subscriptions()
+            ->active()
+            ->latest('started_at')
+            ->first();
+    }
+
+    /**
+     * API tokens for this user
      */
     public function apiTokens(): HasMany
     {

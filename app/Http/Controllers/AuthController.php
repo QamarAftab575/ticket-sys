@@ -117,6 +117,11 @@ class AuthController extends Controller
                 return redirect()->route('email.verify');
             }
 
+            // Check if user is super admin - redirect to admin dashboard
+            if ($user->is_super_admin) {
+                return redirect()->route('admin.index');
+            }
+
             // Handle org invitation token in session
             $token = session('invitation_token');
             if ($token) {

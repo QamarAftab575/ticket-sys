@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminWorkspaceController;
 use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthController;
@@ -18,6 +21,7 @@ use App\Http\Controllers\ProjectSettingsController;
 use App\Http\Controllers\ProjectActivityController;
 use App\Http\Controllers\ProjectViewController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\WorkspaceDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -152,10 +156,11 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     })->name('settings');
     Route::post('/settings/save', [AuthController::class, 'saveSettings'])->name('settings.save');
 
-    // Google settings routes (workspace owner/admin or global admin)
-    Route::get('/settings/integrations/google', [GoogleSettingsController::class, 'show'])->name('settings.google.show');
-    Route::post('/settings/integrations/google', [GoogleSettingsController::class, 'update'])->name('settings.google.update');
-    Route::post('/settings/integrations/google/test', [GoogleSettingsController::class, 'testCredentials'])->name('settings.google.test');
+    // Subscription routes
+    Route::get('/settings/subscriptions', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+    Route::post('/settings/subscriptions/change-plan', [SubscriptionController::class, 'changePlan'])->name('subscriptions.change-plan');
+    Route::post('/settings/subscriptions/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+    Route::post('/settings/subscriptions/rebuy', [SubscriptionController::class, 'rebuy'])->name('subscriptions.rebuy');
 
     // API Token routes (workspace owner/admin or global admin)
     Route::get('/settings/integrations/tokens', [ApiTokenController::class, 'show'])->name('settings.api-tokens.show');
@@ -261,6 +266,44 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     Route::get('/attachments/{attachment}/download', [AttachmentController::class, 'download'])->name('attachments.download');
     Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
 });
+
+
+// Admin routes (super admin only)
+Route::prefix('admin')
+    ->middleware(['auth', 'password.set', 'super.admin'])
+    ->name('admin.')
+    ->group(function () {
+        // Dashboard
+        Route::get('/', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
+
+        // Users management
+        Route::get('/users', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'show'])->name('users.show');
+        Route::post('/users/{user}/impersonate', [\App\Http\Controllers\Admin\AdminUserController::class, 'impersonate'])->name('users.impersonate');
+        Route::get('/stop-impersonating', [\App\Http\Controllers\Admin\AdminUserController::class, 'stopImpersonating'])->name('stop-impersonating');
+        Route::post('/users/{user}/assign-plan', [\App\Http\Controllers\Admin\AdminUserController::class, 'assignPlan'])->name('users.assign-plan');
+        Route::post('/users/{user}/extend-trial', [\App\Http\Controllers\Admin\AdminUserController::class, 'extendTrial'])->name('users.extend-trial');
+        Route::patch('/users/{user}/suspend', [\App\Http\Controllers\Admin\AdminUserController::class, 'suspend'])->name('users.suspend');
+        Route::patch('/users/{user}/activate', [\App\Http\Controllers\Admin\AdminUserController::class, 'activate'])->name('users.activate');
+        Route::delete('/users/{user}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('users.destroy');
+
+        // Workspaces management
+        Route::get('/workspaces', [\App\Http\Controllers\Admin\AdminWorkspaceController::class, 'index'])->name('workspaces.index');
+        Route::patch('/workspaces/{organization}/deactivate', [\App\Http\Controllers\Admin\AdminWorkspaceController::class, 'deactivate'])->name('workspaces.deactivate');
+        Route::patch('/workspaces/{organization}/activate', [\App\Http\Controllers\Admin\AdminWorkspaceController::class, 'activate'])->name('workspaces.activate');
+        Route::delete('/workspaces/{organization}', [\App\Http\Controllers\Admin\AdminWorkspaceController::class, 'destroy'])->name('workspaces.destroy');
+
+        // Settings & Billing
+        Route::get('/settings', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'index'])->name('settings');
+        Route::post('/settings', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'update'])->name('settings.update');
+        Route::post('/settings/google/test', [GoogleSettingsController::class, 'testCredentials'])->name('settings.google.test');
+
+        // Plans management
+        Route::get('/settings/plans', [\App\Http\Controllers\Admin\AdminPlanController::class, 'index'])->name('plans.index');
+        Route::post('/settings/plans', [\App\Http\Controllers\Admin\AdminPlanController::class, 'store'])->name('plans.store');
+        Route::patch('/settings/plans/{plan}', [\App\Http\Controllers\Admin\AdminPlanController::class, 'update'])->name('plans.update');
+        Route::delete('/settings/plans/{plan}', [\App\Http\Controllers\Admin\AdminPlanController::class, 'destroy'])->name('plans.destroy');
+    });
 
 
 Route::get('/test-mail', function () {

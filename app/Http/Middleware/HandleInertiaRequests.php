@@ -39,12 +39,14 @@ class HandleInertiaRequests extends Middleware
                     'email_verified_at'  => $user->email_verified_at,
                     'is_admin'           => $user->is_admin ?? false,
                     'active_workspace_id' => $user->active_workspace_id,
+                    'needs_upgrade'      => \App\Helpers\BillingHelper::needsUpgrade($user),
+                    'trial_ends_at'      => $user->trial_ends_at,
                 ] : null,
             ],
             'sidebarProjects' => $user ? \App\Models\Project::visibleTo($user)
                 ->select('id', 'name', 'color', 'icon', 'archived_at', 'privacy')
                 ->orderBy('name')
-                ->limit(50) // Fetch up to 50, frontend will paginate
+                ->limit(50)
                 ->get()
                 : [],
         ]);

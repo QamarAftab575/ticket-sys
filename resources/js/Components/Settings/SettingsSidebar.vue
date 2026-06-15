@@ -14,18 +14,22 @@
       </Link>
 
       <div class="mt-4 pt-4 border-t">
-        <h3 class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Integrations</h3>
+        <h3 class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Billing</h3>
         <Link
-          href="/settings/integrations/google"
+          href="/settings/subscriptions"
           :class="[
             'block px-4 py-2 rounded-lg font-medium transition-colors ml-2',
-            isActive('/settings/integrations/google') 
+            isActive('/settings/subscriptions') 
               ? 'bg-blue-50 text-blue-600' 
               : 'text-gray-700 hover:bg-gray-50'
           ]"
         >
-          Google Social Login
+          Plans & Subscriptions
         </Link>
+      </div>
+
+      <div class="mt-4 pt-4 border-t">
+        <h3 class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Integrations</h3>
         <Link
           href="/settings/integrations/tokens"
           :class="[

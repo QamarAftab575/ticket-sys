@@ -29,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role'              => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission'        => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'auth.api-token'    => \App\Http\Middleware\AuthenticateApiToken::class,
+            'super.admin'       => \App\Http\Middleware\SuperAdminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

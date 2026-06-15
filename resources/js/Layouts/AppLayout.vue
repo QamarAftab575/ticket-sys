@@ -33,6 +33,12 @@
       @close="showInviteModal = false"
       @invited="handleInviteSent"
     />
+
+    <!-- Upgrade Modal -->
+    <UpgradeModal
+      v-if="showUpgradeModal"
+      @dismiss="dismissUpgradeModal"
+    />
   </div>
 </template>
 
@@ -42,11 +48,13 @@ import { usePage } from '@inertiajs/vue3'
 import AppSidebar from '@/Components/Layout/AppSidebar.vue'
 import AppHeader from '@/Components/Layout/AppHeader.vue'
 import InviteModal from '@/Components/Workspace/InviteModal.vue'
+import UpgradeModal from '@/Components/UpgradeModal.vue'
 import { useSidebarData } from '@/Composables/useSidebarData'
 import { useRealtimeListeners } from '@/Composables/useRealtimeListeners'
 
 const page = usePage()
 const showInviteModal = ref(false)
+const showUpgradeModalState = ref(false)
 const mobileOpen = ref(false)
 
 // Props passed from server (for backward compatibility)
@@ -77,6 +85,14 @@ const currentRoute = computed(() => {
   if (url.includes('/my-tasks')) return 'my-tasks'
   return 'dashboard'
 })
+
+const showUpgradeModal = computed(() => {
+  return page.props.auth?.user?.needs_upgrade === true && !showUpgradeModalState.value === false
+})
+
+const dismissUpgradeModal = () => {
+  showUpgradeModalState.value = true
+}
 
 const handleInviteSent = () => {
   showInviteModal.value = false
