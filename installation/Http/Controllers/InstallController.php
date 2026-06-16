@@ -300,7 +300,7 @@ class InstallController extends Controller
     private function processEmail(Request $request): array|bool
     {
         $request->validate([
-            'mail_mailer' => 'required|in:smtp,sendmail,mailgun,ses,postmark',
+            'mail_mailer' => 'required|string',
             'mail_host' => 'nullable|string',
             'mail_port' => 'nullable|integer',
             'mail_username' => 'nullable|string',
