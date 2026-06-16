@@ -48,6 +48,10 @@ class Task extends Model
     ];
 
     /**
+     * UUID foreign keys (project_id, section_id, my_tasks_section_id, etc.)
+     * are automatically handled by the HasUuids trait and do not require
+     * explicit casting. They are stored and retrieved as strings naturally.
+     */
      * Get the project that owns the task.
      */
     public function project(): BelongsTo
@@ -64,7 +68,19 @@ class Task extends Model
     }
 
     /**
-     * Get the My Tasks section for this task.
+     * Get the My Tasks section for this task (BelongsTo).
+     * 
+     * My Tasks sections are user-specific organizational sections.
+     * Each task assigned to a user is auto-assigned to their "Recently Assigned" section
+     * when first accessed in the My Tasks view.
+     * 
+     * Used by:
+     * - MyTasksService::getUserTasks() for eager-loading task sections
+     * - TaskService::moveTaskInMyTasks() for moving tasks between sections
+     * - My Tasks frontend views for organizing and displaying tasks
+     * 
+     * @see MyTasksService::getUserTasks()
+     * @see TaskService::moveTaskInMyTasks()
      */
     public function myTasksSection(): BelongsTo
     {

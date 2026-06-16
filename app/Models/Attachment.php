@@ -45,4 +45,12 @@ class Attachment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the comment that owns the attachment.
+     */
+    public function comment(): BelongsTo
+    {
+        return $this->belongsTo(Comment::class);
+    }
 }

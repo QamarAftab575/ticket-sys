@@ -123,4 +123,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Installation Status
+    |--------------------------------------------------------------------------
+    |
+    | This flag determines if the application has been fully installed.
+    | When false, the installer module is loaded. When true, config cache
+    | takes over and the installer module is permanently disabled.
+    |
+    */
+
+    'installed' => env('APP_INSTALLED', false),
+
 ];

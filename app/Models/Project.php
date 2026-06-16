@@ -66,6 +66,15 @@ class Project extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /**
+     * Get the project manager/lead (Project Lead).
+     * The manager is responsible for overseeing the project.
+     */
+    public function manager(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'manager_id');
+    }
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);

@@ -309,8 +309,14 @@ Search specific domains using the CLI tool below.
 
 Check if Python is installed:
 
+**macOS/Linux:**
 ```bash
-python3 --version || python --version
+python3 --version
+```
+
+**Windows:**
+```powershell
+py --version
 ```
 
 If Python is not installed, install it based on user's OS:
@@ -362,8 +368,14 @@ Extract key information from user request:
 
 **Always start with `--design-system`** to get comprehensive recommendations with reasoning:
 
+**macOS/Linux:**
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system [-p "Project Name"]
+```
+
+**Windows (PowerShell):**
+```powershell
+py skills/ui-ux-pro-max/scripts/search.py "<product_type> <industry> <keywords>" --design-system [-p "Project Name"]
 ```
 
 This command:
@@ -372,26 +384,42 @@ This command:
 3. Returns complete design system: pattern, style, colors, typography, effects
 4. Includes anti-patterns to avoid
 
-**Example:**
+**Example (macOS/Linux):**
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
+```
+
+**Example (Windows):**
+```powershell
+py skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness service" --design-system -p "Serenity Spa"
 ```
 
 ### Step 2b: Persist Design System (Master + Overrides Pattern)
 
 To save the design system for **hierarchical retrieval across sessions**, add `--persist`:
 
+**macOS/Linux:**
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
+```
+
+**Windows:**
+```powershell
+py skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name"
 ```
 
 This creates:
 - `design-system/MASTER.md` — Global Source of Truth with all design rules
 - `design-system/pages/` — Folder for page-specific overrides
 
-**With page-specific override:**
+**With page-specific override (macOS/Linux):**
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name" --page "dashboard"
+```
+
+**With page-specific override (Windows):**
+```powershell
+py skills/ui-ux-pro-max/scripts/search.py "<query>" --design-system --persist -p "Project Name" --page "dashboard"
 ```
 
 This also creates:
@@ -415,8 +443,14 @@ Now, generate the code...
 
 After getting the design system, use domain searches to get additional details:
 
+**macOS/Linux:**
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
+```
+
+**Windows:**
+```powershell
+py skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
 ```
 
 **When to use detailed searches:**
@@ -440,8 +474,14 @@ python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n
 
 Get React Native implementation-specific best practices:
 
+**macOS/Linux:**
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack react-native
+```
+
+**Windows:**
+```powershell
+py skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack react-native
 ```
 
 ---
@@ -484,14 +524,21 @@ python3 skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack react-native
 
 ### Step 2: Generate Design System (REQUIRED)
 
+**macOS/Linux:**
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "AI search tool modern minimal" --design-system -p "AI Search"
+```
+
+**Windows:**
+```powershell
+py skills/ui-ux-pro-max/scripts/search.py "AI search tool modern minimal" --design-system -p "AI Search"
 ```
 
 **Output:** Complete design system with pattern, style, colors, typography, effects, and anti-patterns.
 
 ### Step 3: Supplement with Detailed Searches (as needed)
 
+**macOS/Linux:**
 ```bash
 # Get style options for a modern tool product
 python3 skills/ui-ux-pro-max/scripts/search.py "minimalism dark mode" --domain style
@@ -500,10 +547,25 @@ python3 skills/ui-ux-pro-max/scripts/search.py "minimalism dark mode" --domain s
 python3 skills/ui-ux-pro-max/scripts/search.py "search loading animation" --domain ux
 ```
 
+**Windows:**
+```powershell
+# Get style options for a modern tool product
+py skills/ui-ux-pro-max/scripts/search.py "minimalism dark mode" --domain style
+
+# Get UX best practices for search interaction and loading
+py skills/ui-ux-pro-max/scripts/search.py "search loading animation" --domain ux
+```
+
 ### Step 4: Stack Guidelines
 
+**macOS/Linux:**
 ```bash
 python3 skills/ui-ux-pro-max/scripts/search.py "list performance navigation" --stack react-native
+```
+
+**Windows:**
+```powershell
+py skills/ui-ux-pro-max/scripts/search.py "list performance navigation" --stack react-native
 ```
 
 **Then:** Synthesize design system + detailed searches and implement the design.
@@ -514,12 +576,22 @@ python3 skills/ui-ux-pro-max/scripts/search.py "list performance navigation" --s
 
 The `--design-system` flag supports two output formats:
 
+**macOS/Linux:**
 ```bash
 # ASCII box (default) - best for terminal display
 python3 skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system
 
 # Markdown - best for documentation
 python3 skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f markdown
+```
+
+**Windows:**
+```powershell
+# ASCII box (default) - best for terminal display
+py skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system
+
+# Markdown - best for documentation
+py skills/ui-ux-pro-max/scripts/search.py "fintech crypto" --design-system -f markdown
 ```
 
 ---

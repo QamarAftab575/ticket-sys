@@ -67,6 +67,7 @@ class User extends Authenticatable
             'last_login_at' => 'datetime',
             'is_suspended' => 'boolean',
             'is_super_admin' => 'boolean',
+            'must_set_password' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -85,15 +86,6 @@ class User extends Authenticatable
     protected function setEmailAttribute(string $value): void
     {
         $this->attributes['email'] = strtolower($value);
-    }
-
-    /**
-     * Get the user's avatar as a full public URL.
-     * Returns null if no avatar is set.
-     */
-    public function getAvatarUrlAttribute(): ?string
-    {
-        return $this->avatar ? asset('storage/' . $this->avatar) : null;
     }
 
     /**
@@ -116,27 +108,6 @@ class User extends Authenticatable
     public function getFullNameAttribute(): string
     {
         return ucwords($this->name);
-    }
-
-    /**
-     * Get the user's first name (capitalized).
-     */
-    public function getFirstNameAttribute(): string
-    {
-        $parts = explode(' ', $this->name);
-        return ucfirst($parts[0] ?? '');
-    }
-
-    /**
-     * Get the user's last name (capitalized).
-     */
-    public function getLastNameAttribute(): string
-    {
-        $parts = explode(' ', $this->name);
-        if (count($parts) > 1) {
-            return ucfirst(end($parts));
-        }
-        return '';
     }
 
     /**
@@ -283,22 +254,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the invitations for this user.
-     */
-    public function invitations()
-    {
-        return $this->hasMany(Invitation::class, 'user_id');
-    }
-
-    /**
-     * Get the invitations sent by this user.
-     */
-    public function sentInvitations()
-    {
-        return $this->hasMany(Invitation::class, 'invited_by_user_id');
-    }
-
-    /**
      * Check if the user's email is verified.
      */
     public function isEmailVerified(): bool
@@ -363,7 +318,32 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's active plan.
+     * Scope to get users with active paid plans.
+     * Used by BillingHelper to enforce plan-based limits.
+     */
+    public function scopeWithActivePlan($query)
+    {
+        return $query->whereNotNull('active_plan_id')
+            ->whereNotNull('stripe_subscription_id');
+    }
+
+    /**
+     * Scope to get users on trial.
+     * Used to identify users with trial access.
+     */
+    public function scopeOnTrial($query)
+    {
+        return $query->where('trial_ends_at', '>', now())
+            ->whereNull('active_plan_id');
+    }
+
+    /**
+     * Get the user's active plan (BelongsTo).
+     * Used by BillingHelper to check workspace/project/member limits.
+     * 
+     * @see BillingHelper::canCreateWorkspace()
+     * @see BillingHelper::canAddMember()
+     * @see BillingHelper::canCreateProject()
      */
     public function activePlan()
     {
@@ -371,15 +351,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all subscriptions for this user.
+     * Get all subscriptions for this user (HasMany).
+     * Used by SubscriptionService and SubscriptionController for billing operations.
      */
-    public function subscriptions()
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
     }
 
     /**
      * Get the user's current active subscription.
+     * Used by SubscriptionService and SubscriptionController for billing checks.
+     * 
+     * @see SubscriptionService::hasActiveSubscription()
+     * @see SubscriptionService::getCurrentPlanDetails()
      */
     public function currentSubscription()
     {
