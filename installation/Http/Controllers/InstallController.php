@@ -24,6 +24,9 @@ class InstallController extends Controller
      */
     public function index()
     {
+        // Force session to start early
+        session()->start();
+        
         $requirements = $this->installationService->checkRequirements();
 
         return view('installer::welcome', [
@@ -37,6 +40,9 @@ class InstallController extends Controller
      */
     public function step(string $step)
     {
+        // Force session to start early
+        session()->start();
+        
         $validSteps = ['requirements', 'database', 'site', 'admin', 'email'];
 
         if (!in_array($step, $validSteps)) {
@@ -352,8 +358,7 @@ class InstallController extends Controller
     public function finalize(Request $request)
     {
         try {
-          
-             // Check if installation is already complete to prevent duplicate runs
+            // Check if installation is already complete to prevent duplicate runs
             if (env('APP_INSTALLED') === 'true' || env('APP_INSTALLED') === true) {
                 return redirect()->route('installer.done');
             }
@@ -368,7 +373,7 @@ class InstallController extends Controller
             $adminCredentials = session('admin_credentials', []);
             if ($adminCredentials) {
                 // Check if admin user already exists
-                $existingUser = User::where('email', $adminCredentials['email'])->where('is_super_admin' , true)->first();
+                $existingUser = User::where('email', $adminCredentials['email'])->where('is_super_admin', true)->first();
                 
                 if (!$existingUser) {
                     $adminUser = $this->installationService->createAdminUser(
@@ -380,28 +385,11 @@ class InstallController extends Controller
                     // Create the first workspace for the admin
                     $workspaceName = $adminCredentials['workspace_name'] ?? 'Main Workspace';
                     $this->installationService->createFirstWorkspace($adminUser, $workspaceName);
-                } else {
-                    $adminUser = $existingUser;
                 }
             }
 
-            // Clear any existing cache
-            Artisan::call('cache:clear');
-
-            // Update .env with installation complete and switch back to database drivers
-            $this->installationService->updateEnv([
-                'APP_INSTALLED' => 'true',
-                'SESSION_DRIVER' => 'database', // Switch back to database sessions
-                'CACHE_STORE' => 'database', // Switch back to database cache
-                'QUEUE_CONNECTION' => 'database', // Switch back to database queue
-            ]);
-
-            // Remove Installation namespace from composer.json
-            $this->installationService->removeInstallationFromComposer();
-
-            // Run config cache - this is critical!
-            // After this, Laravel will use bootstrap/cache/config.php
-            Artisan::call('config:cache');
+            // Set session to mark that migrations have been run
+            session(['migrations_completed' => true]);
 
             // Clear session data
             session()->forget(['installer_data', 'admin_credentials']);
@@ -417,9 +405,48 @@ class InstallController extends Controller
      */
     public function done()
     {
+        // Check if migrations have been completed
+        if (!session('migrations_completed', false)) {
+            return redirect()->route('installer.index');
+        }
+
         return view('installer::done', [
             'appName' => config('app.name'),
             'appUrl' => config('app.url'),
         ]);
+    }
+
+    /**
+     * Complete the installation - called when user clicks Complete button on done page.
+     */
+    public function complete()
+    {
+        try {
+            // Switch to database drivers now that migrations have completed
+            $this->installationService->updateEnv([
+                'APP_INSTALLED' => 'true',
+                'SESSION_DRIVER' => 'database',
+                'CACHE_STORE' => 'database',
+                'QUEUE_CONNECTION' => 'database',
+            ]);
+
+            // Remove Installation namespace from composer.json
+            $this->installationService->removeInstallationFromComposer();
+
+            // Clear any cache that might have old installer references
+            try {
+                Artisan::call('cache:clear');
+            } catch (\Exception $e) {
+                \Log::debug('Cache clear failed during completion: ' . $e->getMessage());
+            }
+
+            // Destroy the migrations completed session
+            session()->forget('migrations_completed');
+
+            // Return JSON response with redirect URL
+            return response()->json(['redirect' => config('app.url') . '/login']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Installation completion failed: ' . $e->getMessage()], 422);
+        }
     }
 }

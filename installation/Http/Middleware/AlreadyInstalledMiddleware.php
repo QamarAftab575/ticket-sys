@@ -15,6 +15,15 @@ class AlreadyInstalledMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        // Ensure session is started for installer
+        session()->start();
+        
+        // Allow finalize, done, and complete routes to always run regardless of installation status
+        if ($request->is('install/finalize') || $request->is('install/complete') || $request->is('install/done')) {
+            return $next($request);
+        }
+        
+        // For other routes, check if already installed
         if (config('app.installed', false)) {
             return redirect('/');
         }
@@ -22,3 +31,4 @@ class AlreadyInstalledMiddleware
         return $next($request);
     }
 }
+

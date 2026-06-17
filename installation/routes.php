@@ -10,4 +10,5 @@ Route::middleware(['web', AlreadyInstalledMiddleware::class])->group(function ()
     Route::post('/install/step/{step}', [InstallController::class, 'processStep'])->name('installer.process');
     Route::match(['get', 'post'], '/install/finalize', [InstallController::class, 'finalize'])->name('installer.finalize');
     Route::get('/install/done', [InstallController::class, 'done'])->name('installer.done');
+    Route::match(['get', 'post'], '/install/complete', [InstallController::class, 'complete'])->name('installer.complete');
 });

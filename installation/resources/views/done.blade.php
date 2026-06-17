@@ -42,8 +42,6 @@
     </strong>
     <ul>
         <li><strong>Delete the installer:</strong> Remove the <code>installation</code> folder from your server for security</li>
-        <li><strong>Set up backups:</strong> Configure regular database backups in your hosting control panel</li>
-        <li><strong>Enable SSL:</strong> Make sure your site uses HTTPS for secure connections</li>
         <li><strong>Review settings:</strong> Check your application settings in the admin panel</li>
     </ul>
 </div>
@@ -58,31 +56,34 @@
         Cron Job Setup (Optional)
     </strong>
     <p style="font-size: 14px; color: var(--text-muted); margin-top: 8px; margin-bottom: 10px;">
-        For scheduled tasks and notifications, add this cron job to your server:
+        For scheduled tasks and notifications, configure the scheduler based on your server:
     </p>
-    <pre>* * * * * php {{ base_path('artisan') }} schedule:run >> /dev/null 2>&1</pre>
-    <p style="font-size: 13px; color: var(--text-muted); margin-top: 10px;">
-        <strong>cPanel:</strong> Add to Cron Jobs section<br>
-        <strong>VPS/Linux:</strong> Run <code>crontab -e</code> and paste the command above
-    </p>
+    
+    <div style="margin-bottom: 15px;">
+        <p style="font-weight: 600; font-size: 13px; margin-bottom: 5px;">Windows (Task Scheduler):</p>
+        <pre>* * * * * php &lt;path to your project&gt;\artisan schedule:run >> /dev/null 2>&1</pre>
+    </div>
+
+    <div>
+        <p style="font-weight: 600; font-size: 13px; margin-bottom: 5px;">Linux/cPanel/VPS:</p>
+        <pre>* * * * * php {{ base_path('artisan') }} schedule:run >> /dev/null 2>&1</pre>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">
+            <strong>cPanel:</strong> Add to Cron Jobs section<br>
+            <strong>VPS/Linux:</strong> Run <code>crontab -e</code> and paste the command above
+        </p>
+    </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px;">
-    <a href="{{ $appUrl }}" class="btn btn-primary" style="text-decoration: none;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-        Go to Application
-    </a>
-    <a href="{{ $appUrl }}/login" class="btn btn-secondary" style="text-decoration: none;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-            <polyline points="10 17 15 12 10 7"></polyline>
-            <line x1="15" y1="12" x2="3" y2="12"></line>
-        </svg>
-        Login Now
-    </a>
+<div style="display: flex; justify-content: center; gap: 12px; margin-top: 32px;">
+    <form action="{{ route('installer.complete') }}" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; border: none; cursor: pointer; font-size: 16px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+           Click to Finish it
+        </button>
+    </form>
 </div>
 
 <div class="footer-note">

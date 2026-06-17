@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Installation Wizard') - {{ config('app.name') }}</title>
     
     <!-- Favicons -->
@@ -722,9 +723,21 @@
                 form.querySelectorAll('.form-group').forEach(el => el.classList.remove('error'));
 
                 try {
+                    // Create FormData and ensure CSRF token is included
+                    const formData = new FormData(form);
+                    
+                    // If CSRF token is not in form (shouldn't happen but as backup), add it
+                    if (!formData.has('_token')) {
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || 
+                                        document.querySelector('[name="_token"]')?.value;
+                        if (csrfToken) {
+                            formData.append('_token', csrfToken);
+                        }
+                    }
+
                     const response = await fetch(form.action, {
                         method: form.method,
-                        body: new FormData(form),
+                        body: formData,
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
                             'Accept': 'application/json'

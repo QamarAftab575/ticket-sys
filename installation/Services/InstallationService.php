@@ -125,29 +125,35 @@ class InstallationService
         $envContent = File::get($envPath);
 
         foreach ($values as $key => $value) {
-            // Escape special characters and add quotes if value contains spaces or special chars
+            // Escape special characters
+            $escapedValue = addcslashes($value, '\\$"');
+            
+            // Check if value needs quotes (contains spaces, special chars, or is empty after the first char)
             $needsQuotes = $value !== '' && (
                 str_contains($value, ' ') || 
                 str_contains($value, '#') || 
-                str_contains($value, '"')
+                str_contains($value, '"') ||
+                str_contains($value, '@') ||
+                str_contains($value, '!') ||
+                str_contains($value, '$') ||
+                str_contains($value, '&') ||
+                str_contains($value, '*')
             );
             
-            if ($needsQuotes && !str_starts_with($value, '"')) {
-                $value = '"' . addslashes($value) . '"';
-            } else {
-                $value = addslashes($value);
+            if ($needsQuotes && !str_starts_with($escapedValue, '"')) {
+                $escapedValue = '"' . $escapedValue . '"';
             }
 
-            if (preg_match("/^{$key}=/m", $envContent)) {
+            if (preg_match("/^" . preg_quote($key) . "=/m", $envContent)) {
                 // Key exists, update it
                 $envContent = preg_replace(
-                    "/^{$key}=.*/m",
-                    "{$key}={$value}",
+                    "/^" . preg_quote($key) . "=.*/m",
+                    $key . "=" . $escapedValue,
                     $envContent
                 );
             } else {
                 // Key doesn't exist, append it
-                $envContent .= "\n{$key}={$value}";
+                $envContent .= "\n" . $key . "=" . $escapedValue;
             }
         }
 
