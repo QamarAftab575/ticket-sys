@@ -52,6 +52,8 @@ class Task extends Model
      * are automatically handled by the HasUuids trait and do not require
      * explicit casting. They are stored and retrieved as strings naturally.
      */
+
+    /**
      * Get the project that owns the task.
      */
     public function project(): BelongsTo

@@ -3,6 +3,7 @@
 namespace Installation\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -300,13 +301,13 @@ class InstallController extends Controller
     private function processEmail(Request $request): array|bool
     {
         $request->validate([
-            'mail_mailer' => 'required|string',
+            'mail_mailer' => 'nullable|string',
             'mail_host' => 'nullable|string',
             'mail_port' => 'nullable|integer',
             'mail_username' => 'nullable|string',
             'mail_password' => 'nullable|string',
             'mail_encryption' => 'nullable|in:tls,ssl',
-            'mail_from_address' => 'required|email',
+            'mail_from_address' => 'nullable|email',
         ]);
 
         $data = session('installer_data', []);
@@ -351,24 +352,37 @@ class InstallController extends Controller
     public function finalize(Request $request)
     {
         try {
+          
+             // Check if installation is already complete to prevent duplicate runs
+            if (env('APP_INSTALLED') === 'true' || env('APP_INSTALLED') === true) {
+                return redirect()->route('installer.done');
+            }
+
             // Run migrations
             Artisan::call('migrate', ['--force' => true]);
 
             // Seed the database
             Artisan::call('db:seed', ['--force' => true]);
 
-            // Create admin user
+            // Create admin user only if not already exists
             $adminCredentials = session('admin_credentials', []);
             if ($adminCredentials) {
-                $adminUser = $this->installationService->createAdminUser(
-                    $adminCredentials['name'],
-                    $adminCredentials['email'],
-                    $adminCredentials['password']
-                );
+                // Check if admin user already exists
+                $existingUser = User::where('email', $adminCredentials['email'])->where('is_super_admin' , true)->first();
+                
+                if (!$existingUser) {
+                    $adminUser = $this->installationService->createAdminUser(
+                        $adminCredentials['name'],
+                        $adminCredentials['email'],
+                        $adminCredentials['password']
+                    );
 
-                // Create the first workspace for the admin
-                $workspaceName = $adminCredentials['workspace_name'] ?? 'Main Workspace';
-                $this->installationService->createFirstWorkspace($adminUser, $workspaceName);
+                    // Create the first workspace for the admin
+                    $workspaceName = $adminCredentials['workspace_name'] ?? 'Main Workspace';
+                    $this->installationService->createFirstWorkspace($adminUser, $workspaceName);
+                } else {
+                    $adminUser = $existingUser;
+                }
             }
 
             // Clear any existing cache
@@ -384,9 +398,6 @@ class InstallController extends Controller
 
             // Remove Installation namespace from composer.json
             $this->installationService->removeInstallationFromComposer();
-
-            // Run dump-autoload to regenerate composer files
-            Artisan::call('dump-autoload');
 
             // Run config cache - this is critical!
             // After this, Laravel will use bootstrap/cache/config.php

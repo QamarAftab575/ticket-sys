@@ -49,13 +49,13 @@
             name="mail_mailer"
             value="{{ old('mail_mailer', $mail_mailer ?? 'smtp') }}"
             placeholder="smtp"
-            required
+            
             aria-label="Email Service Provider"
         >
         <p class="help-text">e.g. <code>smtp</code></p>
     </div>
 
-    <div id="smtp-settings" style="display: none;">
+    <div id="smtp-settings" >
         <div class="form-group">
             <label for="mail_host">SMTP Host</label>
             <input 
@@ -152,7 +152,6 @@
             name="mail_from_address" 
             value="{{ old('mail_from_address', $mail_from_address ?? '') }}"
             placeholder="noreply@example.com"
-            required
             aria-label="From Email Address"
         >
         <p class="help-text">Email address that notifications will be sent from</p>
@@ -168,7 +167,7 @@
         </span>
         <div>
             <strong>Optional Configuration</strong>
-            Email configuration is optional and can be set up later in the admin panel. If you skip it now, notifications will be disabled.
+Email configuration is optional and can be completed later from the dashboard. If skipped, email notifications and member invitations will be disabled until it is configured.
         </div>
     </div>
 
@@ -189,17 +188,3 @@
     </div>
 </form>
 @endsection
-
-@push('scripts')
-<script>
-    const mailerSelect = document.getElementById('mail_mailer');
-    const smtpSettings = document.getElementById('smtp-settings');
-
-    function toggleSmtpSettings() {
-        smtpSettings.style.display = mailerSelect.value === 'smtp' ? 'block' : 'none';
-    }
-
-    mailerSelect.addEventListener('change', toggleSmtpSettings);
-    toggleSmtpSettings();
-</script>
-@endpush
