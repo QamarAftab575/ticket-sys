@@ -37,13 +37,18 @@ class AdminDashboardController extends Controller
 
         // Subscription metrics - ENHANCED
         $activeSubscriptions = \App\Models\Subscription::active()->distinct('user_id')->count('user_id');
+        $previousMonthActiveSubscriptions = $this->getPreviousMonthActiveSubscriptions();
+        $subscriptionGrowth = $this->calculateGrowthPercentage($activeSubscriptions, $previousMonthActiveSubscriptions);
+        
         $expiredSubscriptions = \App\Models\Subscription::expired()->distinct('user_id')->count('user_id');
+        $expiredThisMonth = $this->getExpiredSubscriptionsThisMonth();
+        $potentialRevenueLost = $this->calculatePotentialRevenueLost();
+        
         $monthlyRevenue = $this->calculateMonthlyRevenue();
         $previousMonthRevenue = $this->calculatePreviousMonthRevenue();
         $totalRevenue = $this->calculateTotalRevenue();
-        $expiredThisMonth = $this->getExpiredSubscriptionsThisMonth();
-        $potentialRevenueLost = $this->calculatePotentialRevenueLost();
         $revenueGrowth = $this->calculateRevenueGrowth($monthlyRevenue, $previousMonthRevenue);
+        $mrr = $this->calculateMRR();
 
         // User distribution metrics
         $userDistribution = $this->getUserDistribution();
@@ -72,23 +77,25 @@ class AdminDashboardController extends Controller
 
         return inertia('Admin/Dashboard', [
             'stats' => [
-                'total_users'               => $totalUsers,
-                'total_workspaces'          => $totalWorkspaces,
-                'total_projects'            => $totalProjects,
-                'total_tasks'               => $totalTasks,
-                'new_users_today'           => $newUsersToday,
-                'new_users_week'            => $newUsersWeek,
-                'new_users_month'           => $newUsersMonth,
-                'active_trials'             => $activeTrials,
-                'expired_trials'            => $expiredTrials,
-                'active_subscriptions'      => $activeSubscriptions,
-                'expired_subscriptions'     => $expiredSubscriptions,
-                'monthly_revenue'           => $monthlyRevenue,
-                'previous_month_revenue'    => $previousMonthRevenue,
-                'total_revenue'             => $totalRevenue,
-                'revenue_growth'            => $revenueGrowth,
-                'expired_this_month'        => $expiredThisMonth,
-                'potential_revenue_lost'    => $potentialRevenueLost,
+                'total_users'                           => $totalUsers,
+                'total_workspaces'                      => $totalWorkspaces,
+                'total_projects'                        => $totalProjects,
+                'total_tasks'                           => $totalTasks,
+                'new_users_today'                       => $newUsersToday,
+                'new_users_week'                        => $newUsersWeek,
+                'new_users_month'                       => $newUsersMonth,
+                'active_trials'                         => $activeTrials,
+                'expired_trials'                        => $expiredTrials,
+                'active_subscriptions'                  => $activeSubscriptions,
+                'subscription_growth'                   => $subscriptionGrowth,
+                'expired_subscriptions'                 => $expiredSubscriptions,
+                'expired_this_month'                    => $expiredThisMonth,
+                'potential_revenue_lost'                => $potentialRevenueLost,
+                'monthly_revenue'                       => $monthlyRevenue,
+                'previous_month_revenue'                => $previousMonthRevenue,
+                'total_revenue'                         => $totalRevenue,
+                'revenue_growth'                        => $revenueGrowth,
+                'mrr'                                   => $mrr,
             ],
             'userDistribution'          => $userDistribution,
             'planPerformance'            => $planPerformance,
@@ -112,6 +119,38 @@ class AdminDashboardController extends Controller
             ->whereMonth('started_at', now()->month)
             ->whereYear('started_at', now()->year)
             ->sum('price_paid');
+    }
+
+    /**
+     * Calculate Monthly Recurring Revenue (MRR).
+     */
+    private function calculateMRR(): float
+    {
+        return (float) \App\Models\Subscription::where('status', 'active')->sum('price_paid');
+    }
+
+    /**
+     * Get previous month active subscriptions count.
+     */
+    private function getPreviousMonthActiveSubscriptions(): int
+    {
+        $lastMonth = now()->subMonth();
+        return \App\Models\Subscription::where('status', 'active')
+            ->whereMonth('started_at', $lastMonth->month)
+            ->whereYear('started_at', $lastMonth->year)
+            ->distinct('user_id')
+            ->count('user_id');
+    }
+
+    /**
+     * Calculate growth percentage.
+     */
+    private function calculateGrowthPercentage(int $current, int $previous): float
+    {
+        if ($previous == 0) {
+            return $current > 0 ? 100 : 0;
+        }
+        return round((($current - $previous) / $previous) * 100, 2);
     }
 
     /**

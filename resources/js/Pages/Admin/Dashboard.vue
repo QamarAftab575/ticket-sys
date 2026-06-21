@@ -121,42 +121,163 @@
         </div>
       </div>
 
-      <!-- Subscription Metrics -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Paid Subscribers -->
-        <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl shadow-lg p-8 border border-emerald-200">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-emerald-600 text-sm font-semibold uppercase">Paid Subscribers</p>
-            <svg class="w-6 h-6 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-            </svg>
-          </div>
-          <p class="text-4xl font-bold text-emerald-900">{{ stats.paid_subscribers }}</p>
-          <p class="text-emerald-600 text-sm mt-4">Active subscriptions</p>
+      <!-- Subscription Overview Section -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-900">Subscription Overview</h2>
+          <p class="text-sm text-gray-600 mt-1">Real-time subscription and revenue metrics</p>
         </div>
 
-        <!-- Expired Trials -->
-        <div class="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl shadow-lg p-8 border border-rose-200">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-rose-600 text-sm font-semibold uppercase">Expired Trials</p>
-            <svg class="w-6 h-6 text-rose-600" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-            </svg>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Active Subscriptions KPI -->
+          <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl shadow-md p-8 border border-emerald-200 hover:shadow-xl transition-shadow">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex-1">
+                <p class="text-emerald-700 text-sm font-bold uppercase tracking-wide mb-3">Active Subscriptions</p>
+                <p class="text-5xl font-black text-emerald-900 mb-4">{{ formatNumber(stats.active_subscriptions) }}</p>
+                
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <svg v-if="stats.subscription_growth >= 0" class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" />
+                    </svg>
+                    <svg v-else class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586 3.707 5.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clip-rule="evenodd" />
+                    </svg>
+                    <span :class="stats.subscription_growth >= 0 ? 'text-emerald-700' : 'text-red-700'" class="text-sm font-bold">
+                      {{ stats.subscription_growth }}% vs last month
+                    </span>
+                  </div>
+                  
+                  <div class="text-sm text-emerald-600 font-medium">
+                    MRR: ${{ formatNumber(stats.mrr) }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="w-16 h-16 bg-emerald-200/50 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-8 h-8 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
           </div>
-          <p class="text-4xl font-bold text-rose-900">{{ stats.expired_trials }}</p>
-          <p class="text-rose-600 text-sm mt-4">Need upgrade</p>
-        </div>
 
-        <!-- Monthly Revenue -->
-        <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl shadow-lg p-8 border border-amber-200">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-amber-600 text-sm font-semibold uppercase">Monthly Revenue</p>
-            <svg class="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" />
-            </svg>
+          <!-- Expired Subscriptions KPI -->
+          <div class="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl shadow-md p-8 border border-rose-200 hover:shadow-xl transition-shadow">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex-1">
+                <p class="text-rose-700 text-sm font-bold uppercase tracking-wide mb-3">Expired Subscriptions</p>
+                <p class="text-5xl font-black text-rose-900 mb-4">{{ formatNumber(stats.expired_subscriptions) }}</p>
+                
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-rose-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-sm font-bold text-rose-700">
+                      {{ stats.expired_this_month }} expired this month
+                    </span>
+                  </div>
+                  
+                  <div class="text-sm text-rose-600 font-medium">
+                    Lost: ${{ formatNumber(stats.potential_revenue_lost) }}
+                  </div>
+                  
+                  <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-rose-200 text-rose-800 rounded-md text-xs font-semibold">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    Upgrade opportunity
+                  </div>
+                </div>
+              </div>
+              
+              <div class="w-16 h-16 bg-rose-200/50 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-8 h-8 text-rose-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
           </div>
-          <p class="text-4xl font-bold text-amber-900">${{ formatNumber(stats.monthly_revenue) }}</p>
-          <p class="text-amber-600 text-sm mt-4">From active plans</p>
+
+          <!-- Total Revenue KPI -->
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md p-8 border border-blue-200 hover:shadow-xl transition-shadow">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex-1">
+                <p class="text-blue-700 text-sm font-bold uppercase tracking-wide mb-3">Total Subscription Revenue</p>
+                <p class="text-5xl font-black text-blue-900 mb-4">${{ formatNumber(stats.total_revenue) }}</p>
+                
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-sm font-bold text-blue-700">
+                      This month: ${{ formatNumber(stats.monthly_revenue) }}
+                    </span>
+                  </div>
+                  
+                  <div class="text-sm text-blue-600 font-medium">
+                    Previous: ${{ formatNumber(stats.previous_month_revenue) }}
+                  </div>
+                  
+                  <div class="flex items-center gap-1 mt-2">
+                    <svg v-if="stats.revenue_growth >= 0" class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" />
+                    </svg>
+                    <svg v-else class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586 3.707 5.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clip-rule="evenodd" />
+                    </svg>
+                    <span :class="stats.revenue_growth >= 0 ? 'text-green-700' : 'text-red-700'" class="text-sm font-bold">
+                      {{ stats.revenue_growth }}% growth
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="w-16 h-16 bg-blue-200/50 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-8 h-8 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue & Subscription Trends Chart -->
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Revenue & Subscription Trends</h2>
+          <p class="text-sm text-gray-600 mt-1">Last 12 months performance overview</p>
+        </div>
+        <div class="relative" style="height: 400px;">
+          <canvas id="revenueSubscriptionTrendChart"></canvas>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
+          <div class="text-center">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+              <span class="text-sm font-medium text-gray-700">Active Subscriptions</span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ formatNumber(stats.active_subscriptions) }}</p>
+          </div>
+          <div class="text-center border-l border-r border-gray-200">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+              <span class="text-sm font-medium text-gray-700">Expired Subscriptions</span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">{{ formatNumber(stats.expired_subscriptions) }}</p>
+          </div>
+          <div class="text-center">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+              <span class="text-sm font-medium text-gray-700">Total Revenue</span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900">${{ formatNumber(stats.total_revenue) }}</p>
+          </div>
         </div>
       </div>
 
@@ -265,6 +386,7 @@ const props = defineProps({
   stats: Object,
   userGrowthChart: Object,
   revenueChart: Object,
+  revenueAndSubscriptionChart: Object,
   recentSignups: Array,
 })
 
@@ -273,6 +395,89 @@ const lastUpdated = ref('')
 onMounted(() => {
   // Update timestamp
   lastUpdated.value = new Date().toLocaleTimeString()
+
+  // Initialize Revenue & Subscription Trends Chart
+  const revSubTrendCtx = document.getElementById('revenueSubscriptionTrendChart')
+  if (revSubTrendCtx && props.revenueAndSubscriptionChart) {
+    new Chart(revSubTrendCtx, {
+      type: 'line',
+      data: {
+        labels: props.revenueAndSubscriptionChart.labels,
+        datasets: props.revenueAndSubscriptionChart.datasets,
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              font: {
+                size: 13,
+                weight: '600',
+              },
+            },
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: 12,
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            bodySpacing: 4,
+            cornerRadius: 8,
+            displayColors: true,
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.dataset.label === 'Monthly Revenue') {
+                  label += '$' + context.parsed.y.toLocaleString();
+                } else {
+                  label += context.parsed.y;
+                }
+                return label;
+              }
+            }
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#6B7280',
+              font: {
+                size: 12,
+              },
+            },
+            grid: {
+              color: 'rgba(229, 231, 235, 0.5)',
+              drawBorder: false,
+            },
+          },
+          x: {
+            ticks: {
+              color: '#6B7280',
+              font: {
+                size: 12,
+              },
+            },
+            grid: {
+              display: false,
+            },
+          },
+        },
+      },
+    })
+  }
 
   // Initialize User Growth Chart
   const userGrowthCtx = document.getElementById('userGrowthChart')
@@ -361,7 +566,7 @@ onMounted(() => {
             ticks: {
               color: '#9CA3AF',
               callback: function(value) {
-                return '$' + value
+                return '$' + value.toLocaleString()
               },
             },
             grid: {
