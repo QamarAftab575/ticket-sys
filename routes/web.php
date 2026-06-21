@@ -343,6 +343,13 @@ Route::prefix('admin')
         Route::post('/settings/plans', [\App\Http\Controllers\Admin\AdminPlanController::class, 'store'])->name('plans.store');
         Route::patch('/settings/plans/{plan}', [\App\Http\Controllers\Admin\AdminPlanController::class, 'update'])->name('plans.update');
         Route::delete('/settings/plans/{plan}', [\App\Http\Controllers\Admin\AdminPlanController::class, 'destroy'])->name('plans.destroy');
+
+        // Contacts management
+        Route::get('/contacts', [\App\Http\Controllers\Admin\AdminContactController::class, 'index'])->name('contacts.index');
+        Route::get('/contacts/{contact}', [\App\Http\Controllers\Admin\AdminContactController::class, 'show'])->name('contacts.show');
+        Route::patch('/contacts/{contact}/mark-as-read', [\App\Http\Controllers\Admin\AdminContactController::class, 'markAsRead'])->name('contacts.mark-as-read');
+        Route::patch('/contacts/{contact}/mark-as-closed', [\App\Http\Controllers\Admin\AdminContactController::class, 'markAsClosed'])->name('contacts.mark-as-closed');
+        Route::delete('/contacts/{contact}', [\App\Http\Controllers\Admin\AdminContactController::class, 'destroy'])->name('contacts.destroy');
     });
 
 

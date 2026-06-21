@@ -1,52 +1,62 @@
 ﻿<template>
-  <div class="max-w-2xl space-y-6">
+  <div class="w-full space-y-6">
     <form @submit.prevent="save" autocomplete="off" class="space-y-6">
-      <!-- Stripe Keys from ENV -->
-      <div class="bg-white rounded-lg shadow p-6 space-y-4">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Stripe API Keys</h2>
-        
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Stripe Key
-          </label>
-          <input
-            v-model="form.stripe_key"
-            type="text"
-            name="stripe_publishable_key"
-            placeholder="pk_live_..."
-            autocomplete="off"
-            spellcheck="false"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-          />
-          <p v-if="settings?.stripe_key" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.stripe_key }}</p>
+      <!-- Stripe Keys Section -->
+      <div class="bg-white rounded-lg shadow p-8 space-y-6">
+        <div class="flex items-center gap-3 mb-6">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h10m4 0a1 1 0 11-2 0m2 0a1 1 0 10-2 0m-4 0a1 1 0 11-2 0m2 0a1 1 0 10-2 0M3 5a2 2 0 012-2h14a2 2 0 012 2v2H3V5z" />
+          </svg>
+          <h2 class="text-xl font-semibold text-gray-900">Stripe API Keys</h2>
         </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Stripe Publishable Key
+            </label>
+            <input
+              v-model="form.stripe_key"
+              type="text"
+              name="stripe_publishable_key"
+              placeholder="pk_live_..."
+              autocomplete="off"
+              spellcheck="false"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+          </div>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Stripe Secret
-          </label>
-          <input
-            v-model="form.stripe_secret"
-            type="password"
-            name="stripe_secret_key"
-            placeholder="sk_live_..."
-            autocomplete="new-password"
-            spellcheck="false"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-          />
-          <p v-if="settings?.stripe_secret" class="text-xs text-gray-500 mt-1">Current value: ••••••••</p>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Stripe Secret Key
+            </label>
+            <input
+              v-model="form.stripe_secret"
+              type="password"
+              name="stripe_secret_key"
+              placeholder="sk_live_..."
+              autocomplete="new-password"
+              spellcheck="false"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+          </div>
         </div>
       </div>
 
-      <!-- Trial Period from ENV -->
-      <div class="bg-white rounded-lg shadow p-6 space-y-4">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Trial Period Settings</h2>
+      <!-- Trial Period Settings Section -->
+      <div class="bg-white rounded-lg shadow p-8 space-y-6">
+        <div class="flex items-center gap-3 mb-6">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h2 class="text-xl font-semibold text-gray-900">Trial Period Settings</h2>
+        </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Free Trial Days
           </label>
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 max-w-xs">
             <input
               v-model.number="form.free_trial_days"
               type="number"
@@ -58,80 +68,84 @@
             />
             <span class="text-sm text-gray-600">days (0 = no trial)</span>
           </div>
-          <p v-if="settings?.free_trial_days !== undefined && settings?.free_trial_days !== null" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.free_trial_days }} days</p>
         </div>
       </div>
 
-      <!-- Trial Users Limits -->
-      <div class="bg-white rounded-lg shadow p-6 space-y-4">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Trial Users Limits</h2>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Workspaces per Trial User
-          </label>
-          <div class="flex items-center gap-3">
-            <input
-              v-model.number="form.workspace_for_trial_users"
-              type="number"
-              name="workspace_trial_limit"
-              min="1"
-              max="999"
-              autocomplete="off"
-              class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            />
-            <span class="text-sm text-gray-600">workspace(s)</span>
-          </div>
-          <p v-if="settings?.workspace_for_trial_users !== undefined && settings?.workspace_for_trial_users !== null" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.workspace_for_trial_users }}</p>
+      <!-- Trial Users Limits Section -->
+      <div class="bg-white rounded-lg shadow p-8 space-y-6">
+        <div class="flex items-center gap-3 mb-6">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3.654a1 1 0 01-.894-1.447l5.394-7.72A6 6 0 1113.16 21z" />
+          </svg>
+          <h2 class="text-xl font-semibold text-gray-900">Trial Users Limits</h2>
         </div>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Projects per Workspace (Trial Users)
-          </label>
-          <div class="flex items-center gap-3">
-            <input
-              v-model.number="form.project_per_workspace_for_trial_users"
-              type="number"
-              name="project_workspace_trial_limit"
-              min="1"
-              max="999"
-              autocomplete="off"
-              class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            />
-            <span class="text-sm text-gray-600">project(s)</span>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Workspaces per Trial User
+            </label>
+            <div class="flex items-center gap-3">
+              <input
+                v-model.number="form.workspace_for_trial_users"
+                type="number"
+                name="workspace_trial_limit"
+                min="1"
+                max="999"
+                autocomplete="off"
+                class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              />
+              <span class="text-sm text-gray-600">workspace(s)</span>
+            </div>
           </div>
-          <p v-if="settings?.project_per_workspace_for_trial_users !== undefined && settings?.project_per_workspace_for_trial_users !== null" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.project_per_workspace_for_trial_users }}</p>
-        </div>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Members per Project (Trial Users)
-          </label>
-          <div class="flex items-center gap-3">
-            <input
-              v-model.number="form.members_per_project_for_trial_users"
-              type="number"
-              name="members_project_trial_limit"
-              min="1"
-              max="999"
-              autocomplete="off"
-              class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            />
-            <span class="text-sm text-gray-600">member(s)</span>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Projects per Workspace (Trial Users)
+            </label>
+            <div class="flex items-center gap-3">
+              <input
+                v-model.number="form.project_per_workspace_for_trial_users"
+                type="number"
+                name="project_workspace_trial_limit"
+                min="1"
+                max="999"
+                autocomplete="off"
+                class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              />
+              <span class="text-sm text-gray-600">project(s)</span>
+            </div>
           </div>
-          <p v-if="settings?.members_per_project_for_trial_users !== undefined && settings?.members_per_project_for_trial_users !== null" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.members_per_project_for_trial_users }}</p>
+
+          <div class="lg:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Members per Project (Trial Users)
+            </label>
+            <div class="flex items-center gap-3">
+              <input
+                v-model.number="form.members_per_project_for_trial_users"
+                type="number"
+                name="members_project_trial_limit"
+                min="1"
+                max="999"
+                autocomplete="off"
+                class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              />
+              <span class="text-sm text-gray-600">member(s)</span>
+            </div>
+          </div>
         </div>
       </div>
-
-
 
       <!-- Save Button -->
-      <div class="flex justify-end gap-3">
+      <div class="flex justify-end">
         <button
           type="submit"
-          class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition text-sm"
+          class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition text-sm flex items-center gap-2"
         >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
           Save Settings
         </button>
       </div>
@@ -169,4 +183,3 @@ const save = () => {
   opacity: 0;
 }
 </style>
-

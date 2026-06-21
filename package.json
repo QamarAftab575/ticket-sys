@@ -34,6 +34,7 @@
         "@vitejs/plugin-vue": "^6.0.5",
         "chart.js": "4.4.0",
         "pinia": "^3.0.4",
+        "swiper": "^12.2.0",
         "tippy.js": "^6.3.7",
         "vue": "^3.5.30",
         "vue-draggable-plus": "^0.6.1",

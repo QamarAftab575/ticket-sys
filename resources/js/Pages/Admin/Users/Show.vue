@@ -2,43 +2,47 @@
   <AdminLayout>
     <template #header>
       <!-- Hero Section with User Header -->
-      <div class="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 rounded-2xl shadow-2xl p-8 mb-8 text-white">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-8 mb-8">
         <div class="flex items-start justify-between mb-6">
           <div class="flex items-start gap-4">
-            <Link href="/admin/users" class="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition font-medium text-sm">
+            <Link href="/admin/users" class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition font-medium text-sm text-slate-700 dark:text-slate-300">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
               Back
             </Link>
             <div>
-              <h1 class="text-4xl font-bold">{{ user.name }}</h1>
-              <p class="text-purple-200 mt-2">{{ user.email }}</p>
+              <h1 class="text-4xl font-bold text-slate-900 dark:text-white">{{ user.name }}</h1>
+              <p class="text-slate-600 dark:text-slate-400 mt-2">{{ user.email }}</p>
             </div>
           </div>
 
           <!-- Avatar Badge -->
-          <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-3xl font-bold shadow-lg">
+          <div class="w-20 h-20 rounded-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-3xl font-bold shadow-sm text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700">
             {{ user.name.charAt(0).toUpperCase() }}
           </div>
         </div>
 
         <!-- Status Badges Row -->
         <div class="flex flex-wrap gap-2">
-          <span v-if="stats.is_suspended" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-red-500/20 border border-red-500/50 text-red-200">
-            <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+          <span v-if="stats.is_suspended" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-red-100 border border-red-300 text-red-700 dark:bg-red-900/30 dark:border-red-700 dark:text-red-200">
+            <span class="w-2 h-2 bg-red-600 dark:bg-red-400 rounded-full animate-pulse"></span>
             Suspended
           </span>
-          <span v-else class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 border border-green-500/50 text-green-200">
-            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <span v-else class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-green-100 border border-green-300 text-green-700 dark:bg-green-900/30 dark:border-green-700 dark:text-green-200">
+            <span class="w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full animate-pulse"></span>
             Active
           </span>
-          <span v-if="stats.is_super_admin" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/20 border border-amber-500/50 text-amber-200">
+          <span v-if="stats.is_super_admin" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-amber-100 border border-amber-300 text-amber-700 dark:bg-amber-900/30 dark:border-amber-700 dark:text-amber-200">
             ðŸ‘‘ Super Admin
           </span>
-          <span v-if="stats.email_verified" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 border border-blue-500/50 text-blue-200">
-            âœ“ Email Verified
+          <span v-if="stats.email_verified" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-blue-100 border border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-700 dark:text-blue-200">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            Email Verified
+         
           </span>
-          <span v-else class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/20 border border-yellow-500/50 text-yellow-200">
-            âš  Email Unverified
+          <span v-else class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 border border-yellow-300 text-yellow-700 dark:bg-yellow-900/30 dark:border-yellow-700 dark:text-yellow-200">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+            Email Unverified
+            
           </span>
         </div>
       </div>
@@ -47,7 +51,7 @@
       <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
         <button
           @click="showImpersonateModal = true"
-          class="group px-4 py-3 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition font-medium text-sm flex items-center justify-center gap-2"
+          class="group px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium text-sm flex items-center justify-center gap-2"
         >
           <svg class="w-4 h-4 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
           <span class="hidden sm:inline">Login</span>
@@ -55,7 +59,7 @@
 
         <button
           @click="showPlanModal = true"
-          class="group px-4 py-3 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg hover:shadow-green-500/50 transition font-medium text-sm flex items-center justify-center gap-2"
+          class="group px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium text-sm flex items-center justify-center gap-2"
         >
           <svg class="w-4 h-4 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
           <span class="hidden sm:inline">Plan</span>
@@ -64,7 +68,7 @@
         <button
           v-if="!stats.is_suspended"
           @click="confirmSuspend"
-          class="group px-4 py-3 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl hover:shadow-lg hover:shadow-orange-500/50 transition font-medium text-sm flex items-center justify-center gap-2"
+          class="group px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium text-sm flex items-center justify-center gap-2"
         >
           <svg class="w-4 h-4 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/></svg>
           <span class="hidden sm:inline">Suspend</span>
@@ -73,7 +77,7 @@
         <button
           v-else
           @click="confirmActivate"
-          class="group px-4 py-3 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-500/50 transition font-medium text-sm flex items-center justify-center gap-2"
+          class="group px-4 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition font-medium text-sm flex items-center justify-center gap-2"
         >
           <svg class="w-4 h-4 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
           <span class="hidden sm:inline">Activate</span>
@@ -81,7 +85,7 @@
 
         <button
           @click="confirmDelete"
-          class="group px-4 py-3 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl hover:shadow-lg hover:shadow-red-500/50 transition font-medium text-sm flex items-center justify-center gap-2"
+          class="group px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium text-sm flex items-center justify-center gap-2"
         >
           <svg class="w-4 h-4 group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/></svg>
           <span class="hidden sm:inline">Delete</span>
@@ -91,8 +95,7 @@
       <!-- User Stats Grid - Enhanced -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Workspaces -->
-        <div class="group relative bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl shadow-lg p-8 border border-blue-200/50 dark:border-blue-700/50 hover:shadow-xl hover:shadow-blue-500/20 transition-all overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/5 group-hover:to-blue-500/10 transition"></div>
+        <div class="group relative bg-white dark:bg-slate-800 rounded-xl shadow p-6 border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all overflow-hidden">
           <div class="relative">
             <div class="flex items-center justify-between mb-4">
               <p class="text-blue-600 dark:text-blue-400 text-sm font-semibold uppercase tracking-wider">Workspaces</p>
@@ -104,8 +107,7 @@
         </div>
 
         <!-- Total Projects -->
-        <div class="group relative bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-2xl shadow-lg p-8 border border-purple-200/50 dark:border-purple-700/50 hover:shadow-xl hover:shadow-purple-500/20 transition-all overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-purple-500/0 group-hover:from-purple-500/5 group-hover:to-purple-500/10 transition"></div>
+        <div class="group relative bg-white dark:bg-slate-800 rounded-xl shadow p-6 border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all overflow-hidden">
           <div class="relative">
             <div class="flex items-center justify-between mb-4">
               <p class="text-purple-600 dark:text-purple-400 text-sm font-semibold uppercase tracking-wider">Projects</p>
@@ -117,8 +119,7 @@
         </div>
 
         <!-- Total Tasks -->
-        <div class="group relative bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-2xl shadow-lg p-8 border border-green-200/50 dark:border-green-700/50 hover:shadow-xl hover:shadow-green-500/20 transition-all overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-green-500/0 to-green-500/0 group-hover:from-green-500/5 group-hover:to-green-500/10 transition"></div>
+        <div class="group relative bg-white dark:bg-slate-800 rounded-xl shadow p-6 border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all overflow-hidden">
           <div class="relative">
             <div class="flex items-center justify-between mb-4">
               <p class="text-green-600 dark:text-green-400 text-sm font-semibold uppercase tracking-wider">Tasks</p>
@@ -130,8 +131,7 @@
         </div>
 
         <!-- Account Age -->
-        <div class="group relative bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-2xl shadow-lg p-8 border border-orange-200/50 dark:border-orange-700/50 hover:shadow-xl hover:shadow-orange-500/20 transition-all overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-orange-500/0 to-orange-500/0 group-hover:from-orange-500/5 group-hover:to-orange-500/10 transition"></div>
+        <div class="group relative bg-white dark:bg-slate-800 rounded-xl shadow p-6 border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all overflow-hidden">
           <div class="relative">
             <div class="flex items-center justify-between mb-4">
               <p class="text-orange-600 dark:text-orange-400 text-sm font-semibold uppercase tracking-wider">Member Since</p>
@@ -146,7 +146,7 @@
       <!-- Detailed User Info - Enhanced -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- User Profile Info -->
-        <div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl shadow-xl p-8 border border-slate-200/50 dark:border-slate-700/50">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6 border border-slate-200 dark:border-slate-700">
           <div class="flex items-center gap-3 mb-6">
             <svg class="w-6 h-6 text-slate-600 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Profile Information</h2>
@@ -176,19 +176,19 @@
         </div>
 
         <!-- Trial & Subscription Info -->
-        <div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl shadow-xl p-8 border border-slate-200/50 dark:border-slate-700/50">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6 border border-slate-200 dark:border-slate-700">
           <div class="flex items-center gap-3 mb-6">
             <svg class="w-6 h-6 text-slate-600 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
             <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Trial & Subscription</h2>
           </div>
           <div class="space-y-5">
             <!-- If user has active paid plan -->
-            <div v-if="activePlan && stats.plan_starts_at" class="p-6 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-2 border-emerald-300 dark:from-emerald-900/20 dark:to-emerald-800/20 dark:border-emerald-700/50">
+            <div v-if="activePlan && stats.plan_starts_at" class="p-6 rounded-lg bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-700">
               <div class="flex items-start justify-between mb-4">
                 <div>
                   <p class="text-sm font-bold text-emerald-900 dark:text-emerald-200 flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-                    ðŸ’³ Active Subscription
+                     Active Subscription
                   </p>
                   <p class="text-emerald-900 dark:text-emerald-100 font-bold text-2xl mt-3">{{ activePlan.name }}</p>
                 </div>
@@ -215,7 +215,7 @@
             </div>
 
             <!-- If user is on trial -->
-            <div v-else-if="stats.trial_ends_at && !activePlan" class="p-6 rounded-xl" :class="isTrialActive ? 'bg-gradient-to-br from-yellow-50 to-yellow-100/50 border-2 border-yellow-300 dark:from-yellow-900/20 dark:to-yellow-800/20 dark:border-yellow-700/50' : 'bg-gradient-to-br from-red-50 to-red-100/50 border-2 border-red-300 dark:from-red-900/20 dark:to-red-800/20 dark:border-red-700/50'">
+            <div v-else-if="stats.trial_ends_at && !activePlan" class="p-6 rounded-lg" :class="isTrialActive ? 'bg-white dark:bg-slate-800 border border-yellow-300 dark:border-yellow-700' : 'bg-white dark:bg-slate-800 border border-red-300 dark:border-red-700'">
               <p class="text-sm font-bold flex items-center gap-2" :class="isTrialActive ? 'text-yellow-900 dark:text-yellow-200' : 'text-red-900 dark:text-red-200'">
                 <span :class="['w-3 h-3 rounded-full', isTrialActive ? 'bg-yellow-500 animate-pulse' : 'bg-red-500 animate-pulse']"></span>
                 {{ isTrialActive ? 'ðŸ”„ Active Trial' : 'â° Trial Expired' }}
@@ -240,7 +240,7 @@
             </div>
 
             <!-- If no trial and no plan -->
-            <div v-else class="p-6 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100/50 border-2 border-gray-300 dark:from-gray-900/20 dark:to-gray-800/20 dark:border-gray-700/50">
+            <div v-else class="p-6 rounded-lg bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700">
               <p class="text-sm font-bold text-gray-900 dark:text-gray-200 flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-gray-500"></span>
                 âš ï¸ No Plan or Trial
@@ -259,7 +259,7 @@
       </div>
 
       <!-- Workspaces - Enhanced -->
-      <div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl shadow-xl p-8 border border-slate-200/50 dark:border-slate-700/50 mb-8">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6 border border-slate-200 dark:border-slate-700 mb-8">
         <div class="mb-8">
           <div class="flex items-center gap-3 mb-2">
             <svg class="w-6 h-6 text-slate-600 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
@@ -304,7 +304,7 @@
       </div>
 
       <!-- Projects - Enhanced -->
-      <div class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl shadow-xl p-8 border border-slate-200/50 dark:border-slate-700/50 mb-8">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6 border border-slate-200 dark:border-slate-700 mb-8">
         <div class="mb-8">
           <div class="flex items-center gap-3 mb-2">
             <svg class="w-6 h-6 text-slate-600 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
@@ -450,7 +450,7 @@
             </button>
             <button
               @click="impersonateUser"
-              class="px-5 py-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-lg font-semibold transition shadow-lg"
+              class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition"
             >
               Login as User
             </button>
@@ -489,7 +489,7 @@
             <button
               @click="assignPlan"
               :disabled="!selectedPlanId"
-              class="px-5 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg font-semibold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Assign Plan
             </button>
@@ -528,7 +528,7 @@
             <button
               @click="extendTrial"
               :disabled="!extendDays || extendDays < 1"
-              class="px-5 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg font-semibold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Extend Trial
             </button>

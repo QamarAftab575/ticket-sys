@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
                     'utc_offset_minutes' => $user->utc_offset_minutes,
                     'email_verified_at'  => $user->email_verified_at,
                     'is_admin'           => $user->is_admin ?? false,
+                    'is_super_admin'     => $user->is_super_admin ?? false,
                     'active_workspace_id' => $user->active_workspace_id,
                     'needs_upgrade'      => \App\Helpers\BillingHelper::needsUpgrade($user),
                     'trial_ends_at'      => $user->trial_ends_at,

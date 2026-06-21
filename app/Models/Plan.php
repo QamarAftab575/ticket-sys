@@ -45,4 +45,12 @@ class Plan extends Model
     {
         return $this->hasMany(User::class, 'active_plan_id');
     }
+
+    /**
+     * Get all subscriptions for this plan.
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

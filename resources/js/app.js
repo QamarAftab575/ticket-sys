@@ -16,15 +16,19 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         const pinia = createPinia();
         
-        createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(pinia)
             .use(Vue3Toastify, {
                 autoClose: 5000,
                 position: 'top-right',
                 theme: 'light',
-            })
-            .mount(el);
+            });
+        
+        // Make route() available globally in all components
+        app.config.globalProperties.$route = window.route;
+        
+        app.mount(el);
         
         // Initialize cache invalidation on app start
         setupCacheInvalidation();
