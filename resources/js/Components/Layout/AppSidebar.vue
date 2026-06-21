@@ -2,7 +2,7 @@
   <aside
     :class="[
       'fixed inset-y-0 left-0 z-30 bg-[#2A2C2E] border-r border-gray-800 flex flex-col transition-all duration-300 ease-in-out',
-      'lg:static lg:translate-x-0 lg:z-auto',
+      'lg:static lg:translate-x-0 lg:z-auto lg:h-screen',
       collapsed ? 'w-16' : 'w-64',
       mobileOpen ? 'translate-x-0 !w-64' : '-translate-x-full lg:translate-x-0',
     ]"

@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="flex min-h-screen bg-white">
+  <div class="flex h-screen bg-white">
     <!-- Mobile overlay -->
     <div
       v-if="mobileOpen"
@@ -7,22 +7,24 @@
       @click="mobileOpen = false"
     />
 
-    <!-- Sidebar -->
-    <AppSidebar
-      :current-route="currentRoute"
-      :user-workspaces="userWorkspaces"
-      :current-workspace-id="currentWorkspaceId"
-      :user-role="userRole"
-      :mobile-open="mobileOpen"
-      :subscription-status="subscriptionStatus"
-      @close="mobileOpen = false"
-      @invite="showInviteModal = true"
-    />
+    <!-- Sidebar (Fixed) -->
+    <div class="fixed inset-y-0 left-0 lg:static lg:relative z-30 lg:z-auto">
+      <AppSidebar
+        :current-route="currentRoute"
+        :user-workspaces="userWorkspaces"
+        :current-workspace-id="currentWorkspaceId"
+        :user-role="userRole"
+        :mobile-open="mobileOpen"
+        :subscription-status="subscriptionStatus"
+        @close="mobileOpen = false"
+        @invite="showInviteModal = true"
+      />
+    </div>
 
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden min-w-0">
+    <!-- Main Content (Scrollable) -->
+    <div class="flex-1 flex flex-col overflow-hidden min-w-0 lg:ml-0">
       <AppHeader @toggle-sidebar="mobileOpen = !mobileOpen" />
-      <div class="flex-1 overflow-auto">
+      <div class="flex-1 overflow-y-auto overflow-x-hidden">
         <slot />
       </div>
     </div>

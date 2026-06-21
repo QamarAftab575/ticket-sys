@@ -110,8 +110,16 @@ class TaskService
                 $this->notificationService->notifyMentionsInDescription($task->load('project'), $creator);
             }
 
-            // Broadcast real-time event
-            broadcast(new TaskCreatedEvent($task->fresh()->load('project')))->toOthers();
+            // Broadcast real-time event (silently fail if broadcasting unavailable)
+            try {
+                broadcast(new TaskCreatedEvent($task->fresh()->load('project')))->toOthers();
+            } catch (\Exception $e) {
+                // Silently fail - don't break the response
+                \Log::warning('Failed to broadcast task created event', [
+                    'task_id' => $task->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $task;
         });
@@ -220,8 +228,16 @@ class TaskService
 
             $fresh = $task->fresh();
 
-            // Broadcast real-time event
-            broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+            // Broadcast real-time event (silently fail if broadcasting unavailable)
+            try {
+                broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+            } catch (\Exception $e) {
+                // Silently fail - don't break the response
+                \Log::warning('Failed to broadcast task update event', [
+                    'task_id' => $task->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $fresh;
         });
@@ -299,7 +315,17 @@ class TaskService
             ]);
 
             $fresh = $task->fresh();
-            broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+            
+            // Broadcast real-time event (silently fail if broadcasting unavailable)
+            try {
+                broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+            } catch (\Exception $e) {
+                // Silently fail - don't break the response
+                \Log::warning('Failed to broadcast task updated event', [
+                    'task_id' => $task->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $fresh;
         });
@@ -342,7 +368,17 @@ class TaskService
             ]);
 
             $fresh = $task->fresh();
-            broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+            
+            // Broadcast real-time event (silently fail if broadcasting unavailable)
+            try {
+                broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+            } catch (\Exception $e) {
+                // Silently fail - don't break the response
+                \Log::warning('Failed to broadcast task updated event', [
+                    'task_id' => $task->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $fresh;
         });
@@ -764,7 +800,17 @@ class TaskService
             }
 
             $fresh = $task->fresh();
-            broadcast(new TaskMovedEvent($fresh))->toOthers();
+            
+            // Broadcast real-time event (silently fail if broadcasting unavailable)
+            try {
+                broadcast(new TaskMovedEvent($fresh))->toOthers();
+            } catch (\Exception $e) {
+                // Silently fail - don't break the response
+                \Log::warning('Failed to broadcast task moved event', [
+                    'task_id' => $task->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $fresh;
         });
@@ -843,7 +889,17 @@ class TaskService
             }
 
             $fresh = $task->fresh();
-            broadcast(new TaskMovedEvent($fresh))->toOthers();
+            
+            // Broadcast real-time event (silently fail if broadcasting unavailable)
+            try {
+                broadcast(new TaskMovedEvent($fresh))->toOthers();
+            } catch (\Exception $e) {
+                // Silently fail - don't break the response
+                \Log::warning('Failed to broadcast task moved event', [
+                    'task_id' => $task->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return $fresh;
         });

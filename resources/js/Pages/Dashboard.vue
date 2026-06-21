@@ -1,6 +1,14 @@
 ﻿<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="workspace" :user-role="userRole">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Greeting Header -->
+      <DashboardGreeting />
+
+      <!-- My Tasks Section -->
+      <div class="mb-12">
+        <DashboardTasks :user-initials="userInitials" />
+      </div>
+
       <!-- Workspaces Section -->
       <div class="mb-12">
         <div class="flex justify-between items-center mb-6">
@@ -80,15 +88,25 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3'
+import { computed } from 'vue'
+import { Link, usePage } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import DashboardGreeting from '@/Components/Dashboard/DashboardGreeting.vue'
+import DashboardTasks from '@/Components/Dashboard/DashboardTasks.vue'
 
-defineProps({
+const page = usePage()
+
+const props = defineProps({
   projects: Array,
   workspaces: Array,
   userRole: String,
   workspace: Object,
   userWorkspaces: Array,
+})
+
+const userInitials = computed(() => {
+  const name = page.props.auth?.user?.name || 'User'
+  return name.split(' ').map(n => n.charAt(0)).join('').toUpperCase().slice(0, 2)
 })
 
 const formatStatus = (status) => {
