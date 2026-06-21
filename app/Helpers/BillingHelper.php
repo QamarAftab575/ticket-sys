@@ -188,6 +188,11 @@ class BillingHelper
      */
     public static function canCreateWorkspace(User $user): bool
     {
+        // Super admin can always create workspace
+        if ($user->is_super_admin) {
+            return true;
+        }
+
         // If user has active paid plan
         if ($user->active_plan_id && self::hasActivePlan($user)) {
             $plan = $user->activePlan;
@@ -220,6 +225,11 @@ class BillingHelper
             return false;
         }
 
+        // Super admin can always add members
+        if ($owner->is_super_admin) {
+            return true;
+        }
+
         // If user has active paid plan
         if ($owner->active_plan_id && self::hasActivePlan($owner)) {
             $plan = $owner->activePlan;
@@ -250,6 +260,11 @@ class BillingHelper
         $owner = $workspace->creator;
         if (!$owner) {
             return false;
+        }
+
+        // Super admin can always create projects
+        if ($owner->is_super_admin) {
+            return true;
         }
 
         // If user has active paid plan

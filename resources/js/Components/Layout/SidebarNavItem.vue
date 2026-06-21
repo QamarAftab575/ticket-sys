@@ -2,17 +2,17 @@
   <Link
     :href="href"
     :class="[
-      'group relative flex items-center gap-3 rounded-xl text-sm font-medium transition-all duration-150',
+      'group relative flex items-center gap-3 rounded-lg text-sm font-medium transition-all duration-150',
       collapsed ? 'justify-center p-2.5' : 'px-3 py-2.5',
       active
         ? 'bg-blue-50 text-blue-700'
-        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+        : 'text-gray-400 hover:bg-gray-700 hover:text-gray-200'
     ]"
   >
     <!-- Icon -->
     <svg
       class="shrink-0 w-5 h-5"
-      :class="active ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'"
+      :class="active ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-300'"
       fill="none" stroke="currentColor" viewBox="0 0 24 24"
     >
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" :d="icon" />
@@ -24,7 +24,7 @@
     <!-- Badge (unread count) -->
     <span
       v-if="badge && unreadCount > 0 && !collapsed"
-      class="ml-auto px-1.5 py-0.5 text-[10px] font-bold bg-indigo-600 text-white rounded-full min-w-[18px] text-center"
+      class="ml-auto px-1.5 py-0.5 text-[10px] font-bold bg-red-500 text-white rounded-full min-w-[18px] text-center"
     >
       {{ unreadCount > 99 ? '99+' : unreadCount }}
     </span>
@@ -35,7 +35,7 @@
     <!-- Badge dot when collapsed -->
     <span
       v-if="badge && unreadCount > 0 && collapsed"
-      class="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-600 rounded-full border-2 border-white"
+      class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#2A2C2E]"
     />
 
     <!-- Tooltip when collapsed -->
@@ -44,7 +44,7 @@
       class="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-50 shadow-lg"
     >
       {{ label }}
-      <span v-if="badge && unreadCount > 0" class="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-indigo-600 rounded-full">
+      <span v-if="badge && unreadCount > 0" class="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-red-500 rounded-full">
         {{ unreadCount > 99 ? '99+' : unreadCount }}
       </span>
       <!-- Arrow -->

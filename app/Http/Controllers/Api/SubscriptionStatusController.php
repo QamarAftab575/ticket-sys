@@ -11,6 +11,7 @@ class SubscriptionStatusController extends Controller
     /**
      * Get the authenticated user's subscription expiry status.
      * Includes grace period information and warning messages.
+     * Super admins always return 'active' status.
      * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -21,6 +22,19 @@ class SubscriptionStatusController extends Controller
         
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Super admin always has active status - no notifications
+        if ($user->is_super_admin) {
+            return response()->json([
+                'status' => 'active',
+                'type' => 'admin',
+                'days_remaining' => null,
+                'days_in_grace_period' => 0,
+                'expires_at' => null,
+                'grace_period_ends_at' => null,
+                'grace_period_days' => 0,
+            ]);
         }
 
         // Get comprehensive expiry status
@@ -62,6 +76,7 @@ class SubscriptionStatusController extends Controller
     /**
      * Check if user needs renewal warning.
      * Returns true if subscription needs attention (warning, grace period, or suspended).
+     * Super admins never need warnings.
      * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -72,6 +87,14 @@ class SubscriptionStatusController extends Controller
         
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Super admin never needs warning
+        if ($user->is_super_admin) {
+            return response()->json([
+                'needs_warning' => false,
+                'status' => 'active',
+            ]);
         }
 
         return response()->json([

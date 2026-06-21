@@ -4,11 +4,11 @@
     <button
       @click="isOpen = !isOpen"
       :class="[
-        'group relative w-full flex items-center gap-2.5 rounded-xl transition-all duration-150',
+        'group relative w-full flex items-center gap-2.5 rounded-lg transition-all duration-150',
         collapsed ? 'justify-center p-2.5' : 'px-3 py-2.5',
         isOpen
-          ? 'bg-indigo-50 text-indigo-600'
-          : 'text-gray-700 hover:bg-gray-100'
+          ? 'bg-gray-700 text-gray-200'
+          : 'text-gray-400 hover:bg-gray-700 hover:text-gray-200'
       ]"
     >
       <!-- Avatar -->
@@ -44,8 +44,7 @@
     >
       <div
         v-if="isOpen"
-        class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden"
-        :style="collapsed ? 'min-width: 280px' : ''"
+        class="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden w-full"
       >
         <!-- Search Input -->
         <div class="p-3 border-b border-gray-100">

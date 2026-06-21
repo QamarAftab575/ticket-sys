@@ -1,29 +1,38 @@
 ﻿<template>
-  <div class="relative flex-1 max-w-md">
+  <div class="relative w-full">
     <!-- Search Input -->
-    <input
-      v-model="searchQuery"
-      type="text"
-      placeholder="Search tasks and projects..."
-      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-      @focus="openDropdown"
-      @keyup="handleSearch"
-    />
-
-    <!-- Search Icon -->
-    <svg
-      class="absolute right-3 top-2.5 w-5 h-5 text-gray-400 pointer-events-none"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+    <div class="relative">
+      <input
+        ref="searchInput"
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search"
+        class="w-full pl-10 pr-20 py-2 bg-[#1F2021] border border-gray-700 text-gray-200 placeholder-gray-500 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+        @focus="openDropdown"
+        @keyup="handleSearch"
       />
-    </svg>
+
+      <!-- Search Icon -->
+      <svg
+        class="absolute left-3 top-2.5 w-4 h-4 text-gray-500 pointer-events-none"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+
+      <!-- Keyboard Shortcut Badge -->
+      <div class="absolute right-3 top-2 flex items-center gap-0.5 px-1.5 py-0.5 bg-[#2D2E2F] border border-gray-700 rounded text-xs text-gray-500 font-medium">
+        <span>⌘</span>
+        <span>K</span>
+      </div>
+    </div>
 
     <!-- Dropdown Content -->
     <div
@@ -124,10 +133,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { api } from '@/Services/api'
 
 const searchQuery = ref('')
+const searchInput = ref(null)
 const isOpen = ref(false)
 const loading = ref(false)
 const results = ref({
@@ -226,5 +236,31 @@ const selectProject = (project) => {
   window.location.href = `/projects/${project.id}`
   closeDropdown()
 }
+
+/**
+ * Handle Cmd+K / Ctrl+K keyboard shortcut
+ */
+const handleKeyboardShortcut = (e) => {
+  // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault()
+    if (searchInput.value) {
+      searchInput.value.focus()
+    }
+  }
+  
+  // ESC to close dropdown
+  if (e.key === 'Escape' && isOpen.value) {
+    closeDropdown()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyboardShortcut)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyboardShortcut)
+})
 </script>
 

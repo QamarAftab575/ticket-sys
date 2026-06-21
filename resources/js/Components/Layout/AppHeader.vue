@@ -1,56 +1,85 @@
-﻿<template>
-  <div class="bg-white border-b border-gray-200 px-6 py-4">
-    <div class="flex items-center justify-between">
-      <!-- Hamburger (mobile only) -->
+<template>
+  <div class="bg-[#2C2C2C] border-b border-[#1F1F1F] px-4 py-2 h-14 flex items-center justify-between">
+    <!-- Left Section: Hamburger + Create Button -->
+    <div class="flex items-center gap-3">
+      <!-- Hamburger Menu (Sidebar Toggle) -->
       <button
-        class="lg:hidden mr-4 text-gray-600 hover:text-gray-900"
-        @click="$emit('toggle-sidebar')"
+        @click="toggleSidebar"
+        class="lg:hidden text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded transition"
+        title="Toggle Sidebar"
       >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <svg 
+          class="w-4 h-4 transition-transform duration-300" 
+          :class="{ 'rotate-180': sidebarOpen }"
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"></path>
         </svg>
       </button>
-      <!-- Search -->
-      <SearchDropdown />
 
-      <!-- Right Actions -->
-      <div class="flex items-center gap-4">
-        <!-- Inbox / Notifications -->
-        <Link href="/inbox" class="relative p-1.5 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+      <!-- Create Button with Dropdown -->
+      <div class="relative" data-create-menu>
+        <button
+          @click="showCreateMenu = !showCreateMenu"
+          class="flex items-center gap-2 bg-[#F06A6A] hover:bg-[#E15555] text-white px-4 py-1.5 rounded-full transition font-medium text-sm cursor-pointer"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.5 1.5H9.5V9.5H1.5V10.5H9.5V18.5H10.5V10.5H18.5V9.5H10.5V1.5Z" fill="currentColor"/>
           </svg>
-          <span
-            v-if="unreadCount > 0"
-            class="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold leading-none"
-          >
-            {{ unreadCount > 99 ? '99+' : unreadCount }}
-          </span>
-        </Link>
+          <span>Create</span>
+        </button>
 
-        <!-- User Profile -->
-        <div class="relative">
-          <button
-            @click="showProfileMenu = !showProfileMenu"
-            class="rounded-full hover:ring-2 hover:ring-blue-400 transition"
+        <!-- Create Dropdown Menu -->
+        <div
+          v-if="showCreateMenu"
+          class="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50"
+          @click.stop
+        >
+          <Link 
+            href="/projects/create" 
+            class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition cursor-pointer"
+            @click="showCreateMenu = false"
           >
-            <Avatar :src="userAvatar" :name="userName" size="md" />
-          </button>
-          <div
-            v-if="showProfileMenu"
-            class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
-          >
-            <Link href="/profile" class="block px-4 py-2 hover:bg-gray-50 text-sm">
-              Profile
-            </Link>
-            <Link href="/settings" class="block px-4 py-2 hover:bg-gray-50 text-sm">
-              Settings
-            </Link>
-            <Link href="/logout" method="post" class="block px-4 py-2 hover:bg-gray-50 text-sm border-t border-gray-200">
-              Logout
-            </Link>
-          </div>
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+            </svg>
+            <span class="text-sm font-medium">Project</span>
+          </Link>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Section: Search Bar -->
+    <div class="flex-1 max-w-2xl mx-auto px-6">
+      <SearchDropdown />
+    </div>
+
+    <!-- Right Section: User Profile -->
+    <div class="flex items-center gap-4">
+      <!-- User Profile Dropdown -->
+      <div class="relative" data-profile-menu>
+        <button
+          @click="showProfileMenu = !showProfileMenu"
+          class="rounded-full hover:ring-2 hover:ring-gray-500 transition cursor-pointer"
+        >
+          <Avatar :src="userAvatar" :name="userName" size="md" />
+        </button>
+        <div
+          v-if="showProfileMenu"
+          class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
+          @click.stop
+        >
+          <Link href="/profile" class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer">
+            Profile
+          </Link>
+          <Link href="/settings" class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer">
+            Settings
+          </Link>
+          <Link href="/logout" method="post" class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 border-t border-gray-200 cursor-pointer">
+            Logout
+          </Link>
         </div>
       </div>
     </div>
@@ -58,32 +87,41 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import Avatar from '@/Components/Avatar.vue'
 import SearchDropdown from '@/Components/GlobalSearch/SearchDropdown.vue'
-import { useNotificationStore } from '@/Stores/useNotificationStore'
-import { api } from '@/Services/api'
 
-defineEmits(['toggle-sidebar'])
+const emit = defineEmits(['toggle-sidebar'])
 
 const showProfileMenu = ref(false)
+const showCreateMenu = ref(false)
+const sidebarOpen = ref(false)
 
 const page = usePage()
 const userName = computed(() => page.props.auth?.user?.name || '')
 const userAvatar = computed(() => page.props.auth?.user?.avatar || null)
 
-const notificationStore = useNotificationStore()
-const unreadCount = computed(() => notificationStore.unreadCount)
+// Toggle sidebar and emit event
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value
+  emit('toggle-sidebar', sidebarOpen.value)
+}
 
-// Seed the store with the server-provided unread count on first load
-onMounted(async () => {
-  try {
-    const response = await api.get('/inbox/unread-count')
-    notificationStore.setUnreadCount(response.count ?? 0)
-  } catch {
-    // non-critical â€” badge simply stays at 0
-  }
+// Close menus when clicking outside
+const handleClickOutside = (event) => {
+  const createBtn = event.target.closest('[data-create-menu]')
+  const profileBtn = event.target.closest('[data-profile-menu]')
+  
+  if (!createBtn) showCreateMenu.value = false
+  if (!profileBtn) showProfileMenu.value = false
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
-
