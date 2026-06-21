@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <form @submit.prevent="handleSubmit" class="space-y-6">
     <div class="space-y-4">
       <div>
@@ -119,3 +119,4 @@ const handleSubmit = () => {
   }, 1000)
 }
 </script>
+

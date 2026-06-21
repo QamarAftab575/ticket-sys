@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex items-center gap-1">
     <!-- Filter button -->
     <button
@@ -69,3 +69,4 @@ const removeFilter = (idx) => {
   emit('filter-changed', newFilters)
 }
 </script>
+

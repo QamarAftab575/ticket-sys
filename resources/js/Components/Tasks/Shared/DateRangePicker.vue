@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="relative inline-flex items-center" ref="containerRef">
     <!-- Trigger -->
     <button
@@ -146,7 +146,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-// ── state ──────────────────────────────────────────────────────────────────
+// â”€â”€ state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const open = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 const popoverRef = ref<HTMLElement | null>(null);
@@ -160,7 +160,7 @@ const localEnd = ref<string | null>(props.endDate ?? null);
 const activeInput = ref<'start' | 'end'>('end');
 const hoverDate = ref<Date | null>(null);
 
-// ── debounced save — single request, last-write-wins ──────────────────────
+// â”€â”€ debounced save â€” single request, last-write-wins â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 function scheduleSave() {
@@ -171,11 +171,11 @@ function scheduleSave() {
   }, 300);
 }
 
-// ── sync props → local ─────────────────────────────────────────────────────
+// â”€â”€ sync props â†’ local â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 watch(() => props.startDate, v => { localStart.value = v ?? null; });
 watch(() => props.endDate,   v => { localEnd.value   = v ?? null; });
 
-// ── computed ───────────────────────────────────────────────────────────────
+// â”€â”€ computed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const hasAnyDate = computed(() => !!(props.startDate || props.endDate));
 
 const isOverdue = computed(() => {
@@ -193,9 +193,9 @@ const dateLabel = computed(() => {
     if (isNaN(s.getTime()) || isNaN(e.getTime())) return '';
     const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
     if (sameMonth) {
-      return `${s.getDate()} – ${e.getDate()} ${e.toLocaleDateString('en-US', { month: 'short' })}`;
+      return `${s.getDate()} â€“ ${e.getDate()} ${e.toLocaleDateString('en-US', { month: 'short' })}`;
     }
-    return `${fmtSmart(start)} – ${fmtSmart(end)}`;
+    return `${fmtSmart(start)} â€“ ${fmtSmart(end)}`;
   }
 
   const iso = end || start;
@@ -231,7 +231,7 @@ const monthLabel = computed(() =>
 const calendarCells = computed(() => {
   const cells: { key: string; date: Date | null; day: number | null }[] = [];
   const first = new Date(viewYear.value, viewMonth.value, 1);
-  // Mon=0 … Sun=6
+  // Mon=0 â€¦ Sun=6
   let startOffset = (first.getDay() + 6) % 7;
   // pad with nulls
   for (let i = 0; i < startOffset; i++) cells.push({ key: `e${i}`, date: null, day: null });
@@ -246,7 +246,7 @@ const calendarCells = computed(() => {
   return cells;
 });
 
-// ── helpers ────────────────────────────────────────────────────────────────
+// â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 // Build YYYY-MM-DD from a local Date without UTC shift
 function toDateStr(d: Date): string {
@@ -286,7 +286,7 @@ function isToday(d: Date): boolean {
   return isSameDay(d, new Date());
 }
 
-// ── day styling ────────────────────────────────────────────────────────────
+// â”€â”€ day styling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function dayClass(cell: { date: Date | null }): string[] {
   if (!cell.date) return [];
   const classes: string[] = [];
@@ -339,7 +339,7 @@ function dayInnerClass(cell: { date: Date | null }): string[] {
   return classes;
 }
 
-// ── actions ────────────────────────────────────────────────────────────────
+// â”€â”€ actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function setActiveInput(input: 'start' | 'end') {
   activeInput.value = input;
 }
@@ -390,7 +390,7 @@ function nextMonth() {
   else viewMonth.value++;
 }
 
-// ── popover positioning ────────────────────────────────────────────────────
+// â”€â”€ popover positioning â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function positionPopover() {
   if (!containerRef.value) return;
   const rect = containerRef.value.getBoundingClientRect();
@@ -473,3 +473,4 @@ onBeforeUnmount(() => {
   if (saveTimer) clearTimeout(saveTimer);
 });
 </script>
+

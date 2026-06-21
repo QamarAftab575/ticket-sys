@@ -119,7 +119,7 @@ class AuthController extends Controller
 
             // Check if user is super admin - redirect to admin dashboard
             if ($user->is_super_admin) {
-                return redirect()->route('admin.index');
+                return redirect()->route('admin.dashboard');
             }
 
             // Handle org invitation token in session

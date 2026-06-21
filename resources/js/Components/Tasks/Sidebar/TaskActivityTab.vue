@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <div v-if="task.activities?.length === 0" class="text-center py-8">
       <p class="text-gray-500 text-sm">No activity yet</p>
@@ -65,3 +65,4 @@ function formatDate(date: string): string {
   });
 }
 </script>
+

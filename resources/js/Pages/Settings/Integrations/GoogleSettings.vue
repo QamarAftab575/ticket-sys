@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace" :user-role="userRole">
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -54,8 +54,8 @@
                 <div>
                   <h3 class="text-lg font-semibold text-gray-900">Configuration Status</h3>
                   <p class="text-gray-600 mt-1">
-                    <span v-if="status.enabled" class="text-green-600 font-medium">✓ Enabled</span>
-                    <span v-else class="text-red-600 font-medium">✗ Disabled</span>
+                    <span v-if="status.enabled" class="text-green-600 font-medium">âœ“ Enabled</span>
+                    <span v-else class="text-red-600 font-medium">âœ— Disabled</span>
                   </p>
                   <p v-if="status.last_updated" class="text-sm text-gray-500 mt-2">
                     Last updated: {{ formatDate(status.last_updated) }}
@@ -63,10 +63,10 @@
                 </div>
                 <div class="text-right">
                   <div v-if="status.configured" class="text-green-600 text-sm font-medium">
-                    ✓ Credentials Configured
+                    âœ“ Credentials Configured
                   </div>
                   <div v-else class="text-amber-600 text-sm font-medium">
-                    ⚠ Credentials Missing
+                    âš  Credentials Missing
                   </div>
                 </div>
               </div>
@@ -310,3 +310,4 @@ const handleSubmit = async () => {
   })
 }
 </script>
+

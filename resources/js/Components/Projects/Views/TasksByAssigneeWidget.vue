@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <div v-if="!assigneeStats || assigneeStats.length === 0" class="text-center py-6 text-gray-500">
       <p class="text-sm">No tasks assigned yet</p>
@@ -56,3 +56,4 @@ defineProps({
 
 defineEmits(['filter'])
 </script>
+

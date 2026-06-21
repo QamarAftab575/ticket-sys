@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="fixed top-4 right-4 z-50 space-y-2">
     <transition-group name="toast">
       <div
@@ -15,7 +15,7 @@
             @click="removeToast(toast.id)"
             class="hover:opacity-75"
           >
-            ×
+            Ã—
           </button>
         </div>
       </div>
@@ -55,3 +55,4 @@ const getToastClass = (type) => {
   transform: translateX(30px);
 }
 </style>
+

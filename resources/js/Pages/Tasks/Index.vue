@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Head title="All Tasks" />
     <TaskListLayout :project-id="null" />
@@ -9,3 +9,4 @@
 import { Head } from '@inertiajs/vue3';
 import TaskListLayout from '@/Components/Tasks/Layout/TaskListLayout.vue';
 </script>
+

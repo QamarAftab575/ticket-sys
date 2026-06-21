@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="board-view">
     <div class="board-container">
       <div
@@ -24,7 +24,7 @@
           >
             <div class="card-header">
               <h4 class="card-title">{{ task.name }}</h4>
-              <button @click.stop="$emit('delete-task', task.id)" class="btn-delete">×</button>
+              <button @click.stop="$emit('delete-task', task.id)" class="btn-delete">Ã—</button>
             </div>
 
             <p v-if="task.description" class="card-description">{{ task.description }}</p>
@@ -369,3 +369,4 @@ const updateTask = async (updates) => {
   background: #f0f8f0;
 }
 </style>
+

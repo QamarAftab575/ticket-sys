@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Link
     :href="href"
     :class="[
@@ -21,3 +21,4 @@ defineProps({
   active: Boolean,
 })
 </script>
+

@@ -40,12 +40,20 @@ class GoogleSettingsController extends Controller
 
         $status = $this->googleSettingsService->getStatus();
         
-        // Get user workspaces for sidebar
-        $userWorkspaces = $user->organizations()
-            ->where('organizations.is_active', true)
-            ->wherePivot('is_active', true)
-            ->select('organizations.id', 'organizations.name', 'organizations.avatar_color')
-            ->get();
+        // Get user workspaces for sidebar (with role information)
+        $userWorkspaces = $user->getAccessibleOrganizations()
+            ->map(function ($organization) use ($user) {
+                return [
+                    'id' => $organization->id,
+                    'name' => $organization->name,
+                    'avatar_color' => $organization->avatar_color,
+                    'description' => $organization->description,
+                    'role' => $user->getWorkspaceRole($organization->id),
+                    'is_owner' => $user->isWorkspaceOwner($organization->id),
+                    'is_admin' => $user->isWorkspaceAdmin($organization->id),
+                    'is_member' => $user->isWorkspaceMember($organization->id),
+                ];
+            });
 
         return Inertia::render('Settings/Integrations/GoogleSettings', [
             'status' => $status,

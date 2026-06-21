@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <Head :title="`${project.name} - Tasks`" />
     <TaskListLayout :project-id="project.id" :project="project" />
@@ -18,3 +18,4 @@ interface Props {
 
 defineProps<Props>();
 </script>
+

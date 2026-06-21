@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-6 p-6">
     <h2 class="text-2xl font-bold">Timezone Handling Examples</h2>
     
@@ -23,13 +23,13 @@
           v-if="checkOverdue(sampleTask.due_date, sampleTask.status)" 
           class="text-red-500 text-sm mt-1"
         >
-          ⚠️ Overdue
+          âš ï¸ Overdue
         </p>
         <p 
           v-else-if="checkIsToday(sampleTask.due_date)" 
           class="text-blue-500 text-sm mt-1"
         >
-          📅 Due Today
+          ðŸ“… Due Today
         </p>
       </div>
       <p class="text-xs text-gray-500 mt-2">
@@ -77,7 +77,7 @@
       <h3 class="font-semibold mb-2">Example 5: Task Completed Timestamp</h3>
       <div class="bg-gray-50 p-3 rounded">
         <p class="text-sm">
-          <span class="text-green-600">✓</span> 
+          <span class="text-green-600">âœ“</span> 
           Completed {{ formatRelative(sampleCompletedTask.completed_at) }}
         </p>
         <p class="text-xs text-gray-500 mt-1">
@@ -183,3 +183,4 @@ onUnmounted(() => {
   }
 })
 </script>
+

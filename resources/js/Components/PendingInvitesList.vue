@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="overflow-x-auto">
     <table v-if="invitations.length > 0" class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
@@ -90,3 +90,4 @@ const isExpired = (expiresAt) => {
   return new Date(expiresAt) < new Date()
 }
 </script>
+

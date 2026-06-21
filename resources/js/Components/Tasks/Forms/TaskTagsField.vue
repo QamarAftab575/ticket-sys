@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex flex-wrap gap-2">
     <span
       v-for="tag in task.tags"
@@ -14,7 +14,7 @@
         @click="handleRemoveTag(tag.id)"
         class="ml-1 text-current hover:opacity-70"
       >
-        ✕
+        âœ•
       </button>
     </span>
     <button
@@ -51,3 +51,4 @@ function handleRemoveTag(tagId: string) {
   // TODO: Implement tag removal
 }
 </script>
+

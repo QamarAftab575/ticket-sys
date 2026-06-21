@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="project-sidebar">
     <!-- View archived toggle -->
     <div class="mb-4 flex items-center justify-between">
@@ -44,7 +44,7 @@
             class="text-xs flex-shrink-0"
             title="Private"
           >
-            🔒
+            ðŸ”’
           </span>
 
           <!-- Archived badge -->
@@ -60,7 +60,7 @@
             @click.prevent="showContextMenu($event, project)"
             class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 flex-shrink-0"
           >
-            ⋯
+            â‹¯
           </button>
         </Link>
 
@@ -178,3 +178,4 @@ const leaveProject = (project) => {
   showContextMenuDropdown.value = false
 }
 </script>
+

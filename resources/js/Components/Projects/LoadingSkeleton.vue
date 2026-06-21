@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <div
       v-for="i in 5"
@@ -16,3 +16,4 @@ defineProps({
   },
 })
 </script>
+

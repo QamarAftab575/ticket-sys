@@ -31,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission'        => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'auth.api-token'    => \App\Http\Middleware\AuthenticateApiToken::class,
             'super.admin'       => \App\Http\Middleware\SuperAdminMiddleware::class,
+            'check.subscription' => \App\Http\Middleware\CheckSubscriptionStatus::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

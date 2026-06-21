@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     class="flex items-center gap-1 px-3 py-1.5 group select-none"
     :class="{ 'opacity-40': isDragging, 'border-t-2 border-t-indigo-400': isDropTarget }"
@@ -121,3 +121,4 @@ const vClickOutside = {
   },
 }
 </script>
+

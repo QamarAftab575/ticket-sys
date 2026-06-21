@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AppLayout>
     <div class="flex h-[calc(100vh-64px)]">
       <!-- Left sidebar: Notification list -->
@@ -284,3 +284,4 @@ onMounted(() => {
   loadNotifications()
 })
 </script>
+

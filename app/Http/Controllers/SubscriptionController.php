@@ -27,18 +27,20 @@ class SubscriptionController extends Controller
         $currentSubscription = $user->currentSubscription();
         $currentPlan = $currentSubscription?->plan;
         
-        // Determine tier status
-        $tierStatus = null;
-        $trialEndsAt = null;
-        $showTrial = false;
+        // Get plan info using BillingHelper
+        $planInfo = \App\Helpers\BillingHelper::getUserPlanInfo($user);
+        $isOnTrial = \App\Helpers\BillingHelper::isOnTrial($user);
+        $daysRemaining = \App\Helpers\BillingHelper::getDaysRemaining($user);
         
-        if ($user->trial_ends_at && now()->lt($user->trial_ends_at)) {
-            $showTrial = true;
-            $trialEndsAt = $user->trial_ends_at;
-            $tierStatus = 'Trial';
-        } elseif ($currentPlan) {
-            $tierStatus = $currentPlan->name;
+        // Get trial usage for trial users
+        $trialUsage = null;
+        if ($isOnTrial) {
+            $trialUsage = \App\Helpers\BillingHelper::getUserTrialUsage($user);
         }
+        
+        // Determine tier status
+        $tierStatus = $planInfo['plan_name'] ?? null;
+        $trialEndsAt = $isOnTrial ? $user->trial_ends_at : null;
 
         // Get subscription history
         $subscriptionHistory = $user->subscriptions()
@@ -61,26 +63,42 @@ class SubscriptionController extends Controller
             });
 
         // Get available plans
+        $stripePaymentService = app(\App\Services\StripePaymentService::class);
         $availablePlans = Plan::where('is_active', true)
+            ->orderBy('sort_order', 'asc')
             ->get()
-            ->map(function ($plan) use ($currentPlan) {
+            ->map(function ($plan, $index) use ($currentPlan, $stripePaymentService) {
+                $paymentInfo = $stripePaymentService->getPaymentInfo($plan);
                 return [
                     'id' => $plan->id,
                     'name' => $plan->name,
                     'slug' => $plan->slug,
+                    'description' => $plan->description,
                     'price' => $plan->price,
+                    'formatted_price' => $paymentInfo['formatted_amount'],
+                    'currency' => $paymentInfo['currency'],
+                    'currency_sign' => $paymentInfo['currency_sign'],
                     'billing_cycle' => $plan->billing_cycle,
                     'features' => $plan->features,
                     'is_current' => $currentPlan?->id === $plan->id,
+                    'highlighted' => $index === 1, // Highlight the second plan (Professional)
                 ];
             });
 
-        // Get user workspaces for layout
-        $userWorkspaces = $user->organizations()
-            ->where('organizations.is_active', true)
-            ->wherePivot('is_active', true)
-            ->select('organizations.id', 'organizations.name', 'organizations.avatar_color')
-            ->get();
+        // Get user workspaces for layout (with role information)
+        $userWorkspaces = $user->getAccessibleOrganizations()
+            ->map(function ($organization) use ($user) {
+                return [
+                    'id' => $organization->id,
+                    'name' => $organization->name,
+                    'avatar_color' => $organization->avatar_color,
+                    'description' => $organization->description,
+                    'role' => $user->getWorkspaceRole($organization->id),
+                    'is_owner' => $user->isWorkspaceOwner($organization->id),
+                    'is_admin' => $user->isWorkspaceAdmin($organization->id),
+                    'is_member' => $user->isWorkspaceMember($organization->id),
+                ];
+            });
 
         return inertia('Settings/Subscriptions', [
             'currentSubscription' => $currentSubscription ? [
@@ -104,12 +122,73 @@ class SubscriptionController extends Controller
             'userRole' => 'member',
             'tierStatus' => $tierStatus,
             'trialEndsAt' => $trialEndsAt,
-            'showTrial' => $showTrial,
+            'isOnTrial' => $isOnTrial,
+            'daysRemaining' => $daysRemaining,
+            'trialUsage' => $trialUsage,
+            'isSuperAdmin' => $user->isSuperAdmin(),
         ]);
     }
 
     /**
-     * Change user's plan.
+     * Get Stripe checkout session for purchasing a plan
+     */
+    public function getCheckoutSession(Request $request)
+    {
+        $validated = $request->validate([
+            'plan_id' => 'required|exists:plans,id',
+        ]);
+
+        $user = auth()->user();
+        $plan = Plan::findOrFail($validated['plan_id']);
+
+        $stripePaymentService = app(\App\Services\StripePaymentService::class);
+        $result = $stripePaymentService->createCheckoutSession($user, $plan);
+
+        return response()->json($result);
+    }
+
+    /**
+     * Handle payment success callback
+     * Verifies token and creates subscription
+     */
+    public function paymentSuccess(Request $request)
+    {
+        $validated = $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        $stripePaymentService = app(\App\Services\StripePaymentService::class);
+        $result = $stripePaymentService->verifyAndCreateSubscription($validated['token']);
+
+        if (!$result['success']) {
+            return redirect()->route('subscriptions.show')
+                ->withErrors(['error' => $result['error']]);
+        }
+
+        return redirect()->route('subscriptions.show')
+            ->with('success', "Successfully subscribed to {$result['plan_name']}! Your subscription will expire on {$result['expires_at']->format('M d, Y')}");
+    }
+
+    /**
+     * Get payment intent for plan purchase
+     */
+    public function getPaymentIntent(Request $request)
+    {
+        $validated = $request->validate([
+            'plan_id' => 'required|exists:plans,id',
+        ]);
+
+        $user = auth()->user();
+        $plan = Plan::findOrFail($validated['plan_id']);
+
+        $stripePaymentService = app(\App\Services\StripePaymentService::class);
+        $result = $stripePaymentService->createPaymentIntent($user, $plan);
+
+        return response()->json($result);
+    }
+
+    /**
+     * Change user's plan (with Stripe payment).
      */
     public function changePlan(Request $request)
     {
@@ -120,9 +199,15 @@ class SubscriptionController extends Controller
         $user = auth()->user();
         $plan = Plan::findOrFail($validated['plan_id']);
 
-        $this->subscriptionService->changePlan($user, $plan, 'purchase');
+        // Create checkout session for plan change
+        $stripePaymentService = app(\App\Services\StripePaymentService::class);
+        $result = $stripePaymentService->createCheckoutSession($user, $plan);
 
-        return back()->with('success', "Your subscription has been updated to {$plan->name}.");
+        if (!$result['success']) {
+            return back()->withErrors(['error' => $result['error']]);
+        }
+
+        return redirect()->away($result['checkout_url']);
     }
 
     /**
@@ -142,7 +227,7 @@ class SubscriptionController extends Controller
     }
 
     /**
-     * Rebuy the same plan (renew subscription).
+     * Rebuy the same plan (renew subscription) with Stripe payment.
      */
     public function rebuy(Request $request)
     {
@@ -155,14 +240,14 @@ class SubscriptionController extends Controller
 
         $plan = $currentSubscription->plan;
 
-        // Create new subscription for the same plan
-        $this->subscriptionService->createPurchasedSubscription(
-            $user,
-            $plan,
-            null,
-            $plan->price
-        );
+        // Create checkout session for renewal
+        $stripePaymentService = app(\App\Services\StripePaymentService::class);
+        $result = $stripePaymentService->createCheckoutSession($user, $plan);
 
-        return back()->with('success', "Your subscription to {$plan->name} has been renewed.");
+        if (!$result['success']) {
+            return back()->withErrors(['error' => $result['error']]);
+        }
+
+        return redirect()->away($result['checkout_url']);
     }
 }

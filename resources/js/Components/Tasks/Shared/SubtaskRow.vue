@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-50 group transition-colors border-b border-gray-100 last:border-b-0"
     :class="subtask.status === 'complete' ? 'opacity-60' : ''"
@@ -67,3 +67,4 @@ function toggleComplete() {
   emit('toggle-complete', props.subtask.id)
 }
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     class="task-row flex items-center border-b border-gray-100 transition-colors group cursor-default"
     :class="[
@@ -49,7 +49,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
           </span>
-          <span v-if="task.comment_count" class="text-[11px] text-gray-400 flex-shrink-0">💬 {{ task.comment_count }}</span>
+          <span v-if="task.comment_count" class="text-[11px] text-gray-400 flex-shrink-0">ðŸ’¬ {{ task.comment_count }}</span>
         </div>
 
         <!-- Assignee -->
@@ -75,7 +75,7 @@
             :style="{ backgroundColor: task.project.color || '#6366f1' }"
           />
           <span class="truncate text-gray-700 text-[13px]">
-            {{ task.project?.name || '—' }}
+            {{ task.project?.name || 'â€”' }}
           </span>
         </div>
 
@@ -92,7 +92,7 @@
         </div>
 
         <!-- Fallback -->
-        <span v-else class="truncate text-gray-500 text-[13px]">{{ task[column.id] ?? '—' }}</span>
+        <span v-else class="truncate text-gray-500 text-[13px]">{{ task[column.id] ?? 'â€”' }}</span>
       </div>
     </div>
   </div>
@@ -127,3 +127,4 @@ function getCustomFieldRaw(fieldId) {
   return cfv?.value ?? null
 }
 </script>
+

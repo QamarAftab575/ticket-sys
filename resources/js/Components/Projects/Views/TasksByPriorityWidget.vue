@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <div v-if="!priorityStats || Object.keys(priorityStats).length === 0" class="text-center py-6 text-gray-500">
       <p class="text-sm">No tasks with priorities yet</p>
@@ -112,3 +112,4 @@ const formatPriority = (priority) => {
   return labels[priority] || priority
 }
 </script>
+

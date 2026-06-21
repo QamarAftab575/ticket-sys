@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="workspace" :user-role="userRole">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Workspaces Section -->
@@ -101,3 +101,4 @@ const formatStatus = (status) => {
   return statusMap[status] || status;
 };
 </script>
+

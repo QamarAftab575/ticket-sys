@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-6">
     <!-- Project Header -->
     <div class="border-b pb-6">
@@ -82,3 +82,4 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString();
 };
 </script>
+

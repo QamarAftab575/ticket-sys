@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
     <!-- Logo -->
     <div class="px-6 py-4 border-b border-gray-200">
@@ -79,6 +79,7 @@
 import { ref } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import SidebarLink from '@/Components/Workspace/SidebarLink.vue'
+import { useActiveWorkspace, setActiveWorkspace } from '@/Composables/useActiveWorkspace'
 
 const props = defineProps({
   workspace: Object,
@@ -93,6 +94,14 @@ const canEdit = ref(['owner', 'admin'].includes(props.userRole))
 
 const switchWorkspace = (e) => {
   const workspaceId = e.target.value
-  router.post(`/workspace/${workspaceId}/switch`)
+  const workspace = props.userWorkspaces.find(w => w.id === workspaceId)
+  
+  if (workspace) {
+    // Use centralized helper to save workspace
+    setActiveWorkspace(workspace)
+    // Navigate to workspace
+    router.post(`/workspace/${workspaceId}/switch`)
+  }
 }
 </script>
+

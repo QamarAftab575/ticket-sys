@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <label class="inline-flex items-center cursor-pointer">
     <input
       type="checkbox"
@@ -28,3 +28,4 @@ defineProps({
 
 defineEmits(['update:modelValue'])
 </script>
+

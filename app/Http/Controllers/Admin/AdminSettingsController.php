@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
+use App\Helpers\EnvHelper;
 use Illuminate\Http\Request;
 
 class AdminSettingsController extends Controller
@@ -15,10 +16,12 @@ class AdminSettingsController extends Controller
     {
         return inertia('Admin/Settings/Index', [
             'settings' => [
-                'stripe_public_key' => BusinessSetting::get('stripe_public_key'),
-                'stripe_secret_key' => BusinessSetting::get('stripe_secret_key'),
-                'trial_enabled' => BusinessSetting::get('trial_enabled', '1'),
-                'trial_days' => BusinessSetting::get('trial_days', '14'),
+                'stripe_key' => EnvHelper::getEnvValue('STRIPE_KEY', ''),
+                'stripe_secret' => EnvHelper::getEnvValue('STRIPE_SECRET', ''),
+                'free_trial_days' => EnvHelper::getEnvValue('FREE_TRIAL_FOR_NEW_USERS', '10'),
+                'workspace_for_trial_users' => EnvHelper::getEnvValue('WORKSPACE_FOR_TRIAL_USERS', '1'),
+                'project_per_workspace_for_trial_users' => EnvHelper::getEnvValue('PROJECT_PER_WORKSPACE_FOR_TRIAL_USERS', '5'),
+                'members_per_project_for_trial_users' => EnvHelper::getEnvValue('MEMBERS_PER_PROJECT_FOR_TRIAL_USERS', '20'),
             ],
             'googleSettings' => BusinessSetting::get('google_oauth'),
             'googleStatus' => $this->getGoogleSettingsStatus(),
@@ -46,19 +49,48 @@ class AdminSettingsController extends Controller
     public function update(Request $request)
     {
         // Validate stripe and trial settings if present
-        if ($request->has('stripe_public_key') || $request->has('stripe_secret_key') || $request->has('trial_enabled')) {
+        if ($request->has('stripe_key') || $request->has('stripe_secret') || $request->has('free_trial_days') || 
+            $request->has('workspace_for_trial_users') || $request->has('project_per_workspace_for_trial_users') || 
+            $request->has('members_per_project_for_trial_users')) {
+            
             $request->validate([
-                'stripe_public_key' => 'nullable|string',
-                'stripe_secret_key' => 'nullable|string',
-                'trial_enabled' => 'required|boolean',
-                'trial_days' => 'required_if:trial_enabled,true|integer|min:1',
+                'stripe_key' => 'nullable|string',
+                'stripe_secret' => 'nullable|string',
+                'free_trial_days' => 'nullable|integer|min:0|max:999',
+                'workspace_for_trial_users' => 'nullable|integer|min:1|max:999',
+                'project_per_workspace_for_trial_users' => 'nullable|integer|min:1|max:999',
+                'members_per_project_for_trial_users' => 'nullable|integer|min:1|max:999',
             ]);
 
-            BusinessSetting::set('stripe_public_key', $request->stripe_public_key);
-            BusinessSetting::set('stripe_secret_key', $request->stripe_secret_key);
-            BusinessSetting::set('trial_enabled', $request->trial_enabled ? '1' : '0');
-            if ($request->trial_enabled) {
-                BusinessSetting::set('trial_days', $request->trial_days);
+            // Update env file with new values
+            $envUpdates = [];
+            
+            if ($request->has('stripe_key')) {
+                $envUpdates['STRIPE_KEY'] = $request->stripe_key;
+            }
+            
+            if ($request->has('stripe_secret')) {
+                $envUpdates['STRIPE_SECRET'] = $request->stripe_secret;
+            }
+            
+            if ($request->has('free_trial_days')) {
+                $envUpdates['FREE_TRIAL_FOR_NEW_USERS'] = $request->free_trial_days;
+            }
+
+            if ($request->has('workspace_for_trial_users')) {
+                $envUpdates['WORKSPACE_FOR_TRIAL_USERS'] = $request->workspace_for_trial_users;
+            }
+
+            if ($request->has('project_per_workspace_for_trial_users')) {
+                $envUpdates['PROJECT_PER_WORKSPACE_FOR_TRIAL_USERS'] = $request->project_per_workspace_for_trial_users;
+            }
+
+            if ($request->has('members_per_project_for_trial_users')) {
+                $envUpdates['MEMBERS_PER_PROJECT_FOR_TRIAL_USERS'] = $request->members_per_project_for_trial_users;
+            }
+
+            if (!empty($envUpdates)) {
+                EnvHelper::updateMultipleEnvKeys($envUpdates);
             }
         }
 

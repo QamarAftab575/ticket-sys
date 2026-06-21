@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-2">
     <div class="flex space-x-1">
       <div
@@ -13,13 +13,13 @@
     </p>
     <ul class="text-xs text-gray-600 space-y-1">
       <li :class="{ 'text-green-600': hasMinLength, 'text-gray-400': !hasMinLength }">
-        ✓ At least 8 characters
+        âœ“ At least 8 characters
       </li>
       <li :class="{ 'text-green-600': hasMixedCase, 'text-gray-400': !hasMixedCase }">
-        ✓ Mix of uppercase and lowercase
+        âœ“ Mix of uppercase and lowercase
       </li>
       <li :class="{ 'text-green-600': hasNumbers, 'text-gray-400': !hasNumbers }">
-        ✓ Contains numbers
+        âœ“ Contains numbers
       </li>
     </ul>
   </div>
@@ -70,3 +70,4 @@ const getStrengthTextClass = computed(() => {
   return 'text-green-600'
 })
 </script>
+

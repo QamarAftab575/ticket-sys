@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="modal-overlay" @click="closeModal">
     <div class="modal" @click.stop>
       <div class="modal-header">
@@ -324,3 +324,4 @@ const submitForm = () => {
   background: #1b5e20;
 }
 </style>
+

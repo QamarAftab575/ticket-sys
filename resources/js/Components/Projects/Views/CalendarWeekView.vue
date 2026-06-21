@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="border rounded overflow-hidden">
     <!-- Day headers -->
     <div class="grid grid-cols-7 gap-px bg-gray-200">
@@ -220,7 +220,7 @@ const getTaskTitle = (task) => {
     return task.name
   }
   
-  return `${task.name} (${taskStart} → ${taskEnd})`
+  return `${task.name} (${taskStart} â†’ ${taskEnd})`
 }
 
 const handleDragStart = (event, task) => {
@@ -233,3 +233,4 @@ const handleDragEnd = () => {
   draggedTask.value = null
 }
 </script>
+

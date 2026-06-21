@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <div v-if="members.length === 0" class="text-gray-500 text-center py-8">
       No members assigned yet
@@ -99,3 +99,4 @@ const removeMember = (userId) => {
   }
 };
 </script>
+

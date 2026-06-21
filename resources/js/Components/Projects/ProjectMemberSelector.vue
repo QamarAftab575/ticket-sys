@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-2">
     <div class="flex flex-wrap gap-2">
       <div
@@ -12,7 +12,7 @@
           @click="removeMember(memberId)"
           class="text-blue-600 hover:text-blue-800 font-bold"
         >
-          ×
+          Ã—
         </button>
       </div>
     </div>
@@ -69,3 +69,4 @@ const removeMember = (memberId) => {
   emit('update:modelValue', props.modelValue.filter(id => id !== memberId));
 };
 </script>
+

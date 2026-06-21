@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6">
     <div class="flex flex-col gap-4">
       <!-- Header with title and reset button -->
@@ -131,13 +131,13 @@
       <!-- Active Filters Display -->
       <div v-if="hasActiveFilters" class="flex flex-wrap gap-2 pt-2 border-t border-gray-200">
         <div v-if="dateFrom || dateTo" class="flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-xs">
-          <span class="font-medium">📅 Date:</span>
+          <span class="font-medium">ðŸ“… Date:</span>
           <span>
             {{ formatDate(dateFrom) }} to {{ formatDate(dateTo) }}
           </span>
         </div>
         <div v-if="selectedMembers.length > 0" class="flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-xs">
-          <span class="font-medium">👥 Members:</span>
+          <span class="font-medium">ðŸ‘¥ Members:</span>
           <span>{{ selectedMembers.length }} selected</span>
         </div>
       </div>
@@ -252,3 +252,4 @@ watch(() => props.loading, (newVal) => {
   isLoading.value = newVal
 })
 </script>
+

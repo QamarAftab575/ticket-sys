@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="min-h-screen bg-gray-100">
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
@@ -6,7 +6,7 @@
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center space-x-8">
             <Link href="/admin" class="text-xl font-bold text-blue-600">
-              🔐 Admin Panel
+              ðŸ” Admin Panel
             </Link>
             
             <!-- Navigation Links -->
@@ -139,3 +139,4 @@ const logout = () => {
   router.post('/logout')
 }
 </script>
+

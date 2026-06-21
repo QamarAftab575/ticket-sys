@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <!-- Upload area -->
     <div
@@ -198,3 +198,4 @@ const uploadFiles = async (filesToUpload) => {
   }
 }
 </script>
+

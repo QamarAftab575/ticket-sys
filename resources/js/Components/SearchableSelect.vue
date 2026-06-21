@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="relative" ref="containerRef">
     <!-- Trigger button -->
     <button
@@ -137,7 +137,7 @@ const props = defineProps({
   },
   clearLabel: {
     type: String,
-    default: '— Clear selection —',
+    default: 'â€” Clear selection â€”',
   },
   disabled: {
     type: Boolean,
@@ -240,3 +240,4 @@ const handleOutsideClick = (e) => {
 onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
 onBeforeUnmount(() => document.removeEventListener('mousedown', handleOutsideClick))
 </script>
+

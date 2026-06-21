@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="fixed inset-0 bg-white flex flex-col">
     <!-- Top bar -->
     <div class="flex items-center justify-between px-8 py-4 border-b border-gray-200">
@@ -290,3 +290,4 @@ const previewRows = [
   { id: 7, done: true,  w: '60%', color: '', tag: '' },
 ]
 </script>
+

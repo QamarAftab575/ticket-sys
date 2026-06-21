@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <!-- Filters -->
     <div class="flex gap-4 mb-6">
@@ -65,7 +65,7 @@
                   class="text-sm"
                   title="Private"
                 >
-                  🔒
+                  ðŸ”’
                 </span>
               </div>
             </div>
@@ -150,3 +150,4 @@ const getStatusBadgeClass = (status) => {
   return classes[status] || 'bg-gray-100 text-gray-800'
 }
 </script>
+

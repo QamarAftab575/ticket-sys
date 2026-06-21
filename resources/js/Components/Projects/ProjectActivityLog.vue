@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="activity-log">
     <div class="mb-4">
       <h3 class="text-lg font-semibold text-gray-900">Project Activity</h3>
@@ -120,3 +120,4 @@ const formatDate = (date) => {
   return d.toLocaleDateString()
 }
 </script>
+

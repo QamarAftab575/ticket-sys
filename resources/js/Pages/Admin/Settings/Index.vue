@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AdminLayout>
     <template #header>
       <h1 class="text-3xl font-bold text-gray-900">Admin Settings</h1>
@@ -17,7 +17,7 @@
                 : 'border-transparent text-gray-600 hover:text-gray-900'
             ]"
           >
-            💳 Billing & Trial
+            ðŸ’³ Billing & Trial
           </button>
           <button
             @click="activeTab = 'plans'"
@@ -28,7 +28,7 @@
                 : 'border-transparent text-gray-600 hover:text-gray-900'
             ]"
           >
-            📦 Plans
+            ðŸ“¦ Plans
           </button>
           <button
             @click="activeTab = 'social-login'"
@@ -39,7 +39,7 @@
                 : 'border-transparent text-gray-600 hover:text-gray-900'
             ]"
           >
-            🔐 Social Login
+            ðŸ” Social Login
           </button>
         </div>
       </div>
@@ -68,3 +68,4 @@ defineProps({
 
 const activeTab = ref('billing')
 </script>
+

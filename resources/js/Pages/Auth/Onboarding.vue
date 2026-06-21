@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
     <div class="space-y-8">
       <div>
@@ -23,7 +23,7 @@
                 Start building your workspace by inviting members to join.
               </p>
               <Link href="/invitations" class="mt-2 inline-block text-blue-600 hover:text-blue-900">
-                Go to Invitations →
+                Go to Invitations â†’
               </Link>
             </div>
           </li>
@@ -71,3 +71,4 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 </script>
+

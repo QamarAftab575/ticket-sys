@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="rich-editor" ref="rootEl">
     <!-- Toolbar -->
     <Transition
@@ -44,7 +44,7 @@
         <!-- Upload image button (only when taskId provided) -->
         <template v-if="taskId">
           <div class="w-px h-4 bg-gray-200 mx-1"/>
-          <label :title="uploading ? 'Uploading…' : 'Insert image'" class="cursor-pointer">
+          <label :title="uploading ? 'Uploadingâ€¦' : 'Insert image'" class="cursor-pointer">
             <input type="file" accept="image/*" class="hidden" @change="onFileInputChange"/>
             <span :class="['flex p-1.5 rounded transition-colors', uploading ? 'text-indigo-400' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700']">
               <svg v-if="!uploading" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -117,11 +117,11 @@ const ToolbarBtn = defineComponent({
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
-  placeholder: { type: String, default: 'Add a description…' },
+  placeholder: { type: String, default: 'Add a descriptionâ€¦' },
   /**
-   * showToolbar: true  → always visible (description, edit-comment)
-   * showToolbar: false → never visible (legacy / read-only)
-   * showToolbar: 'auto' → hidden by default, shown on focus, hidden on blur
+   * showToolbar: true  â†’ always visible (description, edit-comment)
+   * showToolbar: false â†’ never visible (legacy / read-only)
+   * showToolbar: 'auto' â†’ hidden by default, shown on focus, hidden on blur
    */
   showToolbar: { type: [Boolean, String], default: true },
   editable: { type: Boolean, default: true },
@@ -145,7 +145,7 @@ const toolbarVisible = computed(() => {
   return false
 })
 
-// ── Upload image file → return public URL ────────────────────────────────
+// â”€â”€ Upload image file â†’ return public URL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function uploadImageFile(file) {
   if (!props.taskId) return null
   uploading.value = true
@@ -168,7 +168,7 @@ async function uploadImageFile(file) {
   }
 }
 
-// ── Toolbar file input handler ────────────────────────────────────────────
+// â”€â”€ Toolbar file input handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function onFileInputChange(event) {
   const file = event.target.files?.[0]
   if (!file) return
@@ -179,7 +179,7 @@ async function onFileInputChange(event) {
   }
 }
 
-// ── Mention suggestion configuration ──────────────────────────────────────
+// â”€â”€ Mention suggestion configuration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const mentionSuggestion = {
   char: '@',
   allowSpaces: false,
@@ -282,7 +282,7 @@ const mentionSuggestion = {
   },
 }
 
-// ── Create a custom extension for image paste handling ───────────────────
+// â”€â”€ Create a custom extension for image paste handling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const ImagePasteExtension = {
   name: 'imagePaste',
   addProseMirrorPlugins() {
@@ -368,7 +368,7 @@ const editor = useEditor({
     emit('focus')
   },
   onBlur({ editor }) {
-    // Small delay so toolbar button clicks (mousedown → blur → click) complete
+    // Small delay so toolbar button clicks (mousedown â†’ blur â†’ click) complete
     // before we hide the toolbar. The @mousedown.prevent on the toolbar wrapper
     // prevents blur from firing at all for most interactions, but this is a
     // safety net for edge cases (e.g. file input labels).
@@ -441,3 +441,4 @@ onBeforeUnmount(() => {
   background-color: #c7d2fe;
 }
 </style>
+

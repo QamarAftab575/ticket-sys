@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="relative flex-1 max-w-md">
     <!-- Search Input -->
     <input
@@ -227,3 +227,4 @@ const selectProject = (project) => {
   closeDropdown()
 }
 </script>
+

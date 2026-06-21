@@ -1,6 +1,6 @@
-<template>
+﻿<template>
   <!-- Guard: if field definition not loaded yet, show placeholder -->
-  <div v-if="!field || !field.field_type" class="w-full px-1 text-gray-300 text-xs">—</div>
+  <div v-if="!field || !field.field_type" class="w-full px-1 text-gray-300 text-xs">â€”</div>
 
   <div v-else class="w-full h-full flex items-center" @click.stop>
 
@@ -47,7 +47,7 @@
         class="text-xs text-gray-700 cursor-text truncate w-full px-1 hover:bg-gray-50 rounded py-0.5"
         :class="{ 'text-gray-400 italic': !displayValue }"
       >
-        {{ displayValue || '—' }}
+        {{ displayValue || 'â€”' }}
       </span>
     </template>
 
@@ -69,7 +69,7 @@
         class="text-xs text-gray-700 cursor-text truncate w-full px-1 hover:bg-gray-50 rounded py-0.5"
         :class="{ 'text-gray-400 italic': !displayValue }"
       >
-        {{ displayValue || '—' }}
+        {{ displayValue || 'â€”' }}
       </span>
     </template>
 
@@ -85,7 +85,7 @@
 
     <!-- Fallback -->
     <template v-else>
-      <span class="text-xs text-gray-400 px-1">{{ displayValue || '—' }}</span>
+      <span class="text-xs text-gray-400 px-1">{{ displayValue || 'â€”' }}</span>
     </template>
 
   </div>
@@ -159,3 +159,4 @@ function cancelEdit() {
   editing.value = false
 }
 </script>
+

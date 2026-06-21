@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex items-center bg-white border-b border-gray-200 sticky top-0 z-10" style="min-height: 32px;">
     <!-- Drag handle space -->
     <div class="w-5 flex-shrink-0" />
@@ -37,7 +37,7 @@
           </svg>
         </button>
 
-        <!-- Resize handle — overlays the column border on hover -->
+        <!-- Resize handle â€” overlays the column border on hover -->
         <div
           v-if="idx < visibleColumns.length - 1"
           @mousedown="startResize(column.id, $event)"
@@ -102,7 +102,7 @@ const resizingColumn    = ref(null)
 const resizeStartX      = ref(0)
 const isResizing        = ref(false)
 
-// ── column drag-to-reorder ────────────────────────────────────────────────
+// â”€â”€ column drag-to-reorder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const draggingIdx  = ref(null)
 const dragOverIdx  = ref(null)
 const isDraggingCol = ref(false)
@@ -143,7 +143,7 @@ function onDrop(event, toIdx) {
   emit('reorder-column', { fromIndex: fromIdx, toIndex: toIdx })
 }
 
-// ── sort ──────────────────────────────────────────────────────────────────
+// â”€â”€ sort â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const getSortDirection = (columnId) => props.sortRules?.find(r => r.field === columnId)?.direction ?? null
 
 const handleSort = (columnId) => {
@@ -151,13 +151,13 @@ const handleSort = (columnId) => {
   emit('sort', { field: columnId, direction: current === 'asc' ? 'desc' : 'asc' })
 }
 
-// ── hide column ───────────────────────────────────────────────────────────
+// â”€â”€ hide column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const hideColumn = (columnId) => {
   emit('hide-column', columnId)
   activeColumnMenu.value = null
 }
 
-// ── resize ────────────────────────────────────────────────────────────────
+// â”€â”€ resize â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const startResize = (columnId, event) => {
   event.preventDefault()   // prevent text selection
   event.stopPropagation()  // prevent drag start on the parent
@@ -183,10 +183,11 @@ const stopResize = () => {
   setTimeout(() => { isResizing.value = false }, 50)
 }
 
-// ── add field ─────────────────────────────────────────────────────────────
+// â”€â”€ add field â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const onFieldCreated = (field) => {
   if (!fields.value.find(f => f.id === field.id)) fields.value.push(field)
   emit('create-field', field)
   showAddFieldModal.value = false
 }
 </script>
+

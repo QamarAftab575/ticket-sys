@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
 
     <!-- View mode -->
@@ -69,7 +69,7 @@
         <textarea
           v-model="editStatusUpdate"
           rows="3"
-          placeholder="Describe what's happening, blockers, next steps…"
+          placeholder="Describe what's happening, blockers, next stepsâ€¦"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
         />
       </div>
@@ -81,7 +81,7 @@
           :disabled="isSaving"
           class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {{ isSaving ? 'Saving…' : 'Save' }}
+          {{ isSaving ? 'Savingâ€¦' : 'Save' }}
         </button>
         <button
           @click="cancel"
@@ -106,7 +106,7 @@ const props = defineProps({
 
 const { success: showSuccess, error: showError } = useToast()
 
-// ─── Status config ────────────────────────────────────────────────────────
+// â”€â”€â”€ Status config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const STATUS_OPTIONS = {
   on_track: {
     label: 'On Track',
@@ -167,12 +167,12 @@ const STATUS_COLORS = {
   complete:  { badge: 'bg-blue-100 text-blue-800',    dot: 'bg-blue-500' },
 }
 
-// ─── Local reactive state (so UI updates immediately on save) ─────────────
+// â”€â”€â”€ Local reactive state (so UI updates immediately on save) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const localStatus       = ref(props.project.status)
 const localStatusUpdate = ref(props.project.status_update || '')
 const localUpdatedAt    = ref(props.project.updated_at)
 
-// ─── Edit state ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Edit state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const isEditing      = ref(false)
 const isSaving       = ref(false)
 const editStatus     = ref(props.project.status)
@@ -229,3 +229,4 @@ const formatDate = (date) => {
   })
 }
 </script>
+

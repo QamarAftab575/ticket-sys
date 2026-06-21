@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     v-if="items.length > 0"
     class="bg-white rounded-lg shadow-lg border border-gray-200 py-1 max-h-64 overflow-y-auto"
@@ -105,3 +105,4 @@ defineExpose({
   onKeyDown,
 });
 </script>
+

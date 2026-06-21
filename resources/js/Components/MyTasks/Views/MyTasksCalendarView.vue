@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <CalendarView
     :project="null"
     :tasks="tasks"
@@ -24,3 +24,4 @@ const emit = defineEmits<{
   'task-completed': [taskId: string];
 }>();
 </script>
+

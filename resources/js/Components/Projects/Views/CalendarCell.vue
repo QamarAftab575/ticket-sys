@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     :class="[
       'bg-white p-2 min-h-24 border transition-colors',
@@ -219,7 +219,7 @@ const getTaskTitle = (task) => {
     return task.name
   }
   
-  return `${task.name} (${taskStart} → ${taskEnd})`
+  return `${task.name} (${taskStart} â†’ ${taskEnd})`
 }
 
 const handleCellClick = () => {
@@ -250,3 +250,4 @@ const handleDrop = (event) => {
   }
 }
 </script>
+

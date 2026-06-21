@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div ref="containerRef" class="relative inline-flex items-center">
     <!-- Trigger -->
     <button
@@ -160,3 +160,4 @@ function handleOutsideClick(e) {
 onMounted(() => document.addEventListener('mousedown', handleOutsideClick));
 onBeforeUnmount(() => document.removeEventListener('mousedown', handleOutsideClick));
 </script>
+

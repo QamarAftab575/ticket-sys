@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex-1 overflow-auto bg-white flex flex-col">
     <!-- Loading State -->
     <div v-if="loading" class="flex items-center justify-center h-64">

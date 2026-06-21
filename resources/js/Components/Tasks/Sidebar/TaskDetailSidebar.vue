@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="w-96 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
     <!-- Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
@@ -147,3 +147,4 @@ async function handleToggleComplete() {
   }
 }
 </script>
+

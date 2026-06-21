@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <div class="text-center">
       <div class="text-3xl font-bold text-gray-900 mb-1">
@@ -40,3 +40,4 @@ defineProps({
   stats: Object,
 })
 </script>
+

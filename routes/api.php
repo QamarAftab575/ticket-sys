@@ -157,6 +157,13 @@ Route::middleware(['web', 'auth:web'])->group(function () {
         Route::put('/', [TaskTemplateController::class, 'update'])->name('task-templates.update');
         Route::delete('/', [TaskTemplateController::class, 'destroy'])->name('task-templates.destroy');
     });
+
+    // Subscription status routes
+    Route::prefix('/subscription')->group(function () {
+        Route::get('/expiry-status', [\App\Http\Controllers\Api\SubscriptionStatusController::class, 'getExpiryStatus'])->name('subscription.expiry-status');
+        Route::get('/suspended-workspaces', [\App\Http\Controllers\Api\SubscriptionStatusController::class, 'getSuspendedWorkspaces'])->name('subscription.suspended-workspaces');
+        Route::get('/renewal-warning', [\App\Http\Controllers\Api\SubscriptionStatusController::class, 'needsRenewalWarning'])->name('subscription.renewal-warning');
+    });
 });
 
 // API routes protected by API token authentication (for external apps)

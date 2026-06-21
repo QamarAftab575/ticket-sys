@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     class="absolute h-8 rounded cursor-move group"
     :class="[
@@ -241,3 +241,4 @@ const handleDependencyMouseUp = () => {
   document.removeEventListener('mouseup', handleDependencyMouseUp)
 }
 </script>
+

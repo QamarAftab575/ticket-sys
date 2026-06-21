@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Teleport to="body">
     <div class="fixed inset-0 z-[60] flex items-center justify-center bg-black/40" @click.self="$emit('cancel')">
       <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
@@ -79,3 +79,4 @@ defineEmits(['confirm', 'cancel'])
 
 const override = ref(false)
 </script>
+

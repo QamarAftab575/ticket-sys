@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="bg-white border rounded-lg p-6">
     <div class="flex items-center justify-between mb-4">
       <h3 class="font-semibold text-lg">{{ title }}</h3>
@@ -17,3 +17,4 @@ defineProps({
   title: String,
 })
 </script>
+

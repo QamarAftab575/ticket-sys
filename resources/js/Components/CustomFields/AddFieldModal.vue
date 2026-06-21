@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     class="fixed inset-0 bg-black/40 flex items-center justify-center z-[100]"
     @mousedown.self="$emit('close')"
@@ -249,7 +249,7 @@ const emit = defineEmits(['close', 'created', 'updated', 'deleted'])
 
 const isEditMode = computed(() => !!props.editField)
 
-// ── custom field types ────────────────────────────────────────────────────────
+// â”€â”€ custom field types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const fieldTypes = [
   { value: 'single_select', label: 'Single-select', icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>' },
   { value: 'multi_select',  label: 'Multi-select',  icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>' },
@@ -259,7 +259,7 @@ const fieldTypes = [
   { value: 'people',        label: 'People',        icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>' },
 ]
 
-// ── system field definitions (read-only, no options builder) ──────────────────
+// â”€â”€ system field definitions (read-only, no options builder) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const systemFieldTypes = [
   { value: 'system_assignee',         label: 'Assignee',         icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>' },
   { value: 'system_blocked_by',       label: 'Blocked by',       icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.93 4.93l14.14 14.14"/></svg>' },
@@ -271,7 +271,7 @@ const systemFieldTypes = [
   { value: 'system_collaborators',    label: 'Collaborators',    icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>' },
 ]
 
-// ── shared fields cache (to detect already-added system fields) ───────────────
+// â”€â”€ shared fields cache (to detect already-added system fields) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const { fields: projectFields } = useCustomFields(props.projectId)
 
 /** System field values already active in this project */
@@ -295,7 +295,7 @@ const colorPalette = [
   '#64748b','#78716c','#84cc16','#14b8a6','#f43f5e',
 ]
 
-// ── form state ────────────────────────────────────────────────────────────────
+// â”€â”€ form state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const form = ref({ name: '', field_type: 'single_select', options: [] })
 const saving           = ref(false)
 const error            = ref('')
@@ -317,7 +317,7 @@ const isSystemType = computed(() =>
   form.value.field_type.startsWith('system_')
 )
 
-// ── populate form (create vs edit) ────────────────────────────────────────────
+// â”€â”€ populate form (create vs edit) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function initForm() {
   if (props.editField) {
     form.value.name       = props.editField.name
@@ -335,9 +335,9 @@ function initForm() {
   }
 }
 
-// ── type selection ────────────────────────────────────────────────────────────
+// â”€â”€ type selection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function selectType(t) {
-  if (t.system && isSystemFieldUsed(t.value)) return  // blocked — already added
+  if (t.system && isSystemFieldUsed(t.value)) return  // blocked â€” already added
   form.value.field_type = t.value
   // Auto-fill name for system fields
   if (t.system) form.value.name = t.label
@@ -352,7 +352,7 @@ function selectType(t) {
   }
 }
 
-// ── options ───────────────────────────────────────────────────────────────────
+// â”€â”€ options â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function makeOption() {
   return { _key: ++_keyCounter, id: null, name: '', color: colorPalette[_keyCounter % colorPalette.length], position: 0 }
 }
@@ -361,7 +361,7 @@ function removeOption(idx)    { form.value.options.splice(idx, 1) }
 function toggleColorPicker(i) { colorPickerIdx.value = colorPickerIdx.value === i ? null : i }
 function setOptionColor(i, c) { form.value.options[i].color = c; colorPickerIdx.value = null }
 
-// ── drag sort ─────────────────────────────────────────────────────────────────
+// â”€â”€ drag sort â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function dragStart(idx) { dragIdx.value = idx }
 function dragOver(idx) {
   if (dragIdx.value === null || dragIdx.value === idx) return
@@ -373,7 +373,7 @@ function dragOver(idx) {
 }
 function dragEnd() { dragIdx.value = null }
 
-// ── submit ────────────────────────────────────────────────────────────────────
+// â”€â”€ submit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const csrf = () => document.querySelector('meta[name="csrf-token"]')?.content
 
 async function submit() {
@@ -451,7 +451,7 @@ async function deleteField() {
   }
 }
 
-// ── outside click ─────────────────────────────────────────────────────────────
+// â”€â”€ outside click â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function onDocClick(e) {
   if (typeDropdownRef.value && !typeDropdownRef.value.contains(e.target)) showTypeDropdown.value = false
   if (colorPickerIdx.value !== null) colorPickerIdx.value = null
@@ -460,3 +460,4 @@ function onDocClick(e) {
 onMounted(() => { document.addEventListener('mousedown', onDocClick); initForm() })
 onBeforeUnmount(() => document.removeEventListener('mousedown', onDocClick))
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="filter-panel">
     <div class="filter-section">
       <h3>Status</h3>
@@ -181,3 +181,4 @@ const clearFilters = () => {
   color: #2e7d32;
 }
 </style>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="relative w-full" ref="rootRef">
     <!-- Trigger -->
     <button
@@ -15,7 +15,7 @@
         >
           {{ selectedOption.name }}
         </span>
-        <span v-else class="text-gray-400">—</span>
+        <span v-else class="text-gray-400">â€”</span>
       </template>
 
       <!-- Multi select: chips -->
@@ -30,7 +30,7 @@
             {{ opt.name }}
           </span>
         </template>
-        <span v-else class="text-gray-400">—</span>
+        <span v-else class="text-gray-400">â€”</span>
       </template>
     </button>
 
@@ -192,3 +192,4 @@ function onDocClick(e) {
 onMounted(() => document.addEventListener('mousedown', onDocClick))
 onBeforeUnmount(() => document.removeEventListener('mousedown', onDocClick))
 </script>
+

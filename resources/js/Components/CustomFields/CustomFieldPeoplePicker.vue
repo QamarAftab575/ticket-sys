@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="relative w-full" ref="rootRef">
 
     <!-- Trigger: shows selected member chips + search input inline -->
@@ -27,7 +27,7 @@
       </span>
 
       <!-- Placeholder -->
-      <span v-if="!selectedMembers.length && !open" class="text-gray-400 text-xs px-1">—</span>
+      <span v-if="!selectedMembers.length && !open" class="text-gray-400 text-xs px-1">â€”</span>
     </div>
 
     <!-- Dropdown -->
@@ -191,3 +191,4 @@ function onDocClick(e) {
 onMounted(() => document.addEventListener('mousedown', onDocClick))
 onBeforeUnmount(() => document.removeEventListener('mousedown', onDocClick))
 </script>
+

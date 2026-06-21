@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center space-y-6 animate-bounce">
-      <div class="text-6xl">⏰</div>
+      <div class="text-6xl">â°</div>
 
       <div class="space-y-2">
         <h2 class="text-2xl font-bold text-gray-900">Your free trial has ended</h2>
@@ -52,3 +52,4 @@ defineEmits(['dismiss'])
   animation: bounce 2s infinite;
 }
 </style>
+

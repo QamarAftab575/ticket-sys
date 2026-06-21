@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-3">
     <div class="space-y-2">
       <label v-for="column in columns" :key="column.id" class="flex items-center">
@@ -40,3 +40,4 @@ function toggleColumn(columnId: string) {
   tasksStore.toggleColumn(columnId);
 }
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AdminLayout>
     <template #header>
       <div class="flex justify-between items-center">
@@ -60,15 +60,16 @@
               <tr v-for="workspace in workspaces.data" :key="workspace.id" class="border-b border-gray-200 hover:bg-gray-50">
                 <td class="px-6 py-4 text-sm">
                   <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-medium" :style="{ backgroundColor: workspace.creator.avatar_color || '#3B82F6' }">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-medium" :style="{ backgroundColor: workspace.avatar_color || '#3B82F6' }">
                       {{ workspace.name.charAt(0).toUpperCase() }}
                     </div>
                     <div class="font-medium text-gray-900">{{ workspace.name }}</div>
                   </div>
                 </td>
                 <td class="px-6 py-4 text-sm">
-                  <div class="text-gray-900">{{ workspace.creator.name }}</div>
-                  <div class="text-gray-500 text-xs">{{ workspace.creator.email }}</div>
+                  <div v-if="workspace.creator" class="text-gray-900">{{ workspace.creator.name }}</div>
+                  <div v-else class="text-gray-500 italic">No owner</div>
+                  <div v-if="workspace.creator" class="text-gray-500 text-xs">{{ workspace.creator.email }}</div>
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-600">{{ workspace.members_count }}</td>
                 <td class="px-6 py-4 text-sm text-gray-600">{{ workspace.projects_count }}</td>
@@ -251,3 +252,4 @@ const confirmAction = () => {
   }
 }
 </script>
+

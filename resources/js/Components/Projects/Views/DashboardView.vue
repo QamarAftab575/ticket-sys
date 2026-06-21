@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <!-- Widgets grid — 2 draggable columns -->
+    <!-- Widgets grid â€” 2 draggable columns -->
     <div class="flex gap-6">
       <!-- Left column -->
       <div
@@ -177,7 +177,7 @@ const WIDGET_LABELS = {
   'recent-activity': 'Recent Activity',
 }
 
-// Map widgetId → component
+// Map widgetId â†’ component
 const widgetComponents = {
   'project-status': ProjectStatusWidget,
   'task-completion': TaskCompletionWidget,
@@ -188,7 +188,7 @@ const widgetComponents = {
   'recent-activity': RecentActivityWidget,
 }
 
-// Map widgetId → props to pass down
+// Map widgetId â†’ props to pass down
 const widgetProps = (widgetId) => {
   switch (widgetId) {
     case 'project-status':
@@ -234,9 +234,9 @@ const dashboardStats = ref(props.stats)
 const { leftColumn, rightColumn, hiddenWidgets, loadState, hideWidget, addWidget, reorderWidget } =
   useDashboardState(props.project.id)
 
-// ─── Drag & Drop state ─────────────────────────────────────────────────────
+// â”€â”€â”€ Drag & Drop state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const draggingWidgetId = ref(null)
-const dragOverColumn = ref(null)   // 'left' | 'right' | null  — highlight column
+const dragOverColumn = ref(null)   // 'left' | 'right' | null  â€” highlight column
 const dragOverWidget = ref(null)   // widgetId being hovered
 const dropTarget = ref(null)       // { column, index } for the indicator line
 
@@ -315,12 +315,12 @@ const _widgetInColumn = (widgetId, column) => {
     : rightColumn.value.includes(widgetId)
 }
 
-// ─── Lifecycle ────────────────────────────────────────────────────────────
+// â”€â”€â”€ Lifecycle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 onMounted(() => {
   loadState()
 })
 
-// ─── Filters ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ Filters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const handleFiltersChanged = async (filters) => {
   isLoadingFilters.value = true
   try {
@@ -358,3 +358,4 @@ const handleFiltersChanged = async (filters) => {
   animation: slideIn 0.2s ease-in-out;
 }
 </style>
+

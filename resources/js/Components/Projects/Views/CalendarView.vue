@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <!-- Calendar header -->
     <div class="flex items-center justify-between p-4 bg-gray-50 rounded">
@@ -8,7 +8,7 @@
           class="px-3 py-1 border rounded hover:bg-gray-200 transition-colors"
           :aria-label="viewMode === 'month' ? 'Previous month' : 'Previous week'"
         >
-          ← Previous
+          â† Previous
         </button>
         <button
           @click="goToToday"
@@ -22,7 +22,7 @@
           class="px-3 py-1 border rounded hover:bg-gray-200 transition-colors"
           :aria-label="viewMode === 'month' ? 'Next month' : 'Next week'"
         >
-          Next →
+          Next â†’
         </button>
       </div>
       <h3 class="text-lg font-semibold">{{ displayTitle }}</h3>
@@ -157,13 +157,13 @@ const displayTitle = computed(() => {
     const startDay = start.getDate()
     const endDay = end.getDate()
     
-    // If same month: "May 10 – 16"
+    // If same month: "May 10 â€“ 16"
     if (start.getMonth() === end.getMonth()) {
-      return `${startMonth} ${startDay} – ${endDay}`
+      return `${startMonth} ${startDay} â€“ ${endDay}`
     }
-    // If different months: "May 30 – Jun 5"
+    // If different months: "May 30 â€“ Jun 5"
     else {
-      return `${startMonth} ${startDay} – ${endMonth} ${endDay}`
+      return `${startMonth} ${startDay} â€“ ${endMonth} ${endDay}`
     }
   }
 })
@@ -260,3 +260,4 @@ const handleUpdateDueDate = (taskId, newDate) => {
   emit('update-due-date', { taskId, newDate: dateKey(newDate) })
 }
 </script>
+

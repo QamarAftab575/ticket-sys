@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-3">
     <div v-for="value in task.customFieldValues" :key="value.id" class="flex items-center gap-2">
       <label class="text-sm font-medium text-gray-700 flex-1">
@@ -31,3 +31,4 @@ function handleFieldChange(fieldId: string, event: Event) {
   // TODO: Implement custom field update
 }
 </script>
+

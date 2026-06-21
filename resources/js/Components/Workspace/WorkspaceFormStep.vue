@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <form @submit.prevent="$emit('next')" class="space-y-6">
     <!-- Workspace Name -->
     <div>
@@ -171,3 +171,4 @@ const toggleType = (type) => {
   emit('update:workspace', { ...props.workspace, types })
 }
 </script>
+

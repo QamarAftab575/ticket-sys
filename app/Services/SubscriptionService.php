@@ -30,10 +30,11 @@ class SubscriptionService
                 'notes' => $notes ?? "Plan assigned by admin",
             ]);
 
-            // Update user's active plan
+            // Update user's active plan and stripe subscription ID
             $user->update([
                 'active_plan_id' => $plan->id,
                 'plan_starts_at' => now(),
+                'stripe_subscription_id' => $subscription->id,
             ]);
 
             return $subscription;
@@ -146,10 +147,11 @@ class SubscriptionService
                 'notes' => $reason ?? "Subscription cancelled",
             ]);
 
-            // Clear user's active plan
+            // Clear user's active plan and stripe subscription ID
             $user->update([
                 'active_plan_id' => null,
                 'plan_starts_at' => null,
+                'stripe_subscription_id' => null,
             ]);
 
             return $subscription;

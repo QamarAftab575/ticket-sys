@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="border border-gray-200 rounded-lg overflow-hidden">
     <!-- Header with collapse toggle -->
     <button
@@ -89,3 +89,4 @@ async function handleUpdate({ taskId, fieldId, value }) {
   }
 }
 </script>
+

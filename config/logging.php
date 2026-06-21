@@ -118,6 +118,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'payments' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payments.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 90,
+            'replace_placeholders' => true,
+        ],
+
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="bg-white border-b border-gray-200 px-6 py-4">
     <div class="flex items-center justify-between">
       <!-- Hamburger (mobile only) -->
@@ -82,7 +82,8 @@ onMounted(async () => {
     const response = await api.get('/inbox/unread-count')
     notificationStore.setUnreadCount(response.count ?? 0)
   } catch {
-    // non-critical — badge simply stays at 0
+    // non-critical â€” badge simply stays at 0
   }
 })
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex h-screen bg-slate-100">
     <!-- Sidebar Navigation -->
     <div class="w-64 bg-white shadow-lg">
@@ -92,3 +92,4 @@ const isActive = (path) => {
   return page.url === path || page.url.startsWith(path + '/')
 }
 </script>
+

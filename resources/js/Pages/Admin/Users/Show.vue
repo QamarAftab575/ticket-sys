@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AdminLayout>
     <template #header>
       <!-- Hero Section with User Header -->
@@ -32,13 +32,13 @@
             Active
           </span>
           <span v-if="stats.is_super_admin" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/20 border border-amber-500/50 text-amber-200">
-            👑 Super Admin
+            ðŸ‘‘ Super Admin
           </span>
           <span v-if="stats.email_verified" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 border border-blue-500/50 text-blue-200">
-            ✓ Email Verified
+            âœ“ Email Verified
           </span>
           <span v-else class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/20 border border-yellow-500/50 text-yellow-200">
-            ⚠ Email Unverified
+            âš  Email Unverified
           </span>
         </div>
       </div>
@@ -162,7 +162,7 @@
             </div>
             <div class="pb-5 border-b border-slate-200 dark:border-slate-700">
               <p class="text-slate-600 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Timezone</p>
-              <p class="text-slate-900 dark:text-white font-semibold text-lg">{{ user.timezone || '—' }}</p>
+              <p class="text-slate-900 dark:text-white font-semibold text-lg">{{ user.timezone || 'â€”' }}</p>
             </div>
             <div class="pb-5 border-b border-slate-200 dark:border-slate-700">
               <p class="text-slate-600 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Account Created</p>
@@ -170,7 +170,7 @@
             </div>
             <div>
               <p class="text-slate-600 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Last Login</p>
-              <p class="text-slate-900 dark:text-white font-semibold text-lg">{{ stats.last_login || '—' }}</p>
+              <p class="text-slate-900 dark:text-white font-semibold text-lg">{{ stats.last_login || 'â€”' }}</p>
             </div>
           </div>
         </div>
@@ -188,7 +188,7 @@
                 <div>
                   <p class="text-sm font-bold text-emerald-900 dark:text-emerald-200 flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-                    💳 Active Subscription
+                    ðŸ’³ Active Subscription
                   </p>
                   <p class="text-emerald-900 dark:text-emerald-100 font-bold text-2xl mt-3">{{ activePlan.name }}</p>
                 </div>
@@ -218,10 +218,10 @@
             <div v-else-if="stats.trial_ends_at && !activePlan" class="p-6 rounded-xl" :class="isTrialActive ? 'bg-gradient-to-br from-yellow-50 to-yellow-100/50 border-2 border-yellow-300 dark:from-yellow-900/20 dark:to-yellow-800/20 dark:border-yellow-700/50' : 'bg-gradient-to-br from-red-50 to-red-100/50 border-2 border-red-300 dark:from-red-900/20 dark:to-red-800/20 dark:border-red-700/50'">
               <p class="text-sm font-bold flex items-center gap-2" :class="isTrialActive ? 'text-yellow-900 dark:text-yellow-200' : 'text-red-900 dark:text-red-200'">
                 <span :class="['w-3 h-3 rounded-full', isTrialActive ? 'bg-yellow-500 animate-pulse' : 'bg-red-500 animate-pulse']"></span>
-                {{ isTrialActive ? '🔄 Active Trial' : '⏰ Trial Expired' }}
+                {{ isTrialActive ? 'ðŸ”„ Active Trial' : 'â° Trial Expired' }}
               </p>
               <p class="text-slate-700 dark:text-slate-300 text-sm mt-3">Trial ends: <span class="font-semibold">{{ formatDate(stats.trial_ends_at) }}</span></p>
-              <p v-if="isTrialActive" class="text-slate-700 dark:text-slate-300 text-sm font-medium mt-2">⏳ {{ daysUntilTrialExpires }} days remaining</p>
+              <p v-if="isTrialActive" class="text-slate-700 dark:text-slate-300 text-sm font-medium mt-2">â³ {{ daysUntilTrialExpires }} days remaining</p>
 
               <div class="grid grid-cols-2 gap-3 mt-4">
                 <button
@@ -243,7 +243,7 @@
             <div v-else class="p-6 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100/50 border-2 border-gray-300 dark:from-gray-900/20 dark:to-gray-800/20 dark:border-gray-700/50">
               <p class="text-sm font-bold text-gray-900 dark:text-gray-200 flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-gray-500"></span>
-                ⚠️ No Plan or Trial
+                âš ï¸ No Plan or Trial
               </p>
               <p class="text-gray-700 dark:text-gray-300 text-sm mt-3">This user doesn't have an active trial or plan. Assign them a plan to get started.</p>
 
@@ -339,6 +339,66 @@
         <div v-else class="text-center py-16">
           <svg class="w-16 h-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9h-3V8h-1v4h-3v1h3v3h1v-3h3v-1z"/></svg>
           <p class="text-slate-600 dark:text-slate-400 font-medium">This user is not a member of any projects</p>
+        </div>
+      </div>
+
+      <!-- Subscription History Section -->
+      <div v-if="subscriptionHistory && subscriptionHistory.length" class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 border border-slate-200/50 dark:border-slate-700/50">
+        <div class="flex items-center gap-3 mb-6">
+          <svg class="w-6 h-6 text-slate-600 dark:text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5-7h-4v4h4v-4z"/></svg>
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Subscription History</h2>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-slate-700">
+                <th class="px-6 py-3 text-left text-sm font-semibold text-slate-600 dark:text-slate-400">Plan</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-slate-600 dark:text-slate-400">Source</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-slate-600 dark:text-slate-400">Started</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-slate-600 dark:text-slate-400">Expires</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-slate-600 dark:text-slate-400">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="subscription in subscriptionHistory" :key="subscription.id" class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                <td class="px-6 py-4 text-sm">
+                  <div class="font-semibold text-slate-900 dark:text-white">{{ subscription.plan_name }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ subscription.plan_price }} / {{ subscription.billing_cycle }}</div>
+                </td>
+                <td class="px-6 py-4 text-sm">
+                  <span :class="[
+                    'inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-semibold',
+                    subscription.source === 'purchase' 
+                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' 
+                      : subscription.source === 'admin'
+                      ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300'
+                      : 'bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300'
+                  ]">
+                    {{ subscription.source === 'purchase' ? '💳 Purchase' : subscription.source === 'admin' ? '👤 Admin' : subscription.source }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">
+                  {{ formatDate(subscription.started_at) }}
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">
+                  {{ subscription.expires_at ? formatDate(subscription.expires_at) : '—' }}
+                </td>
+                <td class="px-6 py-4 text-sm">
+                  <span :class="[
+                    'inline-flex px-3 py-1 rounded-full text-xs font-semibold',
+                    subscription.status === 'active'
+                      ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                      : subscription.status === 'expired'
+                      ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
+                      : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
+                  ]">
+                    {{ subscription.status === 'active' ? '✓ Active' : subscription.status === 'expired' ? '✕ Expired' : '⏸ ' + subscription.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -491,6 +551,7 @@ const props = defineProps({
   projects: Array,
   availablePlans: Array,
   activePlan: Object,
+  subscriptionHistory: Array,
 })
 
 const showConfirmModal = ref(false)
@@ -596,3 +657,4 @@ const extendTrial = () => {
   })
 }
 </script>
+

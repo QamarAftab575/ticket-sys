@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AppLayout>
     <div class="min-h-screen bg-gray-50">
       <!-- Page Header -->
@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-xl font-semibold text-gray-900">Reporting Dashboard</h1>
-            <p class="text-sm text-gray-500 mt-0.5">360° view of your team's work</p>
+            <p class="text-sm text-gray-500 mt-0.5">360Â° view of your team's work</p>
           </div>
           <div class="flex items-center gap-2 text-xs text-gray-400">
             <span class="w-2 h-2 rounded-full bg-green-400 inline-block"></span>
@@ -38,7 +38,7 @@
           {{ error }}
         </div>
 
-        <!-- Stat Cards — skeleton while loading -->
+        <!-- Stat Cards â€” skeleton while loading -->
         <div v-if="loading" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
           <div v-for="n in 6" :key="n" class="bg-white rounded-xl border border-gray-200 p-4 animate-pulse">
             <div class="h-4 bg-gray-200 rounded w-2/3 mb-3"></div>
@@ -60,7 +60,7 @@
           />
         </div>
 
-        <!-- Charts Grid — skeleton while loading -->
+        <!-- Charts Grid â€” skeleton while loading -->
         <div v-if="loading" class="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div v-for="n in 8" :key="n" class="bg-white rounded-xl border border-gray-200 p-5 animate-pulse">
             <div class="h-5 bg-gray-200 rounded w-1/3 mb-1.5"></div>
@@ -98,7 +98,7 @@
             <canvas ref="chartCompletionRate"></canvas>
           </ChartCard>
 
-          <ChartCard title="Overdue Tasks by Member" subtitle="Sorted by count — highest first">
+          <ChartCard title="Overdue Tasks by Member" subtitle="Sorted by count â€” highest first">
             <canvas ref="chartOverdueByMember"></canvas>
           </ChartCard>
         </div>
@@ -129,7 +129,7 @@ Chart.register(
   DoughnutController, BarController, LineController
 )
 
-// ── Props ───────────────────────────────────────────────────────────────────
+// â”€â”€ Props â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const props = defineProps({
   projects:       { type: Array,  default: () => [] },
   allMembers:     { type: Array,  default: () => [] },
@@ -137,7 +137,7 @@ const props = defineProps({
   defaultFilters: { type: Object, default: () => ({}) },
 })
 
-// ── State ───────────────────────────────────────────────────────────────────
+// â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const loading = ref(false)
 const error   = ref(null)
 const stats   = ref(props.initialData?.stats  || {})
@@ -151,7 +151,7 @@ const filters = ref({
   project_status: props.defaultFilters?.project_status ?? null,
 })
 
-// ── Stat cards ──────────────────────────────────────────────────────────────
+// â”€â”€ Stat cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const statCards = computed(() => {
   const s = stats.value
   return [
@@ -164,7 +164,7 @@ const statCards = computed(() => {
   ]
 })
 
-// ── Chart refs ──────────────────────────────────────────────────────────────
+// â”€â”€ Chart refs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const chartStatus            = ref(null)
 const chartCompletedOverTime = ref(null)
 const chartTasksByProject    = ref(null)
@@ -285,7 +285,7 @@ function buildCharts() {
   }
 }
 
-// ── HTTP ────────────────────────────────────────────────────────────────────
+// â”€â”€ HTTP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function httpPost(url, data) {
   const csrf = document.querySelector('meta[name="csrf-token"]')?.content
   const resp = await fetch(url, {
@@ -307,7 +307,7 @@ async function httpPost(url, data) {
   return resp.json()
 }
 
-// ── Filters ─────────────────────────────────────────────────────────────────
+// â”€â”€ Filters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function applyFilters() {
   loading.value = true
   error.value   = null
@@ -336,9 +336,10 @@ function resetFilters() {
   applyFilters()
 }
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+// â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 onMounted(async () => {
   await nextTick()
   buildCharts()
 })
 </script>
+

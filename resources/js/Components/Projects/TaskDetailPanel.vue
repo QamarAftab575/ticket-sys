@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Teleport to="body">
     <div class="fixed inset-0 z-40 bg-black/10" @click="$emit('close')"/>
 
@@ -112,7 +112,7 @@
                   </svg>
                   <span class="w-2.5 h-2.5 rounded-sm flex-shrink-0" :style="{ backgroundColor: project?.color || '#6366f1' }"/>
                   <span>{{ project?.name }}</span>
-                  <span class="text-gray-400 mx-0.5">·</span>
+                  <span class="text-gray-400 mx-0.5">Â·</span>
                   <span class="text-gray-500">{{ localTask.section?.name || 'No section' }}</span>
                 </button>
 
@@ -143,7 +143,7 @@
           <div>
             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Description</p>
             <div class="border border-gray-200 rounded-lg overflow-hidden focus-within:border-indigo-300 focus-within:ring-1 focus-within:ring-indigo-200 transition-all" @click="onContentClick">
-              <RichEditor v-model="localTask.description" placeholder="Add a description…" :show-toolbar="true" :task-id="props.task.id" :project-id="props.project?.id || props.task.project_id" @blur="onDescriptionBlur"/>
+              <RichEditor v-model="localTask.description" placeholder="Add a descriptionâ€¦" :show-toolbar="true" :task-id="props.task.id" :project-id="props.project?.id || props.task.project_id" @blur="onDescriptionBlur"/>
             </div>
           </div>
 
@@ -241,9 +241,9 @@
                     </div>
                     <div class="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
                       <span v-if="att.file_size">{{ formatFileSize(att.file_size) }}</span>
-                      <span v-if="att.file_size && att.user">·</span>
+                      <span v-if="att.file_size && att.user">Â·</span>
                       <span v-if="att.user">{{ att.user.name }}</span>
-                      <span v-if="att.user">·</span>
+                      <span v-if="att.user">Â·</span>
                       <span>{{ formatTime(att.created_at) }}</span>
                     </div>
                   </div>
@@ -315,7 +315,7 @@
 
             <div v-if="activeTab === 'Comments'" class="space-y-4">
 
-              <!-- Load more older comments — top -->
+              <!-- Load more older comments â€” top -->
               <div v-if="commentsHasMore || commentsLoading" class="flex justify-center pb-1">
                 <button
                   @click="loadMoreComments"
@@ -326,7 +326,7 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
                   </svg>
-                  {{ commentsLoading ? 'Loading…' : 'Load older comments' }}
+                  {{ commentsLoading ? 'Loadingâ€¦' : 'Load older comments' }}
                 </button>
               </div>
 
@@ -376,7 +376,7 @@
 
                   <!-- Edit mode -->
                   <div v-else class="border border-indigo-300 rounded-lg overflow-hidden">
-                    <RichEditor v-model="editingCommentContent" :show-toolbar="true" :task-id="props.task.id" :project-id="props.project?.id || props.task.project_id" placeholder="Edit comment…"/>
+                    <RichEditor v-model="editingCommentContent" :show-toolbar="true" :task-id="props.task.id" :project-id="props.project?.id || props.task.project_id" placeholder="Edit commentâ€¦"/>
                     <div class="flex gap-2 px-3 py-2 bg-gray-50 border-t border-gray-100">
                       <button @click="saveEditComment(comment.id)" class="px-3 py-1 text-xs font-medium bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Save</button>
                       <button @click="editingCommentId = null" class="px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800">Cancel</button>
@@ -390,7 +390,7 @@
               <div class="flex gap-3 pt-2">
                 <Avatar :name="currentUser?.name" :src="currentUser?.avatar" size="sm" class="flex-shrink-0 mt-0.5"/>
                 <div class="flex-1 border border-gray-200 rounded-lg overflow-hidden focus-within:border-indigo-300 focus-within:ring-1 focus-within:ring-indigo-200 transition-all">
-                  <RichEditor v-model="newComment" :show-toolbar="'auto'" :task-id="props.task.id" :project-id="props.project?.id || props.task.project_id" placeholder="Add a comment…"/>
+                  <RichEditor v-model="newComment" :show-toolbar="'auto'" :task-id="props.task.id" :project-id="props.project?.id || props.task.project_id" placeholder="Add a commentâ€¦"/>
 
                   <!-- Staged attachments preview -->
                   <div v-if="stagedFiles.length" class="flex flex-wrap gap-2 px-3 pt-2">
@@ -403,11 +403,11 @@
                       </svg>
                       <span class="max-w-[120px] truncate">{{ f.name }}</span>
                       <span class="text-gray-400">({{ formatFileSize(f.size) }})</span>
-                      <button @click="stagedFiles.splice(i, 1)" class="text-gray-400 hover:text-red-500 ml-0.5">×</button>
+                      <button @click="stagedFiles.splice(i, 1)" class="text-gray-400 hover:text-red-500 ml-0.5">Ã—</button>
                     </div>
                   </div>
 
-                  <!-- Action bar — always visible -->
+                  <!-- Action bar â€” always visible -->
                   <div class="flex items-center justify-between px-3 py-2 bg-gray-50 border-t border-gray-100">
                     <!-- Attach file -->
                     <label class="flex items-center gap-1 text-xs text-gray-500 hover:text-indigo-600 cursor-pointer transition-colors" title="Attach file (max 100 MB)">
@@ -454,7 +454,7 @@
                 <div class="flex-1 text-sm leading-snug">
                   <span class="font-medium text-gray-800">{{ activity.user?.name }}</span>
                   <span class="text-gray-500 mx-1">{{ formatActivity(activity) }}</span>
-                  <span class="text-xs text-gray-400">· {{ formatTime(activity.created_at) }}</span>
+                  <span class="text-xs text-gray-400">Â· {{ formatTime(activity.created_at) }}</span>
                 </div>
               </div>
               <p v-if="activities.length === 0 && !activitiesLoading" class="text-sm text-gray-400 text-center py-4">No activity yet.</p>
@@ -470,7 +470,7 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
                   </svg>
-                  {{ activitiesLoading ? 'Loading…' : 'Load more activity' }}
+                  {{ activitiesLoading ? 'Loadingâ€¦' : 'Load more activity' }}
                 </button>
               </div>
             </div>
@@ -529,7 +529,7 @@ const currentUserId = computed(() => props.currentUser?.id || null)
 const localTask = ref({ ...props.task })
 const projectFieldsExpanded = ref(false)
 
-// ── Custom Fields ─────────────────────────────────────────────────────────
+// â”€â”€ Custom Fields â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const { fields, fetchFields, setTaskFieldValue } = useCustomFields(props.project?.id)
 
 const activeCustomFields = computed(() => {
@@ -595,7 +595,7 @@ async function handleCustomFieldUpdate({ taskId, fieldId, value }) {
 
 watch(() => props.task.id, () => { localTask.value = { ...props.task }; loadTaskDetails() })
 
-// ── Save state ────────────────────────────────────────────────────────────
+// â”€â”€ Save state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const saveState = ref('idle')
 let savedTimer = null
 const saveTimers = {}
@@ -634,7 +634,7 @@ function onDescriptionBlur(freshHTML) {
   debouncedSave('description', freshHTML)
 }
 
-// ── Title ─────────────────────────────────────────────────────────────────
+// â”€â”€ Title â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const titleRef = ref(null)
 function autoResizeTitle() {
   const el = titleRef.value
@@ -643,7 +643,7 @@ function autoResizeTitle() {
   el.style.height = el.scrollHeight + 'px'
 }
 
-// ── Computed ──────────────────────────────────────────────────────────────
+// â”€â”€ Computed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const isComplete = computed(() => localTask.value.status === 'complete')
 const isDueDateOverdue = computed(() => localTask.value.due_date && new Date(localTask.value.due_date) < new Date())
 const priorities = [
@@ -652,7 +652,7 @@ const priorities = [
   { value: 'high',   label: 'High',   dotClass: 'bg-red-400',    activeClass: 'bg-red-50 border-red-400 text-red-700' },
 ]
 
-// ── Field actions ─────────────────────────────────────────────────────────
+// â”€â”€ Field actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const showBlockedModal = ref(false)
 const incompleteDeps = computed(() =>
   (localTask.value.dependencies ?? []).filter(t => t.status !== 'complete')
@@ -717,7 +717,7 @@ function onAssigneeOutsideClick(e) {
 function setDueDate(val) { localTask.value.due_date = val; debouncedSave('due_date', val) }
 function setPriority(val) { localTask.value.priority = val; debouncedSave('priority', val) }
 
-// ── Image preview ─────────────────────────────────────────────────────────
+// â”€â”€ Image preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const previewSrc = ref(null)
 const previewFilename = ref(null)
 function openImagePreview(src, filename = null) { previewSrc.value = src; previewFilename.value = filename }
@@ -728,7 +728,7 @@ function onContentClick(e) {
   openImagePreview(img.src, img.src.split('/').pop().split('?')[0] || null)
 }
 
-// ── Subtasks ──────────────────────────────────────────────────────────────
+// â”€â”€ Subtasks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const localSubtasks = ref([])
 const showAddSubtask = ref(false)
 const newSubtaskName = ref('')
@@ -827,7 +827,7 @@ async function updateSubtaskAssignee({ taskId, assigneeId }) {
   } catch (e) { console.error('Failed to update subtask assignee', e) }
 }
 
-// ── Comments (paginated) ─────────────────────────────────────────────────
+// â”€â”€ Comments (paginated) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const comments = ref([])
 const commentsPage = ref(1)
 const commentsHasMore = ref(false)
@@ -855,7 +855,7 @@ function loadMoreComments() {
   loadComments(commentsPage.value + 1)
 }
 
-// ── Activities (paginated) ────────────────────────────────────────────────
+// â”€â”€ Activities (paginated) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const activities = ref([])
 const activitiesPage = ref(1)
 const activitiesHasMore = ref(false)
@@ -890,7 +890,7 @@ const editingCommentId = ref(null)
 const editingCommentContent = ref('')
 const stagedFiles = ref([])
 
-// ── Task Attachments ──────────────────────────────────────────────────────
+// â”€â”€ Task Attachments â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const taskAttachments = ref([])
 const taskAttachmentInput = ref(null)
 const attachmentUploading = ref(false)
@@ -1235,7 +1235,7 @@ function formatActivity(a) {
 function formatTime(ts) {
   if (!ts) return ''
   let str = typeof ts === 'string' ? ts.trim() : String(ts)
-  // Normalize MySQL "YYYY-MM-DD HH:MM:SS" → ISO UTC
+  // Normalize MySQL "YYYY-MM-DD HH:MM:SS" â†’ ISO UTC
   if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str)) str = str.replace(' ', 'T') + 'Z'
   else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(str)) str = str + 'Z'
   const d = new Date(str)
@@ -1244,7 +1244,7 @@ function formatTime(ts) {
   if (diff < 60)   return 'Just now'
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
-  // Older than 24h — show full readable date: "23 Mar 2026 4:12am"
+  // Older than 24h â€” show full readable date: "23 Mar 2026 4:12am"
   const day   = d.getDate()
   const month = d.toLocaleDateString('en-US', { month: 'short' })
   const year  = d.getFullYear()
@@ -1306,3 +1306,4 @@ onUnmounted(() => { Object.values(saveTimers).forEach(clearTimeout); clearTimeou
   background-color: #c7d2fe;
 }
 </style>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace" :user-role="userRole">
     <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div class="max-w-2xl mx-auto">
@@ -177,3 +177,4 @@ const createWorkspace = async () => {
   }
 }
 </script>
+

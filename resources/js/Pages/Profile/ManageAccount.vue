@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace" :user-role="userRole">
     <div class="py-12">
       <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
@@ -104,10 +104,10 @@
                 :options="timezoneOptions"
                 value-key="timezone"
                 label-key="label"
-                placeholder="— Select Timezone —"
+                placeholder="â€” Select Timezone â€”"
                 search-placeholder="Search timezone..."
                 clearable
-                clear-label="— No timezone —"
+                clear-label="â€” No timezone â€”"
                 class="mt-1"
               />
               <p v-if="errors.timezone" class="mt-1 text-sm text-red-600">{{ errors.timezone }}</p>
@@ -538,3 +538,4 @@ const deleteAccount = () => {
   })
 }
 </script>
+

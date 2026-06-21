@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex min-h-screen bg-gray-50">
     <!-- Mobile overlay -->
     <div
@@ -14,6 +14,7 @@
       :current-workspace-id="currentWorkspaceId"
       :user-role="userRole"
       :mobile-open="mobileOpen"
+      :subscription-status="subscriptionStatus"
       @close="mobileOpen = false"
       @invite="showInviteModal = true"
     />
@@ -56,6 +57,7 @@ const page = usePage()
 const showInviteModal = ref(false)
 const showUpgradeModalState = ref(false)
 const mobileOpen = ref(false)
+const subscriptionStatus = ref(null)
 
 // Props passed from server (for backward compatibility)
 const props = defineProps({
@@ -103,10 +105,36 @@ const handleInviteSent = () => {
 // and personal task updates. Runs once; channel is cleaned up on unmount.
 const { listenToUser } = useRealtimeListeners()
 
+// Fetch subscription status on mount
+const fetchSubscriptionStatus = async () => {
+  try {
+    const response = await fetch('/api/subscription/expiry-status')
+    if (response.ok) {
+      subscriptionStatus.value = await response.json()
+      
+      // Console log the received data
+      console.log('=== SUBSCRIPTION STATUS ===')
+      console.log('Controller: SubscriptionStatusController')
+      console.log('Function: getExpiryStatus()')
+      console.log('API Endpoint: GET /api/subscription/expiry-status')
+      console.log('Received Data:', subscriptionStatus.value)
+      console.log('Status:', subscriptionStatus.value.status)
+      console.log('Message:', subscriptionStatus.value.message)
+      console.log('Days Remaining:', subscriptionStatus.value.days_remaining)
+      console.log('Days in Grace Period:', subscriptionStatus.value.days_in_grace_period)
+      console.log('==========================')
+    }
+  } catch (error) {
+    console.error('Failed to fetch subscription status:', error)
+  }
+}
+
 onMounted(() => {
   const userId = page.props.auth?.user?.id
   if (userId) {
     listenToUser(userId)
+    fetchSubscriptionStatus()
   }
 })
 </script>
+

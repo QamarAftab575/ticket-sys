@@ -35,6 +35,9 @@ class AuthService
                 'email_verified_at' => now(),
             ]);
 
+            // Assign trial to new user
+            \App\Helpers\BillingHelper::assignTrial($user);
+
             // Emit UserRegistered event
             event(new UserRegistered($user, now()));
 

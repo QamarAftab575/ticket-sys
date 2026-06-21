@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <!-- Files header with storage info -->
     <div class="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
@@ -110,35 +110,35 @@
               class="px-4 py-3 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
             >
               Filename
-              <span v-if="sortField === 'filename'" class="ml-1">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+              <span v-if="sortField === 'filename'" class="ml-1">{{ sortDirection === 'asc' ? 'â†‘' : 'â†“' }}</span>
             </th>
             <th
               @click="sortBy('type')"
               class="px-4 py-3 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
             >
               Type
-              <span v-if="sortField === 'type'" class="ml-1">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+              <span v-if="sortField === 'type'" class="ml-1">{{ sortDirection === 'asc' ? 'â†‘' : 'â†“' }}</span>
             </th>
             <th
               @click="sortBy('file_size')"
               class="px-4 py-3 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
             >
               Size
-              <span v-if="sortField === 'file_size'" class="ml-1">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+              <span v-if="sortField === 'file_size'" class="ml-1">{{ sortDirection === 'asc' ? 'â†‘' : 'â†“' }}</span>
             </th>
             <th
               @click="sortBy('user')"
               class="px-4 py-3 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
             >
               Uploaded by
-              <span v-if="sortField === 'user'" class="ml-1">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+              <span v-if="sortField === 'user'" class="ml-1">{{ sortDirection === 'asc' ? 'â†‘' : 'â†“' }}</span>
             </th>
             <th
               @click="sortBy('created_at')"
               class="px-4 py-3 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
             >
               Date
-              <span v-if="sortField === 'created_at'" class="ml-1">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+              <span v-if="sortField === 'created_at'" class="ml-1">{{ sortDirection === 'asc' ? 'â†‘' : 'â†“' }}</span>
             </th>
             <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Source</th>
             <th class="px-4 py-3 text-right text-sm font-semibold text-gray-900">Actions</th>
@@ -475,3 +475,4 @@ const goToTask = (taskId) => {
   emit('navigate-to-task', taskId)
 }
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <!-- Fixed phantom scrollbar pinned to bottom of viewport -->
     <div
@@ -99,7 +99,7 @@
           />
         </template>
 
-        <!-- Add Section button — same style as Add task -->
+        <!-- Add Section button â€” same style as Add task -->
         <div>
           <div v-if="isAddingSection" class="flex items-center gap-2 px-3 py-1 border-t border-gray-200" style="min-height: 36px;">
             <div class="w-5 flex-shrink-0" />
@@ -186,7 +186,7 @@ const emit = defineEmits([
   'sections-reordered', 'update-dates', 'update-assignee', 'update-custom-field',
   'section-collapsed',
 ])
-// ── local section state (for optimistic reorder) ─────────────────────────
+// â”€â”€ local section state (for optimistic reorder) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const localSections = ref([...(props.sections || [])])
 watch(
   () => props.sections,
@@ -209,7 +209,7 @@ const {
 
 const { updateField, deleteField: deleteCustomField } = useCustomFields(props.project?.id)
 
-// ── edit field modal ──────────────────────────────────────────────────────────
+// â”€â”€ edit field modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const editingField = ref(null)
 
 const openEditField = (field) => { editingField.value = field }
@@ -239,7 +239,7 @@ const onFieldDeleted = (fieldId) => {
   editingField.value = null
 }
 
-// ── fixed phantom scrollbar ───────────────────────────────────────────────
+// â”€â”€ fixed phantom scrollbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const tableScrollRef  = ref(null)
 const phantomScrollRef = ref(null)
 const scrollWidth = ref(0)
@@ -290,7 +290,7 @@ onBeforeUnmount(() => {
 /** When a new field is created via the modal, add it as a visible column */
 const onCreateField = (field) => {
   // Cache is already updated by ListViewHeader before this event fires.
-  // Just add the column — TaskRow will find the field def in customFields.
+  // Just add the column â€” TaskRow will find the field def in customFields.
   addColumn({
     id:       field.id,
     label:    field.name,
@@ -326,7 +326,7 @@ const handleSort = (sortData) => {
   emit('sort-changed', sortRules.value)
 }
 
-// ── add section ───────────────────────────────────────────────────────────
+// â”€â”€ add section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const isAddingSection = ref(false)
 const newSectionName = ref('')
 const sectionInputRef = ref(null)
@@ -349,7 +349,7 @@ function cancelAddSection() {
   newSectionName.value = ''
 }
 
-// ── section drag & drop ───────────────────────────────────────────────────
+// â”€â”€ section drag & drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const sectionDragId = ref(null)
 const sectionDropTarget = ref(null)
 const taskDropSection = ref(null)
@@ -392,7 +392,7 @@ function sectionDrop(event, targetId) {
   emit('sections-reordered', reordered.map(s => s.id))
 }
 
-// ── delete section modal ──────────────────────────────────────────────────
+// â”€â”€ delete section modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const deletingSection = ref(null)
 const deleteLoading = ref(false)
 
@@ -402,7 +402,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
 function requestDeleteSection(section) {
   const taskCount = tasksForSection(section.id).length
   if (taskCount === 0) {
-    // No tasks — skip modal, delete immediately
+    // No tasks â€” skip modal, delete immediately
     confirmDeleteSection({ deleteTasks: false, targetSectionId: null })
     deletingSection.value = section
     return
@@ -442,7 +442,7 @@ async function confirmDeleteSection({ deleteTasks, targetSectionId }) {
   }
 }
 
-// ── expose for Show.vue "+ Add task" button ───────────────────────────────
+// â”€â”€ expose for Show.vue "+ Add task" button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const handleUpdateDates = (payload) => emit('update-dates', payload)
 const startCreatingInFirstSection = () => {
   if (hasSections.value) {
@@ -464,3 +464,4 @@ defineExpose({
   hideColumn,
 })
 </script>
+

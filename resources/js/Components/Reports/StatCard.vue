@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     :class="[
       'bg-white border rounded-xl p-4 flex flex-col gap-3 transition-shadow hover:shadow-md',
@@ -66,7 +66,7 @@
         <svg v-else-if="trend < 0" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
         </svg>
-        <span v-else class="w-3 h-3 flex items-center justify-center">—</span>
+        <span v-else class="w-3 h-3 flex items-center justify-center">â€”</span>
         {{ Math.abs(trend) }}%
       </span>
       <span class="text-xs text-gray-400">vs last period</span>
@@ -90,3 +90,4 @@ const formattedValue = computed(() =>
   props.value >= 1000 ? (props.value / 1000).toFixed(1) + 'k' : String(props.value)
 )
 </script>
+

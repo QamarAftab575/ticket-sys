@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-white">
     <!-- File thumbnail -->
     <div class="bg-gray-100 h-40 flex items-center justify-center relative group">
@@ -105,14 +105,14 @@ const getFileIcon = () => {
   const filename = props.file.filename.toLowerCase()
   const type = props.file.type || ''
 
-  if (/\.(pdf)$/i.test(filename) || type.includes('pdf')) return '📄'
-  if (/\.(doc|docx|txt)$/i.test(filename) || type.includes('document') || type.includes('text')) return '📝'
-  if (/\.(xls|xlsx)$/i.test(filename) || type.includes('sheet')) return '📊'
-  if (/\.(ppt|pptx)$/i.test(filename) || type.includes('presentation')) return '🎯'
-  if (/\.(mp4|avi|mov|mkv|webm)$/i.test(filename) || type.startsWith('video/')) return '🎥'
-  if (/\.(mp3|wav|m4a)$/i.test(filename) || type.startsWith('audio/')) return '🎵'
-  if (/\.(zip|rar|7z|tar|gz)$/i.test(filename) || type.includes('archive')) return '📦'
-  return '📎'
+  if (/\.(pdf)$/i.test(filename) || type.includes('pdf')) return 'ðŸ“„'
+  if (/\.(doc|docx|txt)$/i.test(filename) || type.includes('document') || type.includes('text')) return 'ðŸ“'
+  if (/\.(xls|xlsx)$/i.test(filename) || type.includes('sheet')) return 'ðŸ“Š'
+  if (/\.(ppt|pptx)$/i.test(filename) || type.includes('presentation')) return 'ðŸŽ¯'
+  if (/\.(mp4|avi|mov|mkv|webm)$/i.test(filename) || type.startsWith('video/')) return 'ðŸŽ¥'
+  if (/\.(mp3|wav|m4a)$/i.test(filename) || type.startsWith('audio/')) return 'ðŸŽµ'
+  if (/\.(zip|rar|7z|tar|gz)$/i.test(filename) || type.includes('archive')) return 'ðŸ“¦'
+  return 'ðŸ“Ž'
 }
 
 const formatSize = (bytes) => {
@@ -143,3 +143,4 @@ const deleteFile = () => {
   }
 }
 </script>
+

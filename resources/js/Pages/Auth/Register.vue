@@ -1,89 +1,86 @@
-<template>
-  <div class="min-h-screen flex items-center justify-center relative overflow-hidden">
-    <!-- Animated Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-rose-100 via-orange-50 to-amber-100">
-      <div class="absolute inset-0 bg-gradient-to-tr from-pink-200/40 via-transparent to-amber-200/40"></div>
-      
-      <!-- Floating Elements -->
-      <div class="absolute top-20 left-10 w-32 h-32 bg-rose-300/20 rounded-full blur-xl animate-float"></div>
-      <div class="absolute top-40 right-20 w-24 h-24 bg-amber-300/20 rounded-full blur-xl animate-float" style="animation-delay: 2s;"></div>
-      <div class="absolute bottom-32 left-1/4 w-40 h-40 bg-pink-300/20 rounded-full blur-xl animate-float" style="animation-delay: 4s;"></div>
-      <div class="absolute bottom-20 right-1/3 w-28 h-28 bg-orange-300/20 rounded-full blur-xl animate-float" style="animation-delay: 6s;"></div>
-    </div>
+﻿<template>
+  <div class="min-h-screen flex bg-white dark:bg-slate-950">
+    <!-- Left Side - Register Form -->
+    <div class="flex-1 flex items-center justify-center px-6 py-12 overflow-y-auto">
+      <!-- Home Badge (Fixed Position) -->
+      <Link 
+        href="/" 
+        class="fixed top-4 left-4 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium transition-colors duration-200 cursor-pointer group"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4-4m-4 4L9 9m4 4l4 4" />
+        </svg>
+        <span>Home</span>
+      </Link>
 
-    <!-- Register Card -->
-    <div class="relative z-10 w-full max-w-md mx-4">
-      <!-- Glassmorphism Card -->
-      <div class="glass-card rounded-3xl p-8 shadow-2xl">
-        <!-- Logo & Title -->
-        <div class="text-center mb-8">
-          <div class="w-16 h-16 bg-gradient-to-br from-rose-400 to-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <h1 class="text-3xl font-bold text-slate-800 mb-2">Join Asira</h1>
-          <p class="text-slate-600">Create your account to get started</p>
+      <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="mb-8">
+          <Link href="/" class="inline-flex items-center gap-3 group cursor-pointer">
+            <img src="/assets/images/logo/asira-logo-main.png" alt="Asira" class="h-8 w-auto" />
+          </Link>
+        </div>
+
+        <!-- Header -->
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Create an account</h1>
+          <p class="text-slate-600 dark:text-slate-400">Start your 14-day free trial. No credit card required.</p>
         </div>
 
         <!-- Error Message -->
-        <div v-if="errors.general" class="mb-6 p-4 bg-red-500/20 border border-red-400/30 rounded-2xl backdrop-blur-sm">
-          <p class="text-red-700 text-sm font-medium">{{ errors.general }}</p>
+        <div v-if="errors.general" class="mb-6 p-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-lg">
+          <p class="text-red-700 dark:text-red-400 text-sm">{{ errors.general }}</p>
         </div>
 
         <!-- Register Form -->
-        <form @submit.prevent="handleRegister" class="space-y-6">
+        <form @submit.prevent="handleRegister" class="space-y-5">
           <!-- Name Field -->
           <div class="space-y-2">
-            <label for="name" class="block text-sm font-medium text-slate-700">Full Name</label>
-            <div class="relative">
-              <input
-                id="name"
-                v-model="form.name"
-                type="text"
-                autocomplete="name"
-                required
-                :class="[
-                  'w-full px-4 py-3 bg-white/40 border-0 rounded-2xl text-slate-800 placeholder-slate-500 backdrop-blur-sm transition-all duration-200',
-                  'focus:outline-none focus:ring-2 focus:ring-rose-400/50 focus:bg-white/60',
-                  errors.name ? 'ring-2 ring-red-400/50' : ''
-                ]"
-                placeholder="Enter your full name"
-              />
-              <svg class="absolute right-3 top-3.5 w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <p v-if="errors.name" class="text-red-600 text-sm">{{ errors.name[0] }}</p>
+            <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Full name
+            </label>
+            <input
+              id="name"
+              v-model="form.name"
+              type="text"
+              autocomplete="name"
+              required
+              :class="[
+                'w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors duration-200',
+                'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                errors.name ? 'border-red-300 dark:border-red-700' : 'border-slate-300 dark:border-slate-700'
+              ]"
+              placeholder="John Doe"
+            />
+            <p v-if="errors.name" class="text-red-600 dark:text-red-400 text-sm">{{ errors.name[0] }}</p>
           </div>
 
           <!-- Email Field -->
           <div class="space-y-2">
-            <label for="email" class="block text-sm font-medium text-slate-700">Email address</label>
-            <div class="relative">
-              <input
-                id="email"
-                v-model="form.email"
-                type="email"
-                autocomplete="email"
-                required
-                :class="[
-                  'w-full px-4 py-3 bg-white/40 border-0 rounded-2xl text-slate-800 placeholder-slate-500 backdrop-blur-sm transition-all duration-200',
-                  'focus:outline-none focus:ring-2 focus:ring-rose-400/50 focus:bg-white/60',
-                  errors.email ? 'ring-2 ring-red-400/50' : ''
-                ]"
-                placeholder="Enter your email"
-              />
-              <svg class="absolute right-3 top-3.5 w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-              </svg>
-            </div>
-            <p v-if="errors.email" class="text-red-600 text-sm">{{ errors.email[0] }}</p>
+            <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Email address
+            </label>
+            <input
+              id="email"
+              v-model="form.email"
+              type="email"
+              autocomplete="email"
+              required
+              :class="[
+                'w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors duration-200',
+                'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                errors.email ? 'border-red-300 dark:border-red-700' : 'border-slate-300 dark:border-slate-700'
+              ]"
+              placeholder="name@company.com"
+            />
+            <p v-if="errors.email" class="text-red-600 dark:text-red-400 text-sm">{{ errors.email[0] }}</p>
           </div>
 
           <!-- Password Field -->
           <div class="space-y-2">
-            <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+            <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Password
+            </label>
             <div class="relative">
               <input
                 id="password"
@@ -92,16 +89,16 @@
                 autocomplete="new-password"
                 required
                 :class="[
-                  'w-full px-4 py-3 bg-white/40 border-0 rounded-2xl text-slate-800 placeholder-slate-500 backdrop-blur-sm transition-all duration-200',
-                  'focus:outline-none focus:ring-2 focus:ring-rose-400/50 focus:bg-white/60',
-                  errors.password ? 'ring-2 ring-red-400/50' : ''
+                  'w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors duration-200',
+                  'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                  errors.password ? 'border-red-300 dark:border-red-700' : 'border-slate-300 dark:border-slate-700'
                 ]"
-                placeholder="Create a password"
+                placeholder="••••••••"
               />
               <button
                 type="button"
                 @click="showPassword = !showPassword"
-                class="absolute right-3 top-3.5 text-slate-500 hover:text-slate-700 transition-colors"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
               >
                 <svg v-if="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -112,28 +109,31 @@
                 </svg>
               </button>
             </div>
-            <p v-if="errors.password" class="text-red-600 text-sm">{{ errors.password[0] }}</p>
+            <p v-if="errors.password" class="text-red-600 dark:text-red-400 text-sm">{{ errors.password[0] }}</p>
             
             <!-- Password Strength Indicator -->
-            <div v-if="form.password" class="mt-2">
+            <div v-if="form.password" class="space-y-2">
               <div class="flex items-center gap-2">
-                <div class="flex-1 bg-slate-200/50 rounded-full h-2 backdrop-blur-sm">
+                <div class="flex-1 bg-slate-200 dark:bg-slate-800 rounded-full h-1.5">
                   <div 
                     :class="[
-                      'h-2 rounded-full transition-all duration-300',
+                      'h-1.5 rounded-full transition-all duration-300',
                       passwordStrength.color
                     ]"
                     :style="{ width: passwordStrength.width }"
                   ></div>
                 </div>
-                <span class="text-xs text-slate-600">{{ passwordStrength.text }}</span>
+                <span class="text-xs font-medium text-slate-600 dark:text-slate-400">{{ passwordStrength.text }}</span>
               </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Use 8+ characters with a mix of letters, numbers & symbols</p>
             </div>
           </div>
 
           <!-- Confirm Password Field -->
           <div class="space-y-2">
-            <label for="password_confirmation" class="block text-sm font-medium text-slate-700">Confirm Password</label>
+            <label for="password_confirmation" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Confirm password
+            </label>
             <div class="relative">
               <input
                 id="password_confirmation"
@@ -141,13 +141,13 @@
                 :type="showConfirmPassword ? 'text' : 'password'"
                 autocomplete="new-password"
                 required
-                class="w-full px-4 py-3 bg-white/40 border-0 rounded-2xl text-slate-800 placeholder-slate-500 backdrop-blur-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-400/50 focus:bg-white/60"
-                placeholder="Confirm your password"
+                class="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="••••••••"
               />
               <button
                 type="button"
                 @click="showConfirmPassword = !showConfirmPassword"
-                class="absolute right-3 top-3.5 text-slate-500 hover:text-slate-700 transition-colors"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
               >
                 <svg v-if="!showConfirmPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -158,27 +158,27 @@
                 </svg>
               </button>
             </div>
-            <p v-if="form.password_confirmation && form.password !== form.password_confirmation" class="text-red-600 text-sm">
+            <p v-if="form.password_confirmation && form.password !== form.password_confirmation" class="text-red-600 dark:text-red-400 text-sm">
               Passwords do not match
             </p>
           </div>
 
           <!-- Terms Checkbox -->
-          <div class="flex items-start gap-3">
+          <div class="flex items-start gap-3 pt-2">
             <div class="flex items-center h-5">
               <input
                 id="terms"
                 v-model="form.terms"
                 type="checkbox"
                 required
-                class="w-4 h-4 text-rose-600 bg-white/40 border-slate-300 rounded focus:ring-rose-500 focus:ring-2 backdrop-blur-sm"
+                class="w-4 h-4 text-blue-600 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
               />
             </div>
-            <label for="terms" class="text-sm text-slate-600 leading-5">
+            <label for="terms" class="text-sm text-slate-600 dark:text-slate-400 leading-5 cursor-pointer">
               I agree to the 
-              <a href="/terms" class="text-slate-800 hover:text-rose-600 underline transition-colors">Terms of Service</a>
+              <a href="/terms" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">Terms of Service</a>
               and 
-              <a href="/privacy" class="text-slate-800 hover:text-rose-600 underline transition-colors">Privacy Policy</a>
+              <a href="/privacy" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">Privacy Policy</a>
             </label>
           </div>
 
@@ -186,32 +186,121 @@
           <button
             type="submit"
             :disabled="isLoading || !form.terms || form.password !== form.password_confirmation"
-            class="w-full py-3 px-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <span v-if="!isLoading" class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-              </svg>
-              Create Account
-            </span>
-            <span v-else class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <span v-if="!isLoading">Create account</span>
+            <span v-else class="flex items-center gap-2">
+              <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Creating Account...
+              Creating account...
             </span>
           </button>
         </form>
 
-        <!-- Login Link -->
+        <!-- Sign In Link -->
         <div class="mt-8 text-center">
-          <p class="text-slate-600">
+          <p class="text-sm text-slate-600 dark:text-slate-400">
             Already have an account?
-            <Link href="/login" class="text-slate-800 font-semibold hover:text-rose-600 transition-colors ml-1">
+            <Link href="/login" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors cursor-pointer ml-1">
               Sign in
             </Link>
           </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Benefits -->
+    <div class="hidden lg:flex flex-1 bg-slate-50 dark:bg-slate-900 items-center justify-center p-12 relative overflow-hidden">
+      <!-- Subtle gradient background -->
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-50 dark:from-blue-950/20 to-slate-50 dark:to-slate-900"></div>
+      
+      <!-- Grid pattern -->
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMDMiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-40 dark:opacity-20"></div>
+
+      <div class="relative z-10 max-w-lg">
+        <!-- Header -->
+        <div class="mb-10">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-6 border border-blue-200 dark:border-blue-900">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+            <span>Join 50,000+ teams</span>
+          </div>
+          <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
+            Start shipping<br />better projects
+          </h2>
+          <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+            Everything you need to manage projects and collaborate with your team.
+          </p>
+        </div>
+
+        <!-- Benefits -->
+        <div class="space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900 dark:text-white mb-1">14-day free trial</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Try all features free for 14 days. No credit card required.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900 dark:text-white mb-1">Enterprise security</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Bank-level encryption and SOC 2 Type II certified.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900 dark:text-white mb-1">Unlimited team members</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Invite your entire team. No per-user pricing on Pro plan.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900 dark:text-white mb-1">Lightning fast</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Built for speed with real-time updates and offline support.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="mt-12 grid grid-cols-3 gap-8 pt-8 border-t border-slate-200 dark:border-slate-800">
+          <div>
+            <div class="text-3xl font-bold text-slate-900 dark:text-white mb-1">50K+</div>
+            <div class="text-sm text-slate-600 dark:text-slate-400">Active teams</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-slate-900 dark:text-white mb-1">10M+</div>
+            <div class="text-sm text-slate-600 dark:text-slate-400">Tasks completed</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-slate-900 dark:text-white mb-1">4.9/5</div>
+            <div class="text-sm text-slate-600 dark:text-slate-400">User rating</div>
+          </div>
         </div>
       </div>
     </div>
@@ -249,35 +338,29 @@ const passwordStrength = computed(() => {
   if (!password) return { width: '0%', color: '', text: '' }
   
   let score = 0
-  let feedback = []
   
   // Length check
   if (password.length >= 8) score += 1
-  else feedback.push('8+ characters')
   
   // Uppercase check
   if (/[A-Z]/.test(password)) score += 1
-  else feedback.push('uppercase')
   
   // Lowercase check
   if (/[a-z]/.test(password)) score += 1
-  else feedback.push('lowercase')
   
   // Number check
   if (/\d/.test(password)) score += 1
-  else feedback.push('number')
   
   // Special character check
   if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score += 1
-  else feedback.push('special char')
   
   const strengthLevels = {
-    0: { width: '20%', color: 'bg-red-400', text: 'Very Weak' },
-    1: { width: '20%', color: 'bg-red-400', text: 'Very Weak' },
-    2: { width: '40%', color: 'bg-orange-400', text: 'Weak' },
-    3: { width: '60%', color: 'bg-yellow-400', text: 'Fair' },
-    4: { width: '80%', color: 'bg-blue-400', text: 'Good' },
-    5: { width: '100%', color: 'bg-green-400', text: 'Strong' }
+    0: { width: '20%', color: 'bg-red-500', text: 'Very Weak' },
+    1: { width: '20%', color: 'bg-red-500', text: 'Very Weak' },
+    2: { width: '40%', color: 'bg-orange-500', text: 'Weak' },
+    3: { width: '60%', color: 'bg-yellow-500', text: 'Fair' },
+    4: { width: '80%', color: 'bg-blue-500', text: 'Good' },
+    5: { width: '100%', color: 'bg-green-500', text: 'Strong' }
   }
   
   return strengthLevels[score] || strengthLevels[0]
@@ -292,11 +375,9 @@ const handleRegister = async () => {
 
   router.post('/register', form, {
     onError: (pageErrors) => {
-      // Field-level validation errors — wrap in array since template uses [0]
       errors.name = pageErrors.name ? [pageErrors.name] : null
       errors.password = pageErrors.password ? [pageErrors.password] : null
 
-      // email field may carry a general server error message instead of a validation error
       const emailError = pageErrors.email || null
       const isGeneralError = emailError && !emailError.toLowerCase().includes('email')
       if (isGeneralError) {
@@ -319,31 +400,6 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
-/* Glassmorphism card */
-.glass-card {
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-/* Floating animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-10px) rotate(1deg); }
-  66% { transform: translateY(-5px) rotate(-1deg); }
-}
-
-.animate-float {
-  animation: float 8s ease-in-out infinite;
-}
-
-/* Smooth transitions */
-* {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

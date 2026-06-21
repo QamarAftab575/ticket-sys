@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-3">
     <div class="space-y-2">
       <label v-for="option in groupOptions" :key="option" class="flex items-center">
@@ -60,3 +60,4 @@ function handleApply() {
   // Emit apply event
 }
 </script>
+

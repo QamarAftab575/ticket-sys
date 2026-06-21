@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     class="relative"
     @dragover.prevent="onGroupDragOver"
@@ -102,7 +102,7 @@ const emit = defineEmits([
   'task-move', 'update-dates', 'update-assignee', 'update-custom-field', 'edit-field',
 ])
 
-// ── inline creation ──────────────────────────────────────────────────────
+// â”€â”€ inline creation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const isCreating = ref(false)
 const newName = ref('')
 const inputRef = ref(null)
@@ -139,7 +139,7 @@ const onBlur = () => {
 
 defineExpose({ start })
 
-// ── drag & drop ──────────────────────────────────────────────────────────
+// â”€â”€ drag & drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const draggingTaskId = ref(null)
 const insertBeforeId = ref(null)   // task id or '__end__'
 
@@ -202,3 +202,4 @@ function onGroupDrop(event) {
   insertBeforeId.value = null
 }
 </script>
+

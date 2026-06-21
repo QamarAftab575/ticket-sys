@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-3">
     <div v-for="(rule, index) in sortRules" :key="index" class="flex items-center gap-2">
       <select
@@ -25,7 +25,7 @@
         @click="removeSort(index)"
         class="p-1 text-red-600 hover:bg-red-50 rounded transition"
       >
-        ✕
+        âœ•
       </button>
     </div>
 
@@ -80,3 +80,4 @@ function handleApply() {
   // Emit apply event
 }
 </script>
+

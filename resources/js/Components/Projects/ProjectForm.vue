@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <form @submit.prevent="submitForm" class="space-y-6">
     <!-- Name -->
     <div>
@@ -113,7 +113,7 @@
               @click="removeMember(memberId)"
               class="text-gray-600 hover:text-gray-800 font-bold"
             >
-              ×
+              Ã—
             </button>
           </div>
         </div>
@@ -238,3 +238,4 @@ const submitForm = async () => {
   }
 };
 </script>
+

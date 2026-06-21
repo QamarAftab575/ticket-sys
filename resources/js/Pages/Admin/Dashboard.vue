@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AdminLayout>
     <template #header>
       <div class="flex items-center justify-between">
@@ -89,7 +89,7 @@
           <p class="text-gray-600 text-sm font-medium">New Signups Today</p>
           <p class="text-3xl font-bold text-gray-900 mt-2">{{ stats.new_users_today }}</p>
           <div class="mt-4 text-xs text-gray-500">
-            📈 Trending
+            ðŸ“ˆ Trending
           </div>
         </div>
 
@@ -394,4 +394,5 @@ const formatDate = (date) => {
   })
 }
 </script>
+
 

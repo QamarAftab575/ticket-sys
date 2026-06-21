@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <div class="text-center">
       <div class="text-4xl font-bold text-red-600 mb-1">{{ overdueCount }}</div>
@@ -63,3 +63,4 @@ const daysOverdue = (dueDate) => {
   return diffDays
 }
 </script>
+

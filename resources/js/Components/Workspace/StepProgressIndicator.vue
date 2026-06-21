@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="mb-8">
     <div class="flex items-center justify-between">
       <div v-for="step in totalSteps" :key="step" class="flex items-center flex-1">
@@ -45,3 +45,4 @@ defineProps({
   }
 })
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Link
     :href="href"
     :class="[
@@ -66,3 +66,4 @@ defineProps({
   unreadCount: { type: Number, default: 0 },
 })
 </script>
+

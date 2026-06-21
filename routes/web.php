@@ -25,52 +25,101 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\WorkspaceDashboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return inertia('Landing');
-});
+Route::get('/', [\App\Http\Controllers\LandingController::class, 'index'])->name('landing');
+
+// Static pages
+Route::get('/about', function () {
+    return inertia('About');
+})->name('about');
+
+Route::get('/contact', function () {
+    return inertia('Contact');
+})->name('contact');
+
+// Contact form submission (public, with CSRF protection)
+Route::post('/api/contact', [App\Http\Controllers\ContactController::class, 'store'])->middleware(['web'])->name('contact.store');
+
+Route::get('/privacy', function () {
+    return inertia('Privacy');
+})->name('privacy');
+
+Route::get('/terms', function () {
+    return inertia('Terms');
+})->name('terms');
+
+Route::get('/security', function () {
+    return inertia('Security');
+})->name('security');
+
+Route::get('/gdpr', function () {
+    return inertia('GDPR');
+})->name('gdpr');
 
 // Authenticated routes
 Route::middleware(['auth', 'password.set'])->group(function () {
-    Route::get('/dashboard', function () {
-        $user = auth()->user();
-        
-        // Get user's workspaces
-        $workspaces = $user->organizations()
-            ->where('organizations.is_active', true)
-            ->whereNull('organization_memberships.deleted_at')
-            ->get()
-            ->map(function ($workspace) {
-                return [
-                    'id' => $workspace->id,
-                    'name' => $workspace->name,
-                    'description' => $workspace->description,
-                    'avatar_color' => $workspace->avatar_color,
-                    'members_count' => $workspace->members()->count(),
-                ];
-            });
-        
-        // If user has no workspaces, check if they have project access
-        if ($workspaces->isEmpty()) {
-            $projectCount = \App\Models\Project::visibleTo($user)->count();
-            if ($projectCount > 0) {
-                return redirect()->route('projects.index');
+    Route::middleware('check.subscription')->group(function () {
+        Route::get('/dashboard', function () {
+            $user = auth()->user();
+            
+            // Get user's workspaces
+            $workspaces = $user->organizations()
+                ->where('organizations.is_active', true)
+                ->whereNull('organization_memberships.deleted_at')
+                ->get()
+                ->map(function ($workspace) {
+                    return [
+                        'id' => $workspace->id,
+                        'name' => $workspace->name,
+                        'description' => $workspace->description,
+                        'avatar_color' => $workspace->avatar_color,
+                        'members_count' => $workspace->members()->count(),
+                    ];
+                });
+            
+            // If user has no workspaces, check if they have project access
+            if ($workspaces->isEmpty()) {
+                $projectCount = \App\Models\Project::visibleTo($user)->count();
+                if ($projectCount > 0) {
+                    return redirect()->route('projects.index');
+                }
+                return redirect('/onboarding');
             }
-            return redirect('/onboarding');
-        }
-        
-        $projects = \App\Models\Project::visibleTo($user)
-            ->with('members')
-            ->limit(6)
-            ->get();
+            
+            $projects = \App\Models\Project::visibleTo($user)
+                ->with('members')
+                ->limit(6)
+                ->get();
 
-        return inertia('Dashboard', [
-            'workspaces' => $workspaces,
-            'projects' => $projects,
-            'userRole' => 'member',
-            'workspace' => null,
-            'userWorkspaces' => $workspaces,
-        ]);
-    })->name('dashboard');
+            return inertia('Dashboard', [
+                'workspaces' => $workspaces,
+                'projects' => $projects,
+                'userRole' => 'member',
+                'workspace' => null,
+                'userWorkspaces' => $workspaces,
+            ]);
+        })->name('dashboard');
+
+        // My Tasks routes
+        Route::get('/my-tasks', [\App\Http\Controllers\MyTasksController::class, 'index'])->name('my-tasks.index');
+        Route::get('/my-tasks/api/tasks', [\App\Http\Controllers\MyTasksController::class, 'getTasks'])->name('my-tasks.api.tasks');
+        Route::post('/my-tasks/api/tasks', [\App\Http\Controllers\MyTasksController::class, 'storeTask'])->name('my-tasks.api.tasks.store');
+        Route::post('/my-tasks/api/preferences', [\App\Http\Controllers\MyTasksController::class, 'saveViewPreferences'])->name('my-tasks.api.preferences.save');
+        Route::get('/my-tasks/api/preferences/{viewType}', [\App\Http\Controllers\MyTasksController::class, 'getViewPreferences'])->name('my-tasks.api.preferences.get');
+        // My Tasks section management
+        Route::get('/my-tasks/api/sections', [\App\Http\Controllers\MyTasksController::class, 'getSections'])->name('my-tasks.api.sections.index');
+        Route::post('/my-tasks/api/sections', [\App\Http\Controllers\MyTasksController::class, 'storeSection'])->name('my-tasks.api.sections.store');
+        Route::put('/my-tasks/api/sections/{sectionId}', [\App\Http\Controllers\MyTasksController::class, 'updateSection'])->name('my-tasks.api.sections.update');
+        Route::delete('/my-tasks/api/sections/{sectionId}', [\App\Http\Controllers\MyTasksController::class, 'destroySection'])->name('my-tasks.api.sections.destroy');
+        Route::post('/my-tasks/api/sections/reorder', [\App\Http\Controllers\MyTasksController::class, 'reorderSections'])->name('my-tasks.api.sections.reorder');
+
+        // Inbox route
+        Route::get('/inbox', [InboxController::class, 'index'])->name('inbox.index');
+
+        // Reporting Dashboard
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::post('/reports/data', [ReportController::class, 'getData'])->name('reports.data');
+        Route::get('/reports/assignees', [ReportController::class, 'getAssignees'])->name('reports.assignees');
+    });
 
     Route::get('/onboarding', function () {
         return inertia('Auth/OnboardingWizard');
@@ -142,16 +191,22 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     // Settings routes
     Route::get('/settings', function () {
         $user = auth()->user();
-        $userWorkspaces = $user->organizations()
-            ->where('organizations.is_active', true)
-            ->wherePivot('is_active', true)
-            ->select('organizations.id', 'organizations.name', 'organizations.avatar_color')
-            ->get();
+        $userWorkspaces = $user->getAccessibleOrganizations()
+            ->map(function ($organization) use ($user) {
+                return [
+                    'id' => $organization->id,
+                    'name' => $organization->name,
+                    'avatar_color' => $organization->avatar_color,
+                    'description' => $organization->description,
+                    'role' => $user->getWorkspaceRole($organization->id),
+                    'is_owner' => $user->isWorkspaceOwner($organization->id),
+                    'is_admin' => $user->isWorkspaceAdmin($organization->id),
+                    'is_member' => $user->isWorkspaceMember($organization->id),
+                ];
+            });
         
         return inertia('Settings', [
             'userWorkspaces' => $userWorkspaces,
-            'currentWorkspace' => null,
-            'userRole' => 'member',
         ]);
     })->name('settings');
     Route::post('/settings/save', [AuthController::class, 'saveSettings'])->name('settings.save');
@@ -161,6 +216,8 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     Route::post('/settings/subscriptions/change-plan', [SubscriptionController::class, 'changePlan'])->name('subscriptions.change-plan');
     Route::post('/settings/subscriptions/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
     Route::post('/settings/subscriptions/rebuy', [SubscriptionController::class, 'rebuy'])->name('subscriptions.rebuy');
+    Route::get('/subscription/checkout-session', [SubscriptionController::class, 'getCheckoutSession'])->name('subscription.checkout-session');
+    Route::get('/subscription/payment-success', [SubscriptionController::class, 'paymentSuccess'])->name('subscription.payment-success');
 
     // API Token routes (workspace owner/admin or global admin)
     Route::get('/settings/integrations/tokens', [ApiTokenController::class, 'show'])->name('settings.api-tokens.show');
@@ -187,78 +244,61 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     ]);
 
     // Workspace dashboard routes
-    Route::get('/workspace/{organization}/dashboard', [WorkspaceDashboardController::class, 'show'])->name('workspace.dashboard');
-    Route::put('/workspace/{organization}', [WorkspaceDashboardController::class, 'updateWorkspace'])->name('workspace.update');
-    Route::post('/workspace/{organization}/switch', [WorkspaceDashboardController::class, 'switchWorkspace'])->name('workspace.switch');
-    Route::delete('/workspace/{organization}', [WorkspaceDashboardController::class, 'destroy'])->name('workspace.destroy');
+    Route::middleware('check.subscription')->group(function () {
+        Route::get('/workspace/{organization}/dashboard', [WorkspaceDashboardController::class, 'show'])->name('workspace.dashboard');
+        Route::put('/workspace/{organization}', [WorkspaceDashboardController::class, 'updateWorkspace'])->name('workspace.update');
+        Route::post('/workspace/{organization}/switch', [WorkspaceDashboardController::class, 'switchWorkspace'])->name('workspace.switch');
+        Route::delete('/workspace/{organization}', [WorkspaceDashboardController::class, 'destroy'])->name('workspace.destroy');
+    });
 
-    // Project routes
-    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
-    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
-    Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
-    Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
-    Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-    Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
-    Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
-    Route::put('/projects/{project}/status', [ProjectController::class, 'updateStatus'])->name('projects.updateStatus');
-    Route::get('/projects/{project}/share-data', [ProjectController::class, 'shareData'])->name('projects.shareData');
-    Route::put('/projects/{project}/visibility', [ProjectController::class, 'updateVisibility'])->name('projects.updateVisibility');
-    Route::put('/projects/{project}/workspace-member-role', [ProjectController::class, 'updateWorkspaceMemberRole'])->name('projects.updateWorkspaceMemberRole');
-    Route::put('/projects/{project}/lead', [ProjectController::class, 'changeProjectLead'])->name('projects.changeProjectLead');
+    // Project routes - with subscription check
+    Route::middleware('check.subscription')->group(function () {
+        Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+        Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+        Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+        Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+        Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+        Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
+        Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+        Route::put('/projects/{project}/status', [ProjectController::class, 'updateStatus'])->name('projects.updateStatus');
+        Route::get('/projects/{project}/share-data', [ProjectController::class, 'shareData'])->name('projects.shareData');
+        Route::put('/projects/{project}/visibility', [ProjectController::class, 'updateVisibility'])->name('projects.updateVisibility');
+        Route::put('/projects/{project}/workspace-member-role', [ProjectController::class, 'updateWorkspaceMemberRole'])->name('projects.updateWorkspaceMemberRole');
+        Route::put('/projects/{project}/lead', [ProjectController::class, 'changeProjectLead'])->name('projects.changeProjectLead');
 
-    // Inbox route
-    Route::get('/inbox', [InboxController::class, 'index'])->name('inbox.index');
+        // Project member routes
+        Route::get('/projects/{project}/members', [ProjectMemberController::class, 'index'])->name('projects.members.index');
+        Route::post('/projects/{project}/members', [ProjectMemberController::class, 'store'])->name('projects.members.store');
+        Route::delete('/projects/{project}/members/{user}', [ProjectMemberController::class, 'destroy'])->name('projects.members.destroy');
+        Route::patch('/projects/{project}/members/{user}/role', [ProjectMemberController::class, 'changeRole'])->name('projects.members.changeRole');
+        Route::delete('/projects/{project}/members/me', [ProjectMemberController::class, 'leave'])->name('projects.members.leave');
 
-    // Project member routes
-    Route::get('/projects/{project}/members', [ProjectMemberController::class, 'index'])->name('projects.members.index');
-    Route::post('/projects/{project}/members', [ProjectMemberController::class, 'store'])->name('projects.members.store');
-    Route::delete('/projects/{project}/members/{user}', [ProjectMemberController::class, 'destroy'])->name('projects.members.destroy');
-    Route::patch('/projects/{project}/members/{user}/role', [ProjectMemberController::class, 'changeRole'])->name('projects.members.changeRole');
-    Route::delete('/projects/{project}/members/me', [ProjectMemberController::class, 'leave'])->name('projects.members.leave');
+        // Project invitation management routes
+        Route::get('/projects/{project}/invitations', [ProjectInvitationController::class, 'index'])->name('projects.invitations.index');
+        Route::post('/projects/{project}/invitations', [ProjectInvitationController::class, 'store'])->name('projects.invitations.store');
+        Route::post('/project-invitations/{token}/accept', [ProjectInvitationController::class, 'accept'])->name('project-invitations.do-accept');
+        Route::post('/project-invitations/{invitation}/resend', [ProjectInvitationController::class, 'resend'])->name('projects.invitations.resend');
+        Route::delete('/project-invitations/{invitation}', [ProjectInvitationController::class, 'destroy'])->name('projects.invitations.destroy');
 
-    // Project invitation management routes (authenticated)
-    Route::get('/projects/{project}/invitations', [ProjectInvitationController::class, 'index'])->name('projects.invitations.index');
-    Route::post('/projects/{project}/invitations', [ProjectInvitationController::class, 'store'])->name('projects.invitations.store');
-    Route::post('/project-invitations/{token}/accept', [ProjectInvitationController::class, 'accept'])->name('project-invitations.do-accept');
-    Route::post('/project-invitations/{invitation}/resend', [ProjectInvitationController::class, 'resend'])->name('projects.invitations.resend');
-    Route::delete('/project-invitations/{invitation}', [ProjectInvitationController::class, 'destroy'])->name('projects.invitations.destroy');
+        // Project settings routes
+        Route::get('/projects/{project}/settings', [ProjectSettingsController::class, 'show'])->name('projects.settings.show');
+        Route::put('/projects/{project}/settings/general', [ProjectSettingsController::class, 'updateGeneral'])->name('projects.settings.updateGeneral');
+        Route::put('/projects/{project}/settings/privacy', [ProjectSettingsController::class, 'updatePrivacy'])->name('projects.settings.updatePrivacy');
+        Route::post('/projects/{project}/archive', [ProjectSettingsController::class, 'archive'])->name('projects.archive');
+        Route::post('/projects/{project}/unarchive', [ProjectSettingsController::class, 'unarchive'])->name('projects.unarchive');
+        Route::post('/projects/{project}/delete', [ProjectSettingsController::class, 'delete'])->name('projects.delete');
+        Route::post('/projects/{project}/duplicate', [ProjectSettingsController::class, 'duplicate'])->name('projects.duplicate');
 
-    // Project settings routes
-    Route::get('/projects/{project}/settings', [ProjectSettingsController::class, 'show'])->name('projects.settings.show');
-    Route::put('/projects/{project}/settings/general', [ProjectSettingsController::class, 'updateGeneral'])->name('projects.settings.updateGeneral');
-    Route::put('/projects/{project}/settings/privacy', [ProjectSettingsController::class, 'updatePrivacy'])->name('projects.settings.updatePrivacy');
-    Route::post('/projects/{project}/archive', [ProjectSettingsController::class, 'archive'])->name('projects.archive');
-    Route::post('/projects/{project}/unarchive', [ProjectSettingsController::class, 'unarchive'])->name('projects.unarchive');
-    Route::post('/projects/{project}/delete', [ProjectSettingsController::class, 'delete'])->name('projects.delete');
-    Route::post('/projects/{project}/duplicate', [ProjectSettingsController::class, 'duplicate'])->name('projects.duplicate');
+        // Project activity routes
+        Route::get('/projects/{project}/activity', [ProjectActivityController::class, 'index'])->name('projects.activity.index');
 
-    // Project activity routes
-    Route::get('/projects/{project}/activity', [ProjectActivityController::class, 'index'])->name('projects.activity.index');
-
-    // Project view routes
-    Route::get('/projects/{project}/views/tasks', [ProjectViewController::class, 'getTasks'])->name('projects.views.tasks');
-    Route::get('/projects/{project}/views/files', [ProjectViewController::class, 'getFiles'])->name('projects.views.files');
-    Route::get('/projects/{project}/views/dashboard', [ProjectViewController::class, 'getDashboardData'])->name('projects.views.dashboard');
-    Route::post('/projects/{project}/views/preferences', [ProjectViewController::class, 'saveViewPreferences'])->name('projects.views.preferences.save');
-    Route::get('/projects/{project}/views/preferences/{viewType}', [ProjectViewController::class, 'getViewPreferences'])->name('projects.views.preferences.get');
-
-    // Reporting Dashboard
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::post('/reports/data', [ReportController::class, 'getData'])->name('reports.data');
-    Route::get('/reports/assignees', [ReportController::class, 'getAssignees'])->name('reports.assignees');
-
-    // My Tasks routes
-    Route::get('/my-tasks', [\App\Http\Controllers\MyTasksController::class, 'index'])->name('my-tasks.index');
-    Route::get('/my-tasks/api/tasks', [\App\Http\Controllers\MyTasksController::class, 'getTasks'])->name('my-tasks.api.tasks');
-    Route::post('/my-tasks/api/tasks', [\App\Http\Controllers\MyTasksController::class, 'storeTask'])->name('my-tasks.api.tasks.store');
-    Route::post('/my-tasks/api/preferences', [\App\Http\Controllers\MyTasksController::class, 'saveViewPreferences'])->name('my-tasks.api.preferences.save');
-    Route::get('/my-tasks/api/preferences/{viewType}', [\App\Http\Controllers\MyTasksController::class, 'getViewPreferences'])->name('my-tasks.api.preferences.get');
-    // My Tasks section management
-    Route::get('/my-tasks/api/sections', [\App\Http\Controllers\MyTasksController::class, 'getSections'])->name('my-tasks.api.sections.index');
-    Route::post('/my-tasks/api/sections', [\App\Http\Controllers\MyTasksController::class, 'storeSection'])->name('my-tasks.api.sections.store');
-    Route::put('/my-tasks/api/sections/{sectionId}', [\App\Http\Controllers\MyTasksController::class, 'updateSection'])->name('my-tasks.api.sections.update');
-    Route::delete('/my-tasks/api/sections/{sectionId}', [\App\Http\Controllers\MyTasksController::class, 'destroySection'])->name('my-tasks.api.sections.destroy');
-    Route::post('/my-tasks/api/sections/reorder', [\App\Http\Controllers\MyTasksController::class, 'reorderSections'])->name('my-tasks.api.sections.reorder');
+        // Project view routes
+        Route::get('/projects/{project}/views/tasks', [ProjectViewController::class, 'getTasks'])->name('projects.views.tasks');
+        Route::get('/projects/{project}/views/files', [ProjectViewController::class, 'getFiles'])->name('projects.views.files');
+        Route::get('/projects/{project}/views/dashboard', [ProjectViewController::class, 'getDashboardData'])->name('projects.views.dashboard');
+        Route::post('/projects/{project}/views/preferences', [ProjectViewController::class, 'saveViewPreferences'])->name('projects.views.preferences.save');
+        Route::get('/projects/{project}/views/preferences/{viewType}', [ProjectViewController::class, 'getViewPreferences'])->name('projects.views.preferences.get');
+    });
 
     // Attachment routes
     Route::post('/tasks/{task}/attachments', [AttachmentController::class, 'store'])->name('attachments.store');

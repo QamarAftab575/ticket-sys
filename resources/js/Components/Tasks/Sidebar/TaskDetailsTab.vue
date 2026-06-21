@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-4">
     <!-- Assignee -->
     <div>
@@ -76,3 +76,4 @@ const props = withDefaults(defineProps<Props>(), {
 
 defineEmits<Emits>();
 </script>
+

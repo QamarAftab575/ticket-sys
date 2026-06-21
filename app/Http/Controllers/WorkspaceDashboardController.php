@@ -126,6 +126,7 @@ class WorkspaceDashboardController extends Controller
 
     /**
      * Switch to a different workspace.
+     * Now only validates access - actual selection is handled in browser storage
      */
     public function switchWorkspace(Request $request, Organization $organization)
     {
@@ -134,8 +135,6 @@ class WorkspaceDashboardController extends Controller
         if (!$organization->hasMember($user)) {
             abort(403, 'You do not have access to this workspace.');
         }
-
-        session(['current_workspace_id' => $organization->id]);
 
         return redirect()->route('workspace.dashboard', $organization);
     }

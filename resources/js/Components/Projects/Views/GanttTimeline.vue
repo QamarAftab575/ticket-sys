@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex flex-col h-full bg-white">
     <!-- Timeline Header -->
     <div class="flex items-center justify-between gap-4 p-4 bg-gray-50 border-b">
@@ -8,7 +8,7 @@
           class="px-3 py-1 border rounded hover:bg-gray-200 text-sm"
           title="Zoom out"
         >
-          −
+          âˆ’
         </button>
         <span class="text-sm font-medium min-w-16 text-center">{{ zoomLevel }}</span>
         <button
@@ -25,7 +25,7 @@
           @click="previousPeriod"
           class="px-3 py-1 border rounded hover:bg-gray-200 text-sm"
         >
-          ← Previous
+          â† Previous
         </button>
         <button
           @click="goToToday"
@@ -37,7 +37,7 @@
           @click="nextPeriod"
           class="px-3 py-1 border rounded hover:bg-gray-200 text-sm"
         >
-          Next →
+          Next â†’
         </button>
       </div>
 
@@ -634,3 +634,4 @@ const addDays = (date, days) => {
   return d.toISOString().split('T')[0]
 }
 </script>
+

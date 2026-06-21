@@ -1,10 +1,10 @@
-<template>
+﻿<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace" :user-role="userRole">
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <!-- Sidebar Navigation -->
-          <SettingsSidebar />
+          <SettingsSidebar :user-workspaces="userWorkspaces" />
 
           <!-- Main Content -->
           <div class="md:col-span-3 space-y-6">
@@ -342,7 +342,7 @@ const handleCreateToken = async () => {
 const copyTokenToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(newToken.value.plain_token)
-    copyButtonText.value = '✓ Copied!'
+    copyButtonText.value = 'âœ“ Copied!'
     setTimeout(() => {
       copyButtonText.value = 'Copy Token'
     }, 2000)
@@ -464,3 +464,4 @@ const revokeAllTokens = async () => {
     isRevokingAll.value = false
   }
 }</script>
+

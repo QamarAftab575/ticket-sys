@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace">
     <MyTasksLayout
       :saved-preferences="savedPreferences"
@@ -40,3 +40,4 @@ const props = withDefaults(defineProps<Props>(), {
   workspaceMembers: () => [],
 });
 </script>
+

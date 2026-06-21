@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <aside
     :class="[
       'fixed inset-y-0 left-0 z-30 bg-white border-r border-gray-100 flex flex-col transition-all duration-300 ease-in-out shadow-sm',
@@ -7,7 +7,7 @@
       mobileOpen ? 'translate-x-0 !w-64' : '-translate-x-full lg:translate-x-0',
     ]"
   >
-    <!-- ── Logo + Collapse Toggle ── -->
+    <!-- â”€â”€ Logo + Collapse Toggle â”€â”€ -->
     <div
       :class="[
         'flex items-center h-14 border-b border-gray-100 shrink-0 transition-all duration-300',
@@ -41,7 +41,7 @@
       </button>
     </div>
 
-    <!-- ── Workspace Switcher ── -->
+    <!-- â”€â”€ Workspace Switcher â”€â”€ -->
     <div v-if="userWorkspaces && userWorkspaces.length > 0"
       :class="['border-b border-gray-100 py-3 transition-all duration-300', collapsed ? 'px-2' : 'px-3']"
     >
@@ -54,7 +54,7 @@
       />
     </div>
 
-    <!-- ── Scrollable nav area ── -->
+    <!-- â”€â”€ Scrollable nav area â”€â”€ -->
     <nav :class="['flex-1 py-3 overflow-y-auto transition-all duration-300', collapsed ? 'px-2' : 'px-3']">
 
       <!-- Main nav items -->
@@ -70,7 +70,7 @@
         />
       </div>
 
-      <!-- ── Projects Section ── -->
+      <!-- â”€â”€ Projects Section â”€â”€ -->
       <div class="border-t border-gray-100 pt-3">
         <!-- Section header -->
         <div
@@ -134,7 +134,7 @@
           <div v-if="visibleProjects.length === 0" class="px-3 py-3 text-center">
             <p class="text-xs text-gray-400">No projects yet</p>
             <Link href="/projects/create" class="text-xs text-blue-600 hover:underline mt-0.5 inline-block">
-              Create one →
+              Create one â†’
             </Link>
           </div>
 
@@ -193,7 +193,7 @@
         </div>
       </div>
 
-      <!-- ── Account section ── -->
+      <!-- â”€â”€ Account section â”€â”€ -->
       <div class="pt-3 mt-3 border-t border-gray-100 space-y-0.5">
         <p v-if="!collapsed" class="px-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Account</p>
         <SidebarNavItem
@@ -206,7 +206,71 @@
       </div>
     </nav>
 
-    <!-- ── Invite Button ── -->
+    <!-- â”€â”€ Invite Button â”€â”€ -->
+    <!-- Subscription Alert -->
+    <div v-if="subscriptionStatus && subscriptionStatus.status !== 'active'" 
+      :class="[
+        'border-t border-gray-100 px-3 py-2 shrink-0',
+        subscriptionStatus.status === 'warning' ? 'bg-yellow-50' :
+        subscriptionStatus.status === 'expired_grace' ? 'bg-orange-50' :
+        subscriptionStatus.status === 'suspended' ? 'bg-red-50' : ''
+      ]"
+    >
+      <!-- Warning: 1 day remaining -->
+      <div v-if="subscriptionStatus.status === 'warning'" class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <div class="flex-1 min-w-0">
+          <p v-if="!collapsed" class="text-xs font-semibold text-yellow-800 mb-1">Expiring Soon</p>
+          <p v-if="!collapsed" class="text-xs text-yellow-700 line-clamp-2">{{ subscriptionStatus.message }}</p>
+          <Link v-if="!collapsed" href="/settings/subscriptions" class="text-xs text-yellow-700 hover:text-yellow-900 font-semibold">Renew →</Link>
+        </div>
+      </div>
+
+      <!-- Grace Period: Expired but within grace days -->
+      <div v-else-if="subscriptionStatus.status === 'expired_grace'" class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-orange-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <div class="flex-1 min-w-0">
+          <p v-if="!collapsed" class="text-xs font-semibold text-orange-800 mb-1">Grace Period</p>
+          <p v-if="!collapsed" class="text-xs text-orange-700 line-clamp-2">{{ subscriptionStatus.message }}</p>
+          <div v-if="!collapsed" class="flex items-center gap-2 mt-1">
+            <Link href="/settings/subscriptions" class="text-xs text-orange-700 hover:text-orange-900 font-semibold">Renew →</Link>
+            <span class="text-xs text-orange-600 font-semibold">{{ subscriptionStatus.days_in_grace_period }}d left</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suspended: Grace period ended -->
+      <div v-else-if="subscriptionStatus.status === 'suspended'" class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-red-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div class="flex-1 min-w-0">
+          <p v-if="!collapsed" class="text-xs font-semibold text-red-800 mb-1">Suspended</p>
+          <p v-if="!collapsed" class="text-xs text-red-700 line-clamp-2">{{ subscriptionStatus.message }}</p>
+          <Link v-if="!collapsed" href="/settings/subscriptions" class="text-xs text-red-700 hover:text-red-900 font-semibold">Renew Now →</Link>
+        </div>
+      </div>
+
+      <!-- Collapsed tooltip -->
+      <div v-if="collapsed" class="group relative flex justify-center">
+        <div class="w-2 h-2 rounded-full"
+          :class="subscriptionStatus.status === 'warning' ? 'bg-yellow-500' :
+                  subscriptionStatus.status === 'expired_grace' ? 'bg-orange-500' :
+                  subscriptionStatus.status === 'suspended' ? 'bg-red-500' : 'bg-gray-400'"
+        />
+        <span class="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg">
+          {{ subscriptionStatus.status === 'warning' ? 'Expiring Soon' :
+             subscriptionStatus.status === 'expired_grace' ? 'Grace Period' :
+             subscriptionStatus.status === 'suspended' ? 'Suspended' : 'Status' }}
+          <span class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900"/>
+        </span>
+      </div>
+    </div>
+
     <div :class="['border-t border-gray-100 p-3 shrink-0']">
       <button
         @click="$emit('invite')"
@@ -249,6 +313,7 @@ const props = defineProps({
   currentWorkspaceId: String, // Optional, will use composable
   userRole:       String,
   mobileOpen:     Boolean,
+  subscriptionStatus: Object, // Subscription status passed as prop
 })
 
 const emit = defineEmits(['invite', 'close', 'collapsed-change'])
@@ -295,7 +360,7 @@ const activeProjects = computed(() =>
   allProjects.value.filter(p => !p.archived_at)
 )
 
-// Slice to INITIAL_SHOW — "View all" link handles the rest
+// Slice to INITIAL_SHOW â€” "View all" link handles the rest
 const visibleProjects = computed(() =>
   activeProjects.value.slice(0, INITIAL_SHOW)
 )
@@ -336,3 +401,4 @@ const accountNav = [
   },
 ]
 </script>
+

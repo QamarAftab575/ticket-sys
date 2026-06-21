@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-3">
     <div v-if="!activities || activities.length === 0" class="text-center py-6 text-gray-500">
       <p class="text-sm">No recent activity</p>
@@ -65,3 +65,4 @@ const timeAgo = (date) => {
   })
 }
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AuthenticatedLayout>
     <template #header>
       <h2 class="text-2xl font-bold">Edit Project</h2>
@@ -23,3 +23,4 @@ defineProps({
   teamMembers: Array,
 });
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="text-center py-12">
     <div class="text-6xl mb-4">{{ icon }}</div>
     <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ title }}</h3>
@@ -23,3 +23,4 @@ defineProps({
 
 defineEmits(['cta'])
 </script>
+

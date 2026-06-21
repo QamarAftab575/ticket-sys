@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="w-72 bg-white border-l border-gray-200 flex flex-col overflow-hidden">
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200">
@@ -189,3 +189,4 @@ function confirmHideAll() {
   }
 }
 </script>
+

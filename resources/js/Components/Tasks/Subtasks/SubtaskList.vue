@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-2">
     <div v-if="task.subtasks?.length === 0" class="text-sm text-gray-500">
       No subtasks yet
@@ -21,7 +21,7 @@
         @click="handleDeleteSubtask(subtask.id)"
         class="text-red-600 hover:text-red-700 text-sm"
       >
-        ✕
+        âœ•
       </button>
     </div>
 
@@ -82,3 +82,4 @@ function handleCreateSubtask() {
   showCreateForm.value = false;
 }
 </script>
+

@@ -1,8 +1,8 @@
-<template>
+﻿<template>
   <div class="border border-gray-200 rounded-lg overflow-hidden focus-within:border-indigo-300 focus-within:ring-1 focus-within:ring-indigo-200 transition-all">
     <RichEditor
       v-model="localDescription"
-      placeholder="Add a description…"
+      placeholder="Add a descriptionâ€¦"
       :show-toolbar="true"
       :task-id="task.id"
       :project-id="projectId"
@@ -53,3 +53,4 @@ async function handleBlur(html: string) {
   }
 }
 </script>
+

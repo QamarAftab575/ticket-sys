@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-6">
     <!-- Existing Plans Grid -->
     <div v-if="plans.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -23,9 +23,9 @@
         </div>
 
         <div class="space-y-2 text-sm text-gray-600">
-          <p>📁 Workspaces: <strong class="text-gray-900">{{ plan.max_workspaces === 0 ? '∞ Unlimited' : plan.max_workspaces }}</strong></p>
-          <p>👥 Members/workspace: <strong class="text-gray-900">{{ plan.max_members_per_workspace === 0 ? '∞ Unlimited' : plan.max_members_per_workspace }}</strong></p>
-          <p>📊 Projects/workspace: <strong class="text-gray-900">{{ plan.max_projects_per_workspace === 0 ? '∞ Unlimited' : plan.max_projects_per_workspace }}</strong></p>
+          <p>ðŸ“ Workspaces: <strong class="text-gray-900">{{ plan.max_workspaces === 0 ? 'âˆž Unlimited' : plan.max_workspaces }}</strong></p>
+          <p>ðŸ‘¥ Members/workspace: <strong class="text-gray-900">{{ plan.max_members_per_workspace === 0 ? 'âˆž Unlimited' : plan.max_members_per_workspace }}</strong></p>
+          <p>ðŸ“Š Projects/workspace: <strong class="text-gray-900">{{ plan.max_projects_per_workspace === 0 ? 'âˆž Unlimited' : plan.max_projects_per_workspace }}</strong></p>
         </div>
 
         <div v-if="plan.features && plan.features.length" class="space-y-1 text-xs">
@@ -54,7 +54,7 @@
 
     <!-- Add New Plan -->
     <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ editingPlanId ? '✏️ Edit Plan' : '➕ Add New Plan' }}</h2>
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ editingPlanId ? 'âœï¸ Edit Plan' : 'âž• Add New Plan' }}</h2>
 
       <form @submit.prevent="savePlan" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -163,7 +163,7 @@
                 class="text-red-500 hover:text-red-700 ml-2"
                 title="Remove feature"
               >
-                ×
+                Ã—
               </button>
             </li>
             <li v-if="newPlan.features.length === 0" class="text-xs text-gray-400 italic px-3 py-1">
@@ -316,3 +316,4 @@ const deletePlan = () => {
   })
 }
 </script>
+

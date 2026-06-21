@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AdminLayout>
     <template #header>
       <div class="flex justify-between items-center">
@@ -105,7 +105,7 @@
                     </div>
                     <div>
                       <p class="font-medium text-gray-900">{{ user.name }}</p>
-                      <p v-if="user.is_super_admin" class="text-xs text-purple-600 font-semibold">👑 Super Admin</p>
+                      <p v-if="user.is_super_admin" class="text-xs text-purple-600 font-semibold">ðŸ‘‘ Super Admin</p>
                     </div>
                   </div>
                 </td>
@@ -113,22 +113,22 @@
                 <td class="px-6 py-4 text-sm text-gray-600">{{ formatDate(user.created_at) }}</td>
                 <td class="px-6 py-4 text-sm">
                   <span v-if="getUserType(user) === 'paid'" class="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    💳 Paid
+                    ðŸ’³ Paid
                   </span>
                   <span v-else-if="getUserType(user) === 'trial'" class="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    ⏱️ Trial
+                    â±ï¸ Trial
                   </span>
                   <span v-else class="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    ⏰ Expired
+                    â° Expired
                   </span>
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-600">{{ user.organizations_count }}</td>
                 <td class="px-6 py-4 text-sm">
                   <span v-if="user.is_suspended" class="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    🔒 Suspended
+                    ðŸ”’ Suspended
                   </span>
                   <span v-else class="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    ✅ Active
+                    âœ… Active
                   </span>
                 </td>
                 <td class="px-6 py-4 text-sm" @click.stop>
@@ -151,7 +151,7 @@
                       <button
                         class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition text-xs font-medium"
                       >
-                        ⋮
+                        â‹®
                       </button>
                       <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 hidden group-hover:block">
                         <button
@@ -194,14 +194,14 @@
               :href="users.prev_page_url"
               class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium transition"
             >
-              ← Previous
+              â† Previous
             </Link>
             <Link
               v-if="users.next_page_url"
               :href="users.next_page_url"
               class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium transition"
             >
-              Next →
+              Next â†’
             </Link>
           </div>
         </div>
@@ -355,3 +355,4 @@ const confirmAction = () => {
   }
 }
 </script>
+

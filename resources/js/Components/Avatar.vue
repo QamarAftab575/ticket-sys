@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div 
     :class="[
       'flex items-center justify-center rounded-full font-semibold text-white',
@@ -104,3 +104,4 @@ const handleImageError = () => {
   imageError.value = true
 }
 </script>
+

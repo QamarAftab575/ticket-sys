@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="workspace" :user-role="userRole">
     <!-- Notification Toast -->
     <div
@@ -83,7 +83,7 @@
                       step.completed ? 'bg-green-500' : 'bg-gray-300'
                     ]"
                   >
-                    {{ step.completed ? '✓' : '○' }}
+                    {{ step.completed ? 'âœ“' : 'â—‹' }}
                   </div>
                   <span :class="step.completed ? 'text-green-700 line-through' : 'text-gray-700'">
                     {{ step.title }}
@@ -108,7 +108,7 @@
                   <p class="text-sm text-gray-600">{{ project.members?.length || 0 }} members</p>
                 </div>
                 <Link :href="`/projects/${project.id}`" class="text-blue-600 hover:text-blue-700">
-                  View →
+                  View â†’
                 </Link>
               </div>
             </div>
@@ -301,7 +301,7 @@
       </div>
     </div>
 
-    <!-- Delete Workspace Modal — Step 1: Warning -->
+    <!-- Delete Workspace Modal â€” Step 1: Warning -->
     <div v-if="deleteStep === 1" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
         <div class="p-6">
@@ -338,7 +338,7 @@
       </div>
     </div>
 
-    <!-- Delete Workspace Modal — Step 2: Type name to confirm -->
+    <!-- Delete Workspace Modal â€” Step 2: Type name to confirm -->
     <div v-if="deleteStep === 2" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
         <div class="p-6">
@@ -553,3 +553,4 @@ const deleteInvitation = async (invitationId) => {
 // Keep pendingInvitations in sync with props after Inertia reloads
 watch(() => props.invitations, (val) => { pendingInvitations.value = val || [] })
 </script>
+

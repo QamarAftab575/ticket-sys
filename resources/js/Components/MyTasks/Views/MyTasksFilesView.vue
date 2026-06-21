@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <FilesView
     :project="null"
     :tasks="tasks"
@@ -22,3 +22,4 @@ const emit = defineEmits<{
   'select-task': [taskId: string];
 }>();
 </script>
+

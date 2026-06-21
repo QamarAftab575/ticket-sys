@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="color-picker">
     <label class="block text-sm font-medium text-gray-700 mb-2">Project Color</label>
     
@@ -105,3 +105,4 @@ watch(() => props.modelValue, (newValue) => {
   }
 })
 </script>
+

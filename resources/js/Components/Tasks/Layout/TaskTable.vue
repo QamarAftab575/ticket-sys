@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex-1 overflow-auto">
     <table class="w-full border-collapse">
       <thead class="bg-gray-50 sticky top-0 border-b border-gray-200">
@@ -125,3 +125,4 @@ function handleColumnSort(columnId: string) {
   }
 }
 </script>
+

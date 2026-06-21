@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <BoardView
     :project="null"
     :tasks="tasks"
@@ -35,3 +35,4 @@ const sections = [
   { id: 'complete', name: 'Done', color: '#10B981', order: 4 },
 ];
 </script>
+

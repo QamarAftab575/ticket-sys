@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <select
     :value="task.priority"
     @change="handlePriorityChange"
@@ -48,3 +48,4 @@ async function handlePriorityChange(event: Event) {
   }
 }
 </script>
+

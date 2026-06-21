@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex items-center gap-1.5 w-full px-1 min-h-[24px]">
 
     <!-- system_assignee -->
@@ -7,7 +7,7 @@
         <Avatar :name="task.assignee.name" :src="task.assignee.avatar" size="xs" class="flex-shrink-0" />
         <span class="text-xs text-gray-700 truncate">{{ task.assignee.name }}</span>
       </template>
-      <span v-else class="text-xs text-gray-400">—</span>
+      <span v-else class="text-xs text-gray-400">â€”</span>
     </template>
 
     <!-- system_created_by -->
@@ -16,7 +16,7 @@
         <Avatar :name="task.creator.name" :src="task.creator.avatar" size="xs" class="flex-shrink-0" />
         <span class="text-xs text-gray-700 truncate">{{ task.creator.name }}</span>
       </template>
-      <span v-else class="text-xs text-gray-400">—</span>
+      <span v-else class="text-xs text-gray-400">â€”</span>
     </template>
 
     <!-- system_completed_on -->
@@ -24,7 +24,7 @@
       <span v-if="task.completed_at" class="text-xs text-gray-700">
         {{ formatDate(task.completed_at) }}
       </span>
-      <span v-else class="text-xs text-gray-400">—</span>
+      <span v-else class="text-xs text-gray-400">â€”</span>
     </template>
 
     <!-- system_created_on -->
@@ -44,7 +44,7 @@
           {{ task.dependencies.map(d => d.name).join(', ') }}
         </span>
       </template>
-      <span v-else class="text-xs text-gray-400">—</span>
+      <span v-else class="text-xs text-gray-400">â€”</span>
     </template>
 
     <!-- system_blocking -->
@@ -54,7 +54,7 @@
           {{ task.dependents.map(d => d.name).join(', ') }}
         </span>
       </template>
-      <span v-else class="text-xs text-gray-400">—</span>
+      <span v-else class="text-xs text-gray-400">â€”</span>
     </template>
 
     <!-- system_collaborators: show up to 3 member avatars -->
@@ -78,11 +78,11 @@
           </span>
         </div>
       </template>
-      <span v-else class="text-xs text-gray-400">—</span>
+      <span v-else class="text-xs text-gray-400">â€”</span>
     </template>
 
     <!-- fallback -->
-    <span v-else class="text-xs text-gray-400">—</span>
+    <span v-else class="text-xs text-gray-400">â€”</span>
   </div>
 </template>
 
@@ -106,9 +106,10 @@ const fieldType = computed(() => props.field.field_type)
 const collaborators = computed(() => props.members.slice(0, 10))
 
 function formatDate(value) {
-  if (!value) return '—'
+  if (!value) return 'â€”'
   const d = new Date(value)
-  if (isNaN(d)) return '—'
+  if (isNaN(d)) return 'â€”'
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
 }
 </script>
+

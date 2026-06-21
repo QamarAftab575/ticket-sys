@@ -1,93 +1,50 @@
 <template>
-  <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace" :user-role="userRole">
+  <AppLayout>
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <!-- Sidebar Navigation -->
-          <SettingsSidebar />
+          <SettingsSidebar :user-workspaces="userWorkspaces" />
 
           <!-- Main Content -->
           <div class="md:col-span-3">
-            <!-- Workspace Settings -->
+            <!-- Workspaces List -->
             <div class="bg-white rounded-lg shadow p-6 mb-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Workspace Settings</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">My Workspaces</h3>
               
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Workspace Name</label>
-                  <input
-                    v-model="settings.workspaceName"
-                    type="text"
-                    class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
+              <div v-if="userWorkspaces.length === 0" class="text-center py-8">
+                <p class="text-gray-500">You are not part of any workspaces yet.</p>
+              </div>
 
-                <div>
-                  <label class="block text-sm font-medium text-gray-700">Default View</label>
-                  <select
-                    v-model="settings.defaultView"
-                    class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="kanban">Kanban Board</option>
-                    <option value="list">List View</option>
-                    <option value="timeline">Timeline</option>
-                    <option value="calendar">Calendar</option>
-                  </select>
-                </div>
-
-                <button
-                  @click="saveSettings"
-                  :disabled="isSaving"
-                  class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+              <div v-else class="space-y-4">
+                <Link
+                  v-for="workspace in userWorkspaces"
+                  :key="workspace.id"
+                  :href="`/workspace/${workspace.id}/dashboard`"
+                  class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:shadow-md transition cursor-pointer"
                 >
-                  {{ isSaving ? 'Saving...' : 'Save Settings' }}
-                </button>
+                  <div class="flex items-center space-x-4">
+                    <div
+                      :style="{ backgroundColor: workspace.avatar_color }"
+                      class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold"
+                    >
+                      {{ workspace.name.charAt(0).toUpperCase() }}
+                    </div>
+                    <div>
+                      <h4 class="font-medium text-gray-900">{{ workspace.name }}</h4>
+                      <p v-if="workspace.description" class="text-sm text-gray-600">
+                        {{ workspace.description }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center space-x-4">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                      {{ getRoleLabel(workspace.role) }}
+                    </span>
+                  </div>
+                </Link>
               </div>
-            </div>
-
-            <!-- Notification Settings -->
-            <div class="bg-white rounded-lg shadow p-6 mb-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Notifications</h3>
-              
-              <div class="space-y-4">
-                <div class="flex items-center">
-                  <input
-                    v-model="settings.emailNotifications"
-                    type="checkbox"
-                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label class="ml-2 block text-sm text-gray-700">
-                    Email notifications for task updates
-                  </label>
-                </div>
-
-                <div class="flex items-center">
-                  <input
-                    v-model="settings.mentionNotifications"
-                    type="checkbox"
-                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label class="ml-2 block text-sm text-gray-700">
-                    Notify me when mentioned
-                  </label>
-                </div>
-
-                <div class="flex items-center">
-                  <input
-                    v-model="settings.commentNotifications"
-                    type="checkbox"
-                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label class="ml-2 block text-sm text-gray-700">
-                    Notify me on new comments
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Success Message -->
-            <div v-if="successMessage" class="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p class="text-green-800">{{ successMessage }}</p>
             </div>
           </div>
         </div>
@@ -97,47 +54,26 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+import { ref, reactive } from 'vue'
+import { router, Link } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import SettingsSidebar from '@/Components/Settings/SettingsSidebar.vue'
-import { Link } from '@inertiajs/vue3'
-
-const page = usePage()
 
 const props = defineProps({
-  userWorkspaces: Array,
-  currentWorkspace: Object,
-  userRole: String
+  userWorkspaces: {
+    type: Array,
+    default: () => []
+  }
 })
 
-const settings = reactive({
-  workspaceName: 'My Workspace',
-  defaultView: 'list',
-  emailNotifications: true,
-  mentionNotifications: true,
-  commentNotifications: true
-})
-
-const isSaving = ref(false)
-const successMessage = ref('')
-
-const isActive = (path) => {
-  return page.url === path || page.url.startsWith(path + '/')
-}
-
-const saveSettings = () => {
-  isSaving.value = true
-  router.post('/settings/save', settings, {
-    onSuccess: () => {
-      successMessage.value = 'Settings saved successfully!'
-      setTimeout(() => {
-        successMessage.value = ''
-      }, 3000)
-    },
-    onFinish: () => {
-      isSaving.value = false
-    }
-  })
+const getRoleLabel = (role) => {
+  const roles = {
+    'owner': 'Owner',
+    'admin': 'Admin',
+    'member': 'Member',
+    'guest': 'Guest'
+  }
+  return roles[role] || role
 }
 </script>
+

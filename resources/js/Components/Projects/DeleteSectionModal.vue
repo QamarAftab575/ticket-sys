@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Teleport to="body">
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
@@ -118,3 +118,4 @@ function confirm() {
 .fade-enter-active, .fade-leave-active { transition: opacity 0.15s, transform 0.15s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(-4px); }
 </style>
+

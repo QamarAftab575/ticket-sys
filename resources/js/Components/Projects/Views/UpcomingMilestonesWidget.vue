@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="space-y-3">
     <div v-if="!milestones || milestones.length === 0" class="text-center py-6 text-gray-500">
       <p class="text-sm">No upcoming milestones</p>
@@ -11,7 +11,7 @@
         class="flex items-center gap-3 p-3 rounded hover:bg-gray-50 cursor-pointer transition-colors"
         @click="$emit('open-task', milestone.id)"
       >
-        <div class="text-xl">💎</div>
+        <div class="text-xl">ðŸ’Ž</div>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-medium text-gray-900 truncate">{{ milestone.name }}</p>
           <p
@@ -50,3 +50,4 @@ const isOverdue = (dueDate) => {
   return new Date(dueDate) < new Date()
 }
 </script>
+

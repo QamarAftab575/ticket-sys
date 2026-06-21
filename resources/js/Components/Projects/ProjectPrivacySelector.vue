@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="privacy-selector">
     <label class="block text-sm font-medium text-gray-700 mb-4">Privacy Level</label>
     
@@ -103,3 +103,4 @@ watch(selectedMembers, (newValue) => {
   emit('update:selectedMembers', newValue)
 })
 </script>
+

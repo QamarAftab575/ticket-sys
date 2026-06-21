@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="min-h-screen bg-gray-100">
     <!-- Navigation -->
     <nav class="bg-white shadow-sm">
@@ -116,3 +116,4 @@ const logout = () => {
   router.post('/logout')
 }
 </script>
+

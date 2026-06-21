@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex h-screen bg-gray-50">
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
@@ -166,3 +166,4 @@ async function handleTaskCreated() {
   await tasksStore.fetchTasks(props.projectId || null);
 }
 </script>
+

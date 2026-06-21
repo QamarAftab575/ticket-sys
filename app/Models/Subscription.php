@@ -18,7 +18,11 @@ class Subscription extends Model
         'expires_at',
         'status',
         'stripe_subscription_id',
+        'payment_intent_id',
+        'payment_token_id',
         'price_paid',
+        'payment_metadata',
+        'payment_attempts',
         'notes',
     ];
 
@@ -26,6 +30,7 @@ class Subscription extends Model
         'started_at' => 'datetime',
         'expires_at' => 'datetime',
         'price_paid' => 'decimal:2',
+        'payment_metadata' => 'array',
     ];
 
     /**

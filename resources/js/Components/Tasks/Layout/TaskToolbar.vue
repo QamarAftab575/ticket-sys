@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="bg-white border-b border-gray-200 px-6 py-3 flex items-center gap-4 overflow-x-auto">
     <!-- Filter Button -->
     <div class="relative">
@@ -182,3 +182,4 @@ function handleSearch() {
   });
 }
 </script>
+

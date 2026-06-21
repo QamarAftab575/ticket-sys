@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     @click="$emit('click')"
     class="flex-1 h-8 bg-blue-500 rounded cursor-pointer hover:bg-blue-600 flex items-center px-2 text-white text-xs font-medium truncate"
@@ -33,3 +33,4 @@ const getWidth = () => {
   return ((endIdx - startIdx + 1) / props.dateRange.length) * 100
 }
 </script>
+

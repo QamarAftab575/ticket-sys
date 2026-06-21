@@ -136,6 +136,26 @@ class AdminUserController extends Controller
             $q->whereIn('organization_id', $userWorkspaceIds);
         })->count();
 
+        // Get subscription history
+        $subscriptionHistory = $user->subscriptions()
+            ->with('plan')
+            ->latest('started_at')
+            ->get()
+            ->map(function ($subscription) {
+                return [
+                    'id' => $subscription->id,
+                    'plan_id' => $subscription->plan_id,
+                    'plan_name' => $subscription->plan->name,
+                    'plan_price' => $subscription->plan->price,
+                    'billing_cycle' => $subscription->plan->billing_cycle,
+                    'started_at' => $subscription->started_at,
+                    'expires_at' => $subscription->expires_at,
+                    'status' => $subscription->status,
+                    'source' => $subscription->source,
+                    'is_current' => $subscription->isActive(),
+                ];
+            });
+
         // Get user stats
         $stats = [
             'total_workspaces' => $user->ownedOrganizations()->count(),
@@ -158,6 +178,7 @@ class AdminUserController extends Controller
             'projects' => $projectStats,
             'availablePlans' => $availablePlans,
             'activePlan' => $activePlan,
+            'subscriptionHistory' => $subscriptionHistory,
         ]);
     }
 

@@ -1,65 +1,73 @@
-<template>
-  <div class="min-h-screen flex items-center justify-center relative overflow-hidden">
-    <!-- Animated Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-rose-100 via-orange-50 to-amber-100">
-      <div class="absolute inset-0 bg-gradient-to-tr from-pink-200/40 via-transparent to-amber-200/40"></div>
-      
-      <!-- Floating Elements -->
-      <div class="absolute top-20 left-10 w-32 h-32 bg-rose-300/20 rounded-full blur-xl animate-float"></div>
-      <div class="absolute top-40 right-20 w-24 h-24 bg-amber-300/20 rounded-full blur-xl animate-float" style="animation-delay: 2s;"></div>
-      <div class="absolute bottom-32 left-1/4 w-40 h-40 bg-pink-300/20 rounded-full blur-xl animate-float" style="animation-delay: 4s;"></div>
-      <div class="absolute bottom-20 right-1/3 w-28 h-28 bg-orange-300/20 rounded-full blur-xl animate-float" style="animation-delay: 6s;"></div>
-    </div>
+﻿<template>
+  <div class="min-h-screen flex bg-white dark:bg-slate-950">
+    <!-- Left Side - Login Form -->
+    <div class="flex-1 flex items-center justify-center px-6 py-12">
+      <!-- Home Badge (Fixed Position) -->
+      <Link 
+        href="/" 
+        class="fixed top-4 left-4 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium transition-colors duration-200 cursor-pointer group"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4-4m-4 4L9 9m4 4l4 4" />
+        </svg>
+        <span>Home</span>
+      </Link>
 
-    <!-- Login Card -->
-    <div class="relative z-10 w-full max-w-md mx-4">
-      <!-- Glassmorphism Card -->
-      <div class="glass-card rounded-3xl p-8 shadow-2xl">
-        <!-- Logo & Title -->
-        <div class="text-center mb-8">
-          <div class="w-16 h-16 bg-gradient-to-br from-rose-400 to-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <h1 class="text-3xl font-bold text-slate-800 mb-2">Welcome back</h1>
-          <p class="text-slate-600">Sign in to your Asira account</p>
+      <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="mb-8">
+          <Link href="/" class="inline-flex items-center gap-3 group cursor-pointer">
+            <img src="/assets/images/logo/asira-logo-main.png" alt="Asira" class="h-8 w-auto" />
+          </Link>
+        </div>
+
+        <!-- Header -->
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Welcome back</h1>
+          <p class="text-slate-600 dark:text-slate-400">Sign in to your account to continue</p>
         </div>
 
         <!-- Error Message -->
-        <div v-if="errors.general" class="mb-6 p-4 bg-red-500/20 border border-red-400/30 rounded-2xl backdrop-blur-sm">
-          <p class="text-red-700 text-sm font-medium">{{ errors.general }}</p>
+        <div v-if="errors.general" class="mb-6 p-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-lg">
+          <p class="text-red-700 dark:text-red-400 text-sm">{{ errors.general }}</p>
         </div>
 
         <!-- Login Form -->
-        <form @submit.prevent="handleLogin" class="space-y-6">
+        <form @submit.prevent="handleLogin" class="space-y-5">
           <!-- Email Field -->
           <div class="space-y-2">
-            <label for="email" class="block text-sm font-medium text-slate-700">Email address</label>
-            <div class="relative">
-              <input
-                id="email"
-                v-model="form.email"
-                type="email"
-                autocomplete="email"
-                required
-                :class="[
-                  'w-full px-4 py-3 bg-white/40 border-0 rounded-2xl text-slate-800 placeholder-slate-500 backdrop-blur-sm transition-all duration-200',
-                  'focus:outline-none focus:ring-2 focus:ring-rose-400/50 focus:bg-white/60',
-                  errors.email ? 'ring-2 ring-red-400/50' : ''
-                ]"
-                placeholder="Enter your email"
-              />
-              <svg class="absolute right-3 top-3.5 w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-              </svg>
-            </div>
-            <p v-if="errors.email" class="text-red-600 text-sm">{{ errors.email }}</p>
+            <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Email address
+            </label>
+            <input
+              id="email"
+              v-model="form.email"
+              type="email"
+              autocomplete="email"
+              required
+              :class="[
+                'w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors duration-200',
+                'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                errors.email ? 'border-red-300 dark:border-red-700' : 'border-slate-300 dark:border-slate-700'
+              ]"
+              placeholder="name@company.com"
+            />
+            <p v-if="errors.email" class="text-red-600 dark:text-red-400 text-sm">{{ errors.email }}</p>
           </div>
 
           <!-- Password Field -->
           <div class="space-y-2">
-            <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+            <div class="flex items-center justify-between">
+              <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                Password
+              </label>
+              <Link 
+                href="/forgot-password" 
+                class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors cursor-pointer"
+              >
+                Forgot password?
+              </Link>
+            </div>
             <div class="relative">
               <input
                 id="password"
@@ -68,16 +76,16 @@
                 autocomplete="current-password"
                 required
                 :class="[
-                  'w-full px-4 py-3 bg-white/40 border-0 rounded-2xl text-slate-800 placeholder-slate-500 backdrop-blur-sm transition-all duration-200',
-                  'focus:outline-none focus:ring-2 focus:ring-rose-400/50 focus:bg-white/60',
-                  errors.password ? 'ring-2 ring-red-400/50' : ''
+                  'w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors duration-200',
+                  'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                  errors.password ? 'border-red-300 dark:border-red-700' : 'border-slate-300 dark:border-slate-700'
                 ]"
-                placeholder="Enter your password"
+                placeholder="••••••••"
               />
               <button
                 type="button"
                 @click="showPassword = !showPassword"
-                class="absolute right-3 top-3.5 text-slate-500 hover:text-slate-700 transition-colors"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
               >
                 <svg v-if="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -88,30 +96,18 @@
                 </svg>
               </button>
             </div>
-            <p v-if="errors.password" class="text-red-600 text-sm">{{ errors.password[0] }}</p>
-          </div>
-
-          <!-- Forgot Password -->
-          <div class="text-right">
-            <Link href="/forgot-password" class="text-sm text-slate-600 hover:text-slate-800 transition-colors">
-              Forgot your password?
-            </Link>
+            <p v-if="errors.password" class="text-red-600 dark:text-red-400 text-sm">{{ errors.password[0] }}</p>
           </div>
 
           <!-- Sign In Button -->
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full py-3 px-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <span v-if="!isLoading" class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-              </svg>
-              Sign in
-            </span>
-            <span v-else class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <span v-if="!isLoading">Sign in</span>
+            <span v-else class="flex items-center gap-2">
+              <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -122,10 +118,10 @@
           <!-- Divider -->
           <div v-if="googleLoginEnabled" class="relative my-6">
             <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-slate-300"></div>
+              <div class="w-full border-t border-slate-200 dark:border-slate-800"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-              <span class="px-4 bg-transparent text-slate-600">Or continue with</span>
+              <span class="px-3 bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400">Or continue with</span>
             </div>
           </div>
 
@@ -134,7 +130,7 @@
             v-if="googleLoginEnabled"
             type="button"
             @click="handleGoogleLogin"
-            class="w-full py-3 px-4 bg-white/60 hover:bg-white/80 text-slate-700 font-medium rounded-2xl backdrop-blur-sm transition-all duration-200 flex items-center justify-center gap-3 border border-slate-200 hover:border-slate-300"
+            class="w-full py-2.5 px-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 border border-slate-300 dark:border-slate-700"
           >
             <svg class="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -146,19 +142,106 @@
           </button>
 
           <!-- Google Login Error -->
-          <div v-if="googleLoginError" class="p-4 bg-red-500/20 border border-red-400/30 rounded-2xl backdrop-blur-sm">
-            <p class="text-red-700 text-sm font-medium">{{ googleLoginError }}</p>
+          <div v-if="googleLoginError" class="p-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-lg">
+            <p class="text-red-700 dark:text-red-400 text-sm">{{ googleLoginError }}</p>
           </div>
         </form>
 
-        <!-- Login Link -->
+        <!-- Sign Up Link -->
         <div class="mt-8 text-center">
-          <p class="text-slate-600">
+          <p class="text-sm text-slate-600 dark:text-slate-400">
             Don't have an account?
-            <Link href="/register" class="text-slate-800 font-semibold hover:text-rose-600 transition-colors ml-1">
+            <Link href="/register" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors cursor-pointer ml-1">
               Create account
             </Link>
           </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Feature Showcase -->
+    <div class="hidden lg:flex flex-1 bg-slate-50 dark:bg-slate-900 items-center justify-center p-12 relative overflow-hidden">
+      <!-- Subtle gradient background -->
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-50 dark:from-blue-950/20 to-slate-50 dark:to-slate-900"></div>
+      
+      <!-- Grid pattern -->
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMDMiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-40 dark:opacity-20"></div>
+
+      <div class="relative z-10 max-w-lg">
+        <!-- Feature Content -->
+        <div class="mb-8">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-6 border border-blue-200 dark:border-blue-900">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>Trusted by 50,000+ teams</span>
+          </div>
+          <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-4 leading-tight">
+            Ship faster with<br />better workflow
+          </h2>
+          <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+            Join thousands of teams using Asira to manage projects, track progress, and collaborate seamlessly.
+          </p>
+        </div>
+
+        <!-- Feature List -->
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900 dark:text-white mb-1">Multiple views</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Kanban, List, Timeline, and Calendar views for every workflow</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900 dark:text-white mb-1">Real-time collaboration</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Work together with your team in real-time</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900 dark:text-white mb-1">Advanced reporting</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Gain insights with powerful analytics and reports</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial -->
+        <div class="mt-12 p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+          <div class="flex gap-1 mb-3">
+            <svg v-for="i in 5" :key="i" class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          </div>
+          <p class="text-slate-600 dark:text-slate-400 mb-4 text-sm leading-relaxed">
+            "Asira transformed how our team works. The interface is clean, fast, and intuitive. We're shipping features 2x faster."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+              SM
+            </div>
+            <div>
+              <div class="font-semibold text-slate-900 dark:text-white text-sm">Sarah Mitchell</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400">Head of Product, TechCorp</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -207,37 +290,11 @@ const handleLogin = async () => {
 }
 
 const handleGoogleLogin = () => {
-  // Redirect to Google OAuth
   window.location.href = '/auth/google'
 }
 </script>
 
 <style scoped>
-/* Glassmorphism card */
-.glass-card {
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-/* Floating animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-10px) rotate(1deg); }
-  66% { transform: translateY(-5px) rotate(-1deg); }
-}
-
-.animate-float {
-  animation: float 8s ease-in-out infinite;
-}
-
-/* Smooth transitions */
-* {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="relative">
     <!-- Workspace Switcher Trigger Button -->
     <button
@@ -134,11 +134,10 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { Link, router, usePage } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 import { useSidebarData } from '@/Composables/useSidebarData'
+import { useActiveWorkspace } from '@/Composables/useActiveWorkspace'
 import { onWorkspaceSwitched } from '@/Utils/cacheManager'
-
-const STORAGE_KEY = 'asira_active_workspace'
 
 const props = defineProps({
   collapsed: {
@@ -149,37 +148,18 @@ const props = defineProps({
 
 const emit = defineEmits(['workspace-changed', 'close'])
 
-const page = usePage()
 const isOpen = ref(false)
 const searchQuery = ref('')
-const storedWorkspaceId = ref(null)
 
-// Use composable for workspace data
+// Use composables for workspace data
 const { userWorkspaces, isOwnerOfAnyWorkspace } = useSidebarData()
+const { activeWorkspace, switchWorkspace: setActiveWorkspaceHelper, initializeActiveWorkspace } = useActiveWorkspace(userWorkspaces)
 
 onMounted(() => {
-  // Try to load from auth props first (database)
-  const authWorkspaceId = page.props.auth?.user?.active_workspace_id
-  if (authWorkspaceId) {
-    storedWorkspaceId.value = authWorkspaceId
-    localStorage.setItem(STORAGE_KEY, authWorkspaceId)
-  } else {
-    // Fall back to localStorage
-    const stored = localStorage.getItem(STORAGE_KEY)
-    storedWorkspaceId.value = stored
+  // Initialize active workspace on component mount
+  if (userWorkspaces.value && userWorkspaces.value.length > 0) {
+    initializeActiveWorkspace(userWorkspaces.value)
   }
-})
-
-// Find active workspace - prioritize stored workspace from localStorage
-const activeWorkspace = computed(() => {
-  // If we have a stored workspace ID and it exists in user workspaces, use it
-  if (storedWorkspaceId.value) {
-    const stored = userWorkspaces.value.find(w => w.id === storedWorkspaceId.value)
-    if (stored) return stored
-  }
-  
-  // Default to first workspace
-  return userWorkspaces.value[0] || null
 })
 
 // Filter workspaces by search query
@@ -200,23 +180,8 @@ const switchWorkspace = async (workspace) => {
     // Clear cache before switching
     onWorkspaceSwitched()
     
-    // Save to localStorage
-    localStorage.setItem(STORAGE_KEY, workspace.id)
-    storedWorkspaceId.value = workspace.id
-    
-    // Save to database (optional but recommended)
-    try {
-      await fetch('/api/user/active-workspace', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content,
-        },
-        body: JSON.stringify({ workspace_id: workspace.id }),
-      })
-    } catch (error) {
-      console.error('Failed to save active workspace:', error)
-    }
+    // Update browser storage via helper
+    setActiveWorkspaceHelper(workspace)
     
     // Navigate to workspace
     router.visit(`/workspace/${workspace.id}/dashboard`)
@@ -227,3 +192,4 @@ const switchWorkspace = async (workspace) => {
   emit('close')
 }
 </script>
+

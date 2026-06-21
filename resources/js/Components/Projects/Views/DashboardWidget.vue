@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     :data-widget-id="widgetId"
     class="bg-white rounded-lg border border-gray-200 shadow-sm transition-all select-none"
@@ -106,3 +106,4 @@ const handleHide = () => {
   emit('hide')
 }
 </script>
+

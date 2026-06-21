@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <!-- Backdrop -->
   <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click.self="$emit('close')">
     <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
@@ -102,3 +102,4 @@ const send = async () => {
   }
 }
 </script>
+

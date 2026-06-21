@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div
       class="min-h-[48px] w-full px-3 py-2 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent bg-white flex flex-wrap gap-2 cursor-text"
@@ -82,3 +82,4 @@ const onPaste = (e) => {
 // Expose commit so parents can flush the input before submitting
 defineExpose({ commit, invalidCount })
 </script>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="bg-white border border-gray-200 rounded-xl p-4">
     <div class="flex flex-wrap items-end gap-3">
 
@@ -13,7 +13,7 @@
             class="w-full h-9 text-sm border border-gray-300 rounded-lg px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
-        <span class="text-gray-400 text-sm pb-2">→</span>
+        <span class="text-gray-400 text-sm pb-2">â†’</span>
         <div class="flex-1">
           <label class="block text-xs font-medium text-gray-600 mb-1">To</label>
           <input
@@ -42,7 +42,7 @@
       <div class="min-w-[160px]">
         <label class="block text-xs font-medium text-gray-600 mb-1">
           Assignee
-          <span v-if="loadingAssignees" class="ml-1 text-indigo-500">↻</span>
+          <span v-if="loadingAssignees" class="ml-1 text-indigo-500">â†»</span>
         </label>
         <select
           :value="localFilters.assignee_id ?? ''"
@@ -113,7 +113,7 @@ function update(key, value) {
   emit('update:filters', { ...localFilters })
 }
 
-// ── Project status options (matches projects.status enum) ───────────────────
+// â”€â”€ Project status options (matches projects.status enum) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const projectStatusOptions = [
   { value: 'on_track',  label: 'On Track'  },
   { value: 'at_risk',   label: 'At Risk'   },
@@ -122,7 +122,7 @@ const projectStatusOptions = [
   { value: 'complete',  label: 'Complete'  },
 ]
 
-// ── Assignee cascade ────────────────────────────────────────────────────────
+// â”€â”€ Assignee cascade â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const assigneeOptions  = ref([...props.allMembers])
 const loadingAssignees = ref(false)
 
@@ -157,3 +157,4 @@ async function onProjectChange(value) {
   emit('project-changed', projectId)
 }
 </script>
+

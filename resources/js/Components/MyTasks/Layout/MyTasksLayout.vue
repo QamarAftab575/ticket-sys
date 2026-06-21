@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex h-screen bg-gray-50">
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div
     @click="$emit('click')"
     class="bg-white p-3 rounded-lg border transition-all select-none"
@@ -96,3 +96,4 @@ function handleDateChange({ startDate, endDate }) {
   })
 }
 </script>
+

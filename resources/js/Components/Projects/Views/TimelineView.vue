@@ -1,7 +1,7 @@
-<template>
+﻿<template>
   <div class="flex flex-col h-full bg-white overflow-hidden">
 
-    <!-- ── Top Controls ──────────────────────────────────────────────────── -->
+    <!-- â”€â”€ Top Controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <div class="flex items-center justify-between gap-4 px-4 py-2 bg-white border-b flex-shrink-0">
       <div class="flex items-center gap-2">
         <button @click="shiftTimeline(-1)" class="p-1.5 rounded hover:bg-gray-100 transition-colors" :title="`Previous ${zoomLevel.toLowerCase()}`">
@@ -52,10 +52,10 @@
       </div>
     </div>
 
-    <!-- ── Main Layout ────────────────────────────────────────────────────── -->
+    <!-- â”€â”€ Main Layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
     <div class="flex flex-1 overflow-hidden">
 
-      <!-- ── LEFT SIDEBAR: simple flat task list, fully independent ──────── -->
+      <!-- â”€â”€ LEFT SIDEBAR: simple flat task list, fully independent â”€â”€â”€â”€â”€â”€â”€â”€ -->
       <div class="w-64 border-r bg-white flex flex-col flex-shrink-0 z-30">
         <!-- Header spacer matches the two-row date header height -->
         <div class="h-16 border-b bg-gray-50 flex items-end px-4 pb-2 flex-shrink-0">
@@ -142,14 +142,14 @@
                 class="flex items-center px-3 border-b border-gray-100 hover:bg-blue-50/30 transition-colors flex-shrink-0"
                 :style="{ height: ROW_HEIGHT_LANE + 'px' }"
               >
-                <span class="text-xs text-gray-400 italic">Click timeline to add task →</span>
+                <span class="text-xs text-gray-400 italic">Click timeline to add task â†’</span>
               </div>
             </template>
           </template>
         </div>
       </div>
 
-      <!-- ── RIGHT TIMELINE: independent lane-packed scheduler ───────────── -->
+      <!-- â”€â”€ RIGHT TIMELINE: independent lane-packed scheduler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
       <div class="flex-1 flex flex-col overflow-hidden relative">
 
         <!-- Empty state when no dated tasks -->
@@ -210,7 +210,7 @@
           </div>
         </div>
 
-        <!-- Scrollable grid — independent scroll, height driven by lanes only -->
+        <!-- Scrollable grid â€” independent scroll, height driven by lanes only -->
         <div 
           class="flex-1" 
           :class="zoomLevel === 'Day' ? 'overflow-y-auto overflow-x-hidden' : 'overflow-auto'"
@@ -359,7 +359,7 @@ const props = defineProps({
 
 const emit = defineEmits(['select-task', 'update-task', 'create-task', 'toggle-complete'])
 
-// ─── Date Utilities ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Date Utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 /**
  * Normalize any date input to local midnight Date object
  * Prevents timezone offset issues
@@ -409,7 +409,7 @@ const addDays = (date, days) => {
   return dateToISO(d)
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const ROW_HEIGHT_GROUP = 40  // section header row height
 const ROW_HEIGHT_LANE = 40   // timeline lane row height
 
@@ -440,7 +440,7 @@ const ZOOM_CONFIG = {
 
 const ZOOM_LEVELS = ['Month', 'Week', 'Day'] // Order: least to most detail
 
-// ─── Helper Functions ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Helper Functions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const initTimelineStart = () => {
   const d = new Date()
   // For Month view (default), start 1 month back to show prev + current + next
@@ -458,7 +458,7 @@ const getWeekStart = (date) => {
   return d
 }
 
-// ─── State ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const zoomLevel = ref('Month') // Default to Month view
 const groupBy = ref('section')
 const collapsedGroups = ref(new Set())
@@ -467,7 +467,7 @@ const timelineStart = ref(initTimelineStart())
 const headerScrollLeft = ref(0)
 const gridRef = ref(null)
 
-// ─── Computed Cell Width ──────────────────────────────────────────────────────
+// â”€â”€â”€ Computed Cell Width â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const CELL_WIDTH = computed(() => {
   const config = ZOOM_CONFIG[zoomLevel.value]
   
@@ -480,7 +480,7 @@ const CELL_WIDTH = computed(() => {
   return config?.cellWidth ?? 40 // Default to 40 if undefined
 })
 
-// ─── Zoom ─────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Zoom â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const zoomIn = () => {
   const i = ZOOM_LEVELS.indexOf(zoomLevel.value)
   if (i < ZOOM_LEVELS.length - 1) zoomLevel.value = ZOOM_LEVELS[i + 1]
@@ -490,7 +490,7 @@ const zoomOut = () => {
   if (i > 0) zoomLevel.value = ZOOM_LEVELS[i - 1]
 }
 
-// ─── Visible dates ────────────────────────────────────────────────────────────
+// â”€â”€â”€ Visible dates â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const visibleDates = computed(() => {
   const config = ZOOM_CONFIG[zoomLevel.value]
   const dates = []
@@ -510,7 +510,7 @@ const visibleDates = computed(() => {
   return dates
 })
 
-// ─── Month spans (with memoization) ───────────────────────────────────────────
+// â”€â”€â”€ Month spans (with memoization) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const monthHeadersCache = new Map()
 
 const visibleMonths = computed(() => {
@@ -550,7 +550,7 @@ const visibleMonths = computed(() => {
 
 const totalWidth = computed(() => visibleDates.value.length * CELL_WIDTH.value)
 
-// ─── Today indicator with off-screen detection ────────────────────────────────
+// â”€â”€â”€ Today indicator with off-screen detection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const todayInfo = computed(() => {
   const today = normalizeDate(new Date())
   const todayStr = dateToISO(today)
@@ -583,11 +583,11 @@ const columnGridCSS = computed(() =>
   `repeating-linear-gradient(to right, transparent 0px, transparent ${CELL_WIDTH.value - 1}px, #e5e7eb ${CELL_WIDTH.value - 1}px, #e5e7eb ${CELL_WIDTH.value}px)`
 )
 
-// ─── Task data ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Task data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const datedTasks = computed(() => (props.tasks ?? []).filter(t => t.start_date || t.due_date))
 const noDateTasks = computed(() => (props.tasks ?? []).filter(t => !t.start_date && !t.due_date))
 
-// ─── Visible tasks filter (only tasks in visible timeline range) ─────────────
+// â”€â”€â”€ Visible tasks filter (only tasks in visible timeline range) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const visibleDatedTasks = computed(() => {
   if (!visibleDates.value.length) return datedTasks.value
   
@@ -604,7 +604,7 @@ const visibleDatedTasks = computed(() => {
   })
 })
 
-// ─── LEFT SIDEBAR: flat groups, one row per task, fixed height ────────────────
+// â”€â”€â”€ LEFT SIDEBAR: flat groups, one row per task, fixed height â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Shows only tasks visible in the current timeline range
 const flatGroups = computed(() => {
   if (groupBy.value === 'none') {
@@ -633,7 +633,7 @@ const flatGroups = computed(() => {
   return Array.from(map.values())
 })
 
-// ─── RIGHT TIMELINE: lane-packed groups, independent heights ─────────────────
+// â”€â”€â”€ RIGHT TIMELINE: lane-packed groups, independent heights â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const laneCache = new Map()
 
 const packIntoLanes = (tasks, groupKey) => {
@@ -685,7 +685,7 @@ const packedGroups = computed(() => {
   return flatGroups.value.map(g => ({ ...g, lanes: packIntoLanes(g.tasks, g.id) }))
 })
 
-// ─── Grid height (timeline only — sidebar is independent) ─────────────────────
+// â”€â”€â”€ Grid height (timeline only â€” sidebar is independent) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const gridHeight = computed(() => {
   let h = 0
   packedGroups.value.forEach(group => {
@@ -698,7 +698,7 @@ const gridHeight = computed(() => {
   return Math.max(h, 200)
 })
 
-// ─── Inline task creation ─────────────────────────────────────────────────────
+// â”€â”€â”€ Inline task creation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const creatingTask = ref(null)
 const createInputRef = ref(null)
 const createInputValue = ref('')
@@ -805,12 +805,12 @@ const handleAddTaskClick = (group) => {
   })
 }
 
-// ─── Grid scroll (header sync only — sidebar is independent) ─────────────────
+// â”€â”€â”€ Grid scroll (header sync only â€” sidebar is independent) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const onGridScroll = () => {
   headerScrollLeft.value = gridRef.value?.scrollLeft ?? 0
 }
 
-// ─── Navigation (zoom-aware) ──────────────────────────────────────────────────
+// â”€â”€â”€ Navigation (zoom-aware) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const shiftTimeline = (direction) => {
   const config = ZOOM_CONFIG[zoomLevel.value]
   const d = normalizeDate(timelineStart.value)
@@ -867,7 +867,7 @@ const toggleGroup = (id) => {
 
 const handleTaskUpdate = (update) => emit('update-task', update)
 
-// ─── Lifecycle & Cleanup ──────────────────────────────────────────────────────
+// â”€â”€â”€ Lifecycle & Cleanup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Trigger for cell width recalculation in Day view
 const viewportWidth = ref(0)
 
@@ -940,3 +940,4 @@ onUnmounted(() => {
   opacity: 0;
 }
 </style>
+

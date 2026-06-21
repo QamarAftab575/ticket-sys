@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="project-header border-b pb-6">
     <!-- Header with icon, name, and status -->
     <div class="flex justify-between items-start mb-6">
@@ -37,7 +37,7 @@
               class="text-gray-600"
               title="Private project"
             >
-              🔒
+              ðŸ”’
             </span>
           </div>
           <p class="text-gray-600 mt-2">{{ project.description }}</p>
@@ -82,7 +82,7 @@
             @click="showMoreMenu = !showMoreMenu"
             class="px-4 py-2 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 text-sm font-medium"
           >
-            ⋯
+            â‹¯
           </button>
 
           <!-- Dropdown menu -->
@@ -256,3 +256,4 @@ const deleteProject = () => {
   showMoreMenu.value = false
 }
 </script>
+

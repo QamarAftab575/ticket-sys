@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="project-settings-page">
     <div class="mb-6">
       <h1 class="text-3xl font-bold text-gray-900">Project Settings</h1>
@@ -220,3 +220,4 @@ const deleteProject = () => {
   }
 }
 </script>
+

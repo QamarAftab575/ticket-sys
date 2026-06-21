@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50" @click.self="$emit('close')">
     <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 flex flex-col max-h-[90vh]">
 
@@ -159,7 +159,7 @@
               </div>
             </div>
 
-            <!-- Workspace owner — always fixed as Project admin -->
+            <!-- Workspace owner â€” always fixed as Project admin -->
             <div v-if="workspaceOwner" class="flex items-center gap-3 py-2">
               <div
                 class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0"
@@ -262,8 +262,8 @@
               </div>
               <div class="flex-1 min-w-0">
                 <p class="text-sm text-gray-700 truncate">{{ inv.email }}</p>
-                <p v-if="resentIds[inv.id]" class="text-xs text-green-600">✓ Invite re-sent successfully!</p>
-                <p v-else class="text-xs text-amber-500">⏳ Pending acceptance</p>
+                <p v-if="resentIds[inv.id]" class="text-xs text-green-600">âœ“ Invite re-sent successfully!</p>
+                <p v-else class="text-xs text-amber-500">â³ Pending acceptance</p>
               </div>
               <div class="flex items-center gap-1 flex-shrink-0">
                 <!-- Resend icon button -->
@@ -362,7 +362,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
-  /** workspace or project object — must have .id, .name, .visibility, .organization_id */
+  /** workspace or project object â€” must have .id, .name, .visibility, .organization_id */
   context: { type: Object, required: true },
 })
 
@@ -409,7 +409,7 @@ const toggleMemberMenu = (id, event) => {
   openMemberMenu.value = openMemberMenu.value === id ? null : id
 }
 
-// Close menu when clicking outside — use stopPropagation on toggle instead
+// Close menu when clicking outside â€” use stopPropagation on toggle instead
 const handleOutsideClick = (e) => {
   if (!e.target.closest('[data-member-menu]')) openMemberMenu.value = null
 }
@@ -481,10 +481,10 @@ const submitInvite = async () => {
     const data = await res.json()
     if (res.ok) {
       if (data.member) {
-        // Workspace member — added directly, show in members list immediately
+        // Workspace member â€” added directly, show in members list immediately
         members.value.push(data.member)
       } else {
-        // External user — show as pending invitation
+        // External user â€” show as pending invitation
         invitations.value.push(data.invitation)
       }
       inviteEmail.value = ''
@@ -643,3 +643,4 @@ const avatarColor = (name) => {
   return colors[(name?.charCodeAt(0) || 0) % colors.length]
 }
 </script>
+

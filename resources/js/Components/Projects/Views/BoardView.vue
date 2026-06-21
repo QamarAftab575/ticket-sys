@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div ref="scrollContainerRef" class="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
     <div class="flex gap-4 min-w-full pb-4 md:min-w-0 items-start">
 
@@ -151,14 +151,14 @@ const emit = defineEmits([
   'select-task', 'task-created', 'task-move', 'add-section', 'sections-reordered', 'update-dates',
 ])
 
-// ── helpers ───────────────────────────────────────────────────────────────
+// â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const getTasksForSection = (sectionId) => {
   const sectionTasks = (Array.isArray(props.tasks) ? props.tasks : []).filter((t) => t.section_id === sectionId)
   // Sort by position to maintain order
   return sectionTasks.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
 }
 
-// ── inline task creation ──────────────────────────────────────────────────
+// â”€â”€ inline task creation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const creatingInSection = ref(null)
 const newTaskName = ref('')
 const inputRefs = ref({})
@@ -193,7 +193,7 @@ const onBlur = (sectionId) => {
   newTaskName.value = ''
 }
 
-// ── add section ───────────────────────────────────────────────────────────
+// â”€â”€ add section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const isAddingSection = ref(false)
 const newSectionName = ref('')
 const sectionInputRef = ref(null)
@@ -216,12 +216,12 @@ const cancelAddSection = () => {
   newSectionName.value = ''
 }
 
-// ── card (task) drag & drop ───────────────────────────────────────────────
+// â”€â”€ card (task) drag & drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const draggingTaskId = ref(null)
-// { sectionId, beforeTaskId } — beforeTaskId = '__end__' means append
+// { sectionId, beforeTaskId } â€” beforeTaskId = '__end__' means append
 const cardDropTarget = ref(null)
 
-// ── auto-scroll during drag ───────────────────────────────────────────────
+// â”€â”€ auto-scroll during drag â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const scrollContainerRef = ref(null)
 let autoScrollInterval = null
 const SCROLL_EDGE_SIZE = 100 // pixels from edge to trigger scroll
@@ -358,7 +358,7 @@ function onCardDrop(event, sectionId, beforeTaskId) {
   emit('task-move', { taskId, fromSectionId, toSectionId: sectionId, position })
 }
 
-// ── section column drag & drop ────────────────────────────────────────────
+// â”€â”€ section column drag & drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const draggingSectionId = ref(null)
 const sectionDropTarget = ref(null)
 
@@ -398,3 +398,4 @@ function onSectionDrop(event, targetId) {
   emit('sections-reordered', reordered)
 }
 </script>
+

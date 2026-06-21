@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="timeline-view">
     <div class="timeline-header">
       <div class="timeline-labels">
@@ -31,7 +31,7 @@
             :style="getMilestoneStyle(task)"
             @click="selectTask(task)"
           >
-            ◆
+            â—†
           </div>
         </div>
       </div>
@@ -256,3 +256,4 @@ const updateTask = async (updates) => {
   transform: translateX(-50%) scale(1.2);
 }
 </style>
+

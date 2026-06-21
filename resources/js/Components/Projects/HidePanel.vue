@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="bg-white border rounded-lg p-4 mb-4 space-y-3">
     <div class="flex items-center justify-between mb-3">
       <h3 class="font-semibold">Hide columns</h3>
@@ -6,7 +6,7 @@
         @click="$emit('close')"
         class="text-gray-500 hover:text-gray-700"
       >
-        ×
+        Ã—
       </button>
     </div>
 
@@ -47,3 +47,4 @@
 <script setup>
 defineEmits(['close'])
 </script>
+

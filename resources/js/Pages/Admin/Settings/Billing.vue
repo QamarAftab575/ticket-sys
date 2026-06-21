@@ -1,74 +1,130 @@
-<template>
+﻿<template>
   <div class="max-w-2xl space-y-6">
-    <form @submit.prevent="save" class="space-y-6">
-      <!-- Stripe Configuration -->
+    <form @submit.prevent="save" autocomplete="off" class="space-y-6">
+      <!-- Stripe Keys from ENV -->
       <div class="bg-white rounded-lg shadow p-6 space-y-4">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Stripe Configuration</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Stripe API Keys</h2>
         
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Stripe Public Key
+            Stripe Key
           </label>
           <input
-            v-model="form.stripe_public_key"
+            v-model="form.stripe_key"
             type="text"
+            name="stripe_publishable_key"
             placeholder="pk_live_..."
             autocomplete="off"
             spellcheck="false"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           />
-          <p class="text-xs text-gray-500 mt-1">Found in your Stripe Dashboard settings</p>
+          <p v-if="settings?.stripe_key" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.stripe_key }}</p>
         </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Stripe Secret Key
+            Stripe Secret
           </label>
           <input
-            v-model="form.stripe_secret_key"
+            v-model="form.stripe_secret"
             type="password"
+            name="stripe_secret_key"
             placeholder="sk_live_..."
-            autocomplete="off"
+            autocomplete="new-password"
             spellcheck="false"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           />
-          <p class="text-xs text-gray-500 mt-1">Keep this secret - never share publicly</p>
+          <p v-if="settings?.stripe_secret" class="text-xs text-gray-500 mt-1">Current value: ••••••••</p>
         </div>
       </div>
 
-      <!-- Trial Configuration -->
+      <!-- Trial Period from ENV -->
       <div class="bg-white rounded-lg shadow p-6 space-y-4">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Free Trial Settings</h2>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Trial Period Settings</h2>
 
-        <label class="flex items-center gap-3 cursor-pointer">
-          <input
-            v-model="form.trial_enabled"
-            type="checkbox"
-            class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-          />
-          <span class="text-sm font-medium text-gray-900">Enable free trial for new users</span>
-        </label>
-
-        <transition name="fade">
-          <div v-if="form.trial_enabled" class="pt-4 border-t border-gray-200">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Trial Duration (days)
-              </label>
-              <div class="flex items-center gap-3">
-                <input
-                  v-model.number="form.trial_days"
-                  type="number"
-                  min="1"
-                  class="w-24 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                />
-                <span class="text-sm text-gray-600">days</span>
-              </div>
-              <p class="text-xs text-gray-500 mt-1">New users will get {{ form.trial_days }} days free access</p>
-            </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Free Trial Days
+          </label>
+          <div class="flex items-center gap-3">
+            <input
+              v-model.number="form.free_trial_days"
+              type="number"
+              name="trial_days_count"
+              min="0"
+              max="999"
+              autocomplete="off"
+              class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+            <span class="text-sm text-gray-600">days (0 = no trial)</span>
           </div>
-        </transition>
+          <p v-if="settings?.free_trial_days !== undefined && settings?.free_trial_days !== null" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.free_trial_days }} days</p>
+        </div>
       </div>
+
+      <!-- Trial Users Limits -->
+      <div class="bg-white rounded-lg shadow p-6 space-y-4">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Trial Users Limits</h2>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Workspaces per Trial User
+          </label>
+          <div class="flex items-center gap-3">
+            <input
+              v-model.number="form.workspace_for_trial_users"
+              type="number"
+              name="workspace_trial_limit"
+              min="1"
+              max="999"
+              autocomplete="off"
+              class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+            <span class="text-sm text-gray-600">workspace(s)</span>
+          </div>
+          <p v-if="settings?.workspace_for_trial_users !== undefined && settings?.workspace_for_trial_users !== null" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.workspace_for_trial_users }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Projects per Workspace (Trial Users)
+          </label>
+          <div class="flex items-center gap-3">
+            <input
+              v-model.number="form.project_per_workspace_for_trial_users"
+              type="number"
+              name="project_workspace_trial_limit"
+              min="1"
+              max="999"
+              autocomplete="off"
+              class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+            <span class="text-sm text-gray-600">project(s)</span>
+          </div>
+          <p v-if="settings?.project_per_workspace_for_trial_users !== undefined && settings?.project_per_workspace_for_trial_users !== null" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.project_per_workspace_for_trial_users }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Members per Project (Trial Users)
+          </label>
+          <div class="flex items-center gap-3">
+            <input
+              v-model.number="form.members_per_project_for_trial_users"
+              type="number"
+              name="members_project_trial_limit"
+              min="1"
+              max="999"
+              autocomplete="off"
+              class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
+            <span class="text-sm text-gray-600">member(s)</span>
+          </div>
+          <p v-if="settings?.members_per_project_for_trial_users !== undefined && settings?.members_per_project_for_trial_users !== null" class="text-xs text-gray-500 mt-1">Current value: {{ settings?.members_per_project_for_trial_users }}</p>
+        </div>
+      </div>
+
+
 
       <!-- Save Button -->
       <div class="flex justify-end gap-3">
@@ -92,10 +148,12 @@ const props = defineProps({
 })
 
 const form = reactive({
-  stripe_public_key: props.settings?.stripe_public_key ?? '',
-  stripe_secret_key: props.settings?.stripe_secret_key ?? '',
-  trial_enabled: props.settings?.trial_enabled === '1',
-  trial_days: parseInt(props.settings?.trial_days) || 14,
+  stripe_key: props.settings?.stripe_key ?? '',
+  stripe_secret: props.settings?.stripe_secret ?? '',
+  free_trial_days: parseInt(props.settings?.free_trial_days) || 10,
+  workspace_for_trial_users: parseInt(props.settings?.workspace_for_trial_users) || 1,
+  project_per_workspace_for_trial_users: parseInt(props.settings?.project_per_workspace_for_trial_users) || 5,
+  members_per_project_for_trial_users: parseInt(props.settings?.members_per_project_for_trial_users) || 20,
 })
 
 const save = () => {
@@ -111,3 +169,4 @@ const save = () => {
   opacity: 0;
 }
 </style>
+

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div v-if="processedTasks.length === 0 && !isLoading" class="p-4 text-center text-gray-500">
       No tasks found
@@ -106,7 +106,7 @@ const collapsedSectionsArray = computed(() => {
   return [];
 });
 
-// Tasks already have a real section_id from the DB — no mapping needed
+// Tasks already have a real section_id from the DB â€” no mapping needed
 const processedTasks = computed(() => props.tasks);
 
 // Compute members map: task.id -> members array
@@ -156,3 +156,4 @@ function handleSectionCollapsed(sectionId: string) {
   emit('section-collapse-change', sectionId);
 }
 </script>
+
