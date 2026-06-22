@@ -4,180 +4,176 @@
     <div
       v-if="notification.show"
       :class="[
-        'fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white text-sm font-medium z-50 transition-opacity',
+        'fixed top-4 right-4 px-6 py-3 rounded-xl shadow-lg text-white text-sm font-medium z-50 transition-opacity',
         notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
       ]"
     >
       {{ notification.message }}
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Workspace Header -->
-      <div class="mb-8">
-        <div class="flex items-center gap-4 mb-6">
-          <div
-            :style="{ backgroundColor: workspace.avatar_color }"
-            class="w-16 h-16 rounded-lg flex items-center justify-center text-white text-2xl font-bold"
-          >
-            {{ workspace.name.charAt(0).toUpperCase() }}
-          </div>
-          <div class="flex-1">
-            <h1 class="text-3xl font-bold text-gray-900">{{ workspace.name }}</h1>
-            <p v-if="workspace.description" class="text-gray-600 mt-1">{{ workspace.description }}</p>
+    <div class="min-h-screen bg-gray-50/50 py-8">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <!-- Workspace Header -->
+        <div class="mb-8">
+          <div class="flex items-center gap-4">
+            <div
+              :style="{ backgroundColor: workspace.avatar_color }"
+              class="w-14 h-14 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-sm"
+            >
+              {{ workspace.name.charAt(0).toUpperCase() }}
+            </div>
+            <div class="flex-1">
+              <h1 class="text-2xl font-bold text-gray-900">{{ workspace.name }}</h1>
+              <p v-if="workspace.description" class="text-gray-600 text-sm mt-0.5">{{ workspace.description }}</p>
+            </div>
           </div>
         </div>
 
         <!-- Tabs -->
-        <div class="border-b border-gray-200">
-          <nav class="flex gap-8" aria-label="Tabs">
+        <div class="mb-8">
+          <nav class="flex gap-6 border-b border-gray-200" aria-label="Tabs">
             <button
               v-for="tab in tabs"
               :key="tab.id"
               @click="activeTab = tab.id"
               :class="[
-                'py-4 px-1 border-b-2 font-medium text-sm transition-colors',
+                'py-3 px-1 border-b-2 font-medium text-sm transition-colors cursor-pointer',
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               ]"
             >
               {{ tab.label }}
             </button>
           </nav>
         </div>
-      </div>
 
-      <!-- Tab Content -->
-      <div>
-        <!-- Overview Tab -->
-        <div v-if="activeTab === 'overview'" class="space-y-8">
-          <!-- Getting Started Card -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Finish setting up your workspace</h2>
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">{{ setupProgress.completed }} of {{ setupProgress.total }} steps completed</span>
-                <span class="text-sm font-medium text-gray-900">{{ setupProgress.percentage }}%</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  class="bg-blue-600 h-2 rounded-full transition-all"
-                  :style="{ width: setupProgress.percentage + '%' }"
-                />
-              </div>
-              <div class="space-y-2 mt-6">
-                <button
-                  v-for="step in setupProgress.steps"
-                  :key="step.id"
-                  @click="handleSetupStep(step.id)"
-                  :class="[
-                    'w-full flex items-center gap-3 p-3 rounded-lg border transition-colors',
-                    step.completed
-                      ? 'bg-green-50 border-green-200'
-                      : 'bg-gray-50 border-gray-200 hover:border-blue-300'
-                  ]"
-                >
-                  <div
-                    :class="[
-                      'w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold',
-                      step.completed ? 'bg-green-500' : 'bg-gray-300'
-                    ]"
-                  >
-                    {{ step.completed ? 'âœ“' : 'â—‹' }}
+        <!-- Tab Content -->
+        <div>
+          <!-- Overview Tab -->
+          <div v-if="activeTab === 'overview'">
+            <!-- Two Column Layout: Projects + Private Notes -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+              <!-- Left Column: Projects Section -->
+              <div class="space-y-6 flex flex-col">
+                <ProjectsSection :projects="projects" />
+                
+                <!-- Getting Started Card (if not complete) -->
+                <div v-if="setupProgress.percentage < 100" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                  <h2 class="text-base font-semibold text-gray-900 mb-4">Finish setting up</h2>
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs text-gray-600">{{ setupProgress.completed }} of {{ setupProgress.total }} completed</span>
+                      <span class="text-xs font-medium text-gray-900">{{ setupProgress.percentage }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5">
+                      <div
+                        class="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                        :style="{ width: setupProgress.percentage + '%' }"
+                      />
+                    </div>
+                    <div class="space-y-2 mt-4">
+                      <button
+                        v-for="step in setupProgress.steps"
+                        :key="step.id"
+                        @click="handleSetupStep(step.id)"
+                        :class="[
+                          'w-full flex items-center gap-3 p-3 rounded-lg border transition-all duration-150 cursor-pointer',
+                          step.completed
+                            ? 'bg-green-50/50 border-green-200 opacity-60'
+                            : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-sm'
+                        ]"
+                      >
+                        <div
+                          :class="[
+                            'w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0',
+                            step.completed ? 'bg-green-500' : 'bg-gray-300'
+                          ]"
+                        >
+                          <svg v-if="step.completed" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                          </svg>
+                        </div>
+                        <span :class="['text-sm', step.completed ? 'text-green-700 line-through' : 'text-gray-700 font-medium']">
+                          {{ step.title }}
+                        </span>
+                      </button>
+                    </div>
                   </div>
-                  <span :class="step.completed ? 'text-green-700 line-through' : 'text-gray-700'">
-                    {{ step.title }}
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Projects Section -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-semibold text-gray-900">Projects</h2>
-              <Link href="/projects/create" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                + New Project
-              </Link>
-            </div>
-            <div v-if="projects.length > 0" class="space-y-3">
-              <div v-for="project in projects" :key="project.id" class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
-                <div>
-                  <p class="font-medium text-gray-900">{{ project.name }}</p>
-                  <p class="text-sm text-gray-600">{{ project.members?.length || 0 }} members</p>
                 </div>
-                <Link :href="`/projects/${project.id}`" class="text-blue-600 hover:text-blue-700">
-                  View â†’
-                </Link>
+
+                <!-- Workspace Members Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                  <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-base font-semibold text-gray-900">
+                      Members <span class="text-gray-500 font-normal">({{ members.length }}<template v-if="pendingInvitations.length > 0"> + {{ pendingInvitations.length }} pending</template>)</span>
+                    </h2>
+                    <button
+                      v-if="canManageMembers()"
+                      @click="showInviteModal = true"
+                      class="text-blue-600 hover:text-blue-700 text-xs font-medium cursor-pointer transition-colors"
+                    >
+                      + Invite
+                    </button>
+                  </div>
+                  <div class="space-y-2.5">
+                    <!-- Active members -->
+                    <div v-for="member in members.slice(0, 5)" :key="member.id" class="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:border-gray-200 hover:shadow-sm transition-all duration-150">
+                      <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                          {{ member.name.charAt(0).toUpperCase() }}
+                        </div>
+                        <div>
+                          <p class="font-medium text-gray-900 text-sm">{{ member.name }}</p>
+                          <p class="text-xs text-gray-500">{{ member.email }}</p>
+                        </div>
+                      </div>
+                      <span class="text-xs font-medium px-2.5 py-1 bg-blue-50 text-blue-700 rounded-md">
+                        {{ member.organization_memberships?.[0]?.role || 'member' }}
+                      </span>
+                    </div>
+                    <!-- Pending invitations -->
+                    <div v-for="inv in pendingInvitations.slice(0, 2)" :key="inv.id" class="flex items-center justify-between p-3 border border-dashed border-gray-200 rounded-lg opacity-70">
+                      <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-semibold text-xs">
+                          ?
+                        </div>
+                        <p class="text-sm text-gray-600">{{ inv.email }}</p>
+                      </div>
+                      <span :class="['text-xs font-medium px-2.5 py-1 rounded-md', isExpired(inv) ? 'bg-red-50 text-red-600' : 'bg-yellow-50 text-yellow-700']">
+                        {{ isExpired(inv) ? 'Expired' : 'Pending' }}
+                      </span>
+                    </div>
+                    <button
+                      v-if="members.length > 5 || pendingInvitations.length > 2"
+                      @click="activeTab = 'members'"
+                      class="w-full text-center py-2.5 text-xs text-blue-600 hover:text-blue-700 font-medium cursor-pointer transition-colors"
+                    >
+                      View all members
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div v-else class="text-center py-8">
-              <p class="text-gray-600">No projects yet. Create one to get started!</p>
+
+              <!-- Right Column: Private Notes -->
+              <div class="lg:sticky lg:top-6">
+                <PrivateNotesSection />
+              </div>
             </div>
           </div>
 
-          <!-- Workspace Members Section -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-semibold text-gray-900">
-                Workspace Members ({{ members.length }}<template v-if="pendingInvitations.length > 0"> + {{ pendingInvitations.length }} pending</template>)
-              </h2>
+          <!-- Members Tab -->
+          <div v-if="activeTab === 'members'" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-lg font-semibold text-gray-900">Workspace Members</h2>
               <button
                 v-if="canManageMembers()"
                 @click="showInviteModal = true"
-                class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium cursor-pointer transition-colors"
               >
-                + Invite
+                + Invite Member
               </button>
             </div>
-            <div class="space-y-3">
-              <!-- Active members -->
-              <div v-for="member in members" :key="member.id" class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold">
-                    {{ member.name.charAt(0).toUpperCase() }}
-                  </div>
-                  <div>
-                    <p class="font-medium text-gray-900">{{ member.name }}</p>
-                    <p class="text-sm text-gray-500">{{ member.email }}</p>
-                  </div>
-                </div>
-                <span class="text-xs font-medium px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                  {{ member.organization_memberships?.[0]?.role || 'member' }}
-                </span>
-              </div>
-              <!-- Pending invitations -->
-              <div v-for="inv in pendingInvitations" :key="inv.id" class="flex items-center justify-between p-3 border border-dashed border-gray-200 rounded-lg opacity-75">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-bold">
-                    ?
-                  </div>
-                  <p class="text-sm text-gray-600">{{ inv.email }}</p>
-                </div>
-                <span :class="['text-xs font-medium px-2 py-1 rounded', isExpired(inv) ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-700']">
-                  {{ isExpired(inv) ? 'Expired' : 'Pending' }}
-                </span>
-              </div>
-              <div v-if="members.length === 0 && pendingInvitations.length === 0" class="text-center py-8">
-                <p class="text-gray-600">No workspace members yet. Invite someone to collaborate!</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Members Tab -->
-        <div v-if="activeTab === 'members'" class="bg-white rounded-lg shadow p-6">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold text-gray-900">Workspace Members</h2>
-            <button
-              v-if="canManageMembers()"
-              @click="showInviteModal = true"
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
-            >
-              + Invite Member
-            </button>
-          </div>
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead class="bg-gray-50 border-b border-gray-200">
@@ -218,14 +214,14 @@
                       <button
                         v-if="canManageMembers() && member.organization_memberships?.[0]?.role !== 'owner' && member.organization_memberships?.[0]?.is_active !== false"
                         @click="deactivateMember(member.id, member.organization_memberships?.[0]?.id)"
-                        class="text-red-600 hover:text-red-700 text-xs font-medium"
+                        class="text-red-600 hover:text-red-700 text-xs font-medium cursor-pointer"
                       >
                         Deactivate
                       </button>
                       <button
                         v-if="canManageMembers() && member.organization_memberships?.[0]?.role !== 'owner' && member.organization_memberships?.[0]?.is_active === false"
                         @click="activateMember(member.id, member.organization_memberships?.[0]?.id)"
-                        class="text-green-600 hover:text-green-700 text-xs font-medium"
+                        class="text-green-600 hover:text-green-700 text-xs font-medium cursor-pointer"
                       >
                         Activate
                       </button>
@@ -255,14 +251,14 @@
                       <button
                         v-if="canManageMembers() && !isExpired(invitation)"
                         @click="expireInvitation(invitation.id)"
-                        class="text-red-600 hover:text-red-700 text-xs font-medium"
+                        class="text-red-600 hover:text-red-700 text-xs font-medium cursor-pointer"
                       >
                         Expire
                       </button>
                       <button
                         v-if="canManageMembers()"
                         @click="deleteInvitation(invitation.id)"
-                        class="text-gray-500 hover:text-gray-700 text-xs font-medium"
+                        class="text-gray-500 hover:text-gray-700 text-xs font-medium cursor-pointer"
                       >
                         Delete
                       </button>
@@ -277,31 +273,32 @@
           </div>
         </div>
 
-        <!-- Settings Tab -->
-        <div v-if="activeTab === 'settings'" class="space-y-6">
-          <!-- Danger Zone -->
-          <div class="bg-white rounded-lg shadow p-6 border border-red-200">
-            <h2 class="text-lg font-semibold text-gray-900 mb-1">Danger Zone</h2>
-            <p class="text-sm text-gray-500 mb-6">Actions here are permanent and cannot be undone.</p>
+          <!-- Settings Tab -->
+          <div v-if="activeTab === 'settings'" class="space-y-6">
+            <!-- Danger Zone -->
+            <div class="bg-white rounded-xl shadow-sm border border-red-200 p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-1">Danger Zone</h2>
+              <p class="text-sm text-gray-500 mb-6">Actions here are permanent and cannot be undone.</p>
 
-            <div class="flex items-center justify-between p-4 border border-red-200 rounded-lg bg-red-50">
-              <div>
-                <p class="font-medium text-gray-900">Delete this workspace</p>
-                <p class="text-sm text-gray-500 mt-0.5">Permanently deletes the workspace, all projects, tasks, and members. This cannot be undone.</p>
+              <div class="flex items-center justify-between p-4 border border-red-200 rounded-xl bg-red-50">
+                <div>
+                  <p class="font-medium text-gray-900">Delete this workspace</p>
+                  <p class="text-sm text-gray-500 mt-0.5">Permanently deletes the workspace, all projects, tasks, and members. This cannot be undone.</p>
+                </div>
+                <button
+                  @click="deleteStep = 1"
+                  class="ml-6 flex-shrink-0 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
+                >
+                  Delete Workspace
+                </button>
               </div>
-              <button
-                @click="deleteStep = 1"
-                class="ml-6 flex-shrink-0 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Delete Workspace
-              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Delete Workspace Modal â€” Step 1: Warning -->
+    <!-- Delete Workspace Modal – Step 1: Warning -->
     <div v-if="deleteStep === 1" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
         <div class="p-6">
@@ -323,13 +320,13 @@
           <div class="flex gap-3">
             <button
               @click="deleteStep = 0"
-              class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium"
+              class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium cursor-pointer"
             >
               Cancel
             </button>
             <button
               @click="deleteStep = 2"
-              class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium"
+              class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium cursor-pointer"
             >
               Yes, continue
             </button>
@@ -338,7 +335,7 @@
       </div>
     </div>
 
-    <!-- Delete Workspace Modal â€” Step 2: Type name to confirm -->
+    <!-- Delete Workspace Modal – Step 2: Type name to confirm -->
     <div v-if="deleteStep === 2" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
         <div class="p-6">
@@ -357,14 +354,14 @@
           <div class="flex gap-3 mt-4">
             <button
               @click="deleteStep = 0; deleteConfirmName = ''; deleteError = ''"
-              class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium"
+              class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium cursor-pointer"
             >
               Cancel
             </button>
             <button
               @click="confirmDelete"
               :disabled="isDeletingWorkspace || deleteConfirmName.trim().toLowerCase() !== workspace.name.trim().toLowerCase()"
-              class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors"
+              class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors cursor-pointer"
             >
               {{ isDeletingWorkspace ? 'Deleting...' : 'Delete forever' }}
             </button>
@@ -389,6 +386,8 @@ import { ref, reactive, watch } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import InviteModal from '@/Components/Workspace/InviteModal.vue'
+import ProjectsSection from '@/Components/Dashboard/ProjectsSection.vue'
+import PrivateNotesSection from '@/Components/Dashboard/PrivateNotesSection.vue'
 
 const props = defineProps({
   workspace: Object,
@@ -553,4 +552,3 @@ const deleteInvitation = async (invitationId) => {
 // Keep pendingInvitations in sync with props after Inertia reloads
 watch(() => props.invitations, (val) => { pendingInvitations.value = val || [] })
 </script>
-

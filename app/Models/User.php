@@ -381,4 +381,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(ApiToken::class);
     }
+
+    /**
+     * Get the user's private notes
+     */
+    public function privateNote()
+    {
+        return $this->hasOne(PrivateNote::class);
+    }
 }

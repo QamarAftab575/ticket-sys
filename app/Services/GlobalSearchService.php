@@ -49,7 +49,7 @@ class GlobalSearchService
         $offset = ($page - 1) * $limit;
 
         $query = Task::query()
-            ->select('tasks.id', 'tasks.name', 'tasks.project_id', 'tasks.created_at')
+            ->select('tasks.id', 'tasks.name', 'tasks.project_id', 'tasks.status', 'tasks.created_at')
             ->with(['project:id,name'])
             ->where(function ($q) use ($user) {
                 // User created the task
@@ -78,6 +78,7 @@ class GlobalSearchService
                 'id' => $task->id,
                 'name' => $task->name,
                 'project_name' => $task->project?->name,
+                'is_completed' => $task->status === 'complete',
             ])
             ->toArray();
 

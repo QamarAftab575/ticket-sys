@@ -23,6 +23,7 @@ use App\Http\Controllers\ProjectViewController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\WorkspaceDashboardController;
+use App\Http\Controllers\PrivateNoteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\LandingController::class, 'index'])->name('landing');
@@ -86,9 +87,21 @@ Route::middleware(['auth', 'password.set'])->group(function () {
             }
             
             $projects = \App\Models\Project::visibleTo($user)
+                ->select('id', 'name', 'color', 'icon', 'privacy', 'created_at', 'archived_at')
                 ->with('members')
                 ->limit(6)
-                ->get();
+                ->get()
+                ->map(function ($project) {
+                    return [
+                        'id' => $project->id,
+                        'name' => $project->name,
+                        'color' => $project->color ?: '#6366f1', // Default color
+                        'icon' => $project->icon,
+                        'privacy' => $project->privacy,
+                        'members_count' => $project->members->count(),
+                        'archived_at' => $project->archived_at,
+                    ];
+                });
 
             return inertia('Dashboard', [
                 'workspaces' => $workspaces,
@@ -305,6 +318,11 @@ Route::middleware(['auth', 'password.set'])->group(function () {
     Route::get('/attachments/{attachment}', [AttachmentController::class, 'show'])->name('attachments.show');
     Route::get('/attachments/{attachment}/download', [AttachmentController::class, 'download'])->name('attachments.download');
     Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
+
+    // Private Notes routes
+    Route::get('/api/private-note', [PrivateNoteController::class, 'show'])->name('private-note.show');
+    Route::put('/api/private-note', [PrivateNoteController::class, 'update'])->name('private-note.update');
+    Route::delete('/api/private-note', [PrivateNoteController::class, 'destroy'])->name('private-note.destroy');
 });
 
 

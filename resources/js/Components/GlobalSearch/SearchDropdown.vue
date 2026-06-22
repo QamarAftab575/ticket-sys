@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="relative w-full">
     <!-- Search Input -->
     <div class="relative">
@@ -37,10 +37,10 @@
     <!-- Dropdown Content -->
     <div
       v-if="isOpen"
-      class="absolute top-full left-0 right-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto"
+      class="absolute top-full left-0 right-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-2xl z-50 max-h-[600px] overflow-y-auto"
     >
       <!-- Loading State -->
-      <div v-if="loading" class="px-4 py-6 text-center text-gray-500">
+      <div v-if="loading" class="px-4 py-8 text-center text-gray-500">
         <div class="inline-block">
           <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
@@ -49,20 +49,88 @@
         </div>
       </div>
 
-      <!-- Recent Tasks Section -->
-      <div v-if="!loading && results.tasks.length > 0">
-        <div class="px-4 py-2 text-xs font-semibold text-gray-600 uppercase tracking-wider bg-gray-50 border-b">
-          Recent Tasks
-        </div>
+      <!-- Filter Tabs -->
+      <div v-if="!loading && (results.tasks.length > 0 || results.projects.length > 0)" class="flex gap-2 px-4 py-3 border-b border-gray-100 flex-wrap">
+        <button
+          @click="activeTab = 'all'"
+          :class="[
+            'px-4 py-1.5 rounded-full text-sm font-medium transition-all border',
+            activeTab === 'all'
+              ? 'bg-blue-50 border-blue-200 text-blue-700'
+              : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
+          ]"
+        >
+          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          All
+        </button>
+
+        <button
+          v-if="results.tasks.length > 0"
+          @click="activeTab = 'tasks'"
+          :class="[
+            'px-4 py-1.5 rounded-full text-sm font-medium transition-all border',
+            activeTab === 'tasks'
+              ? 'bg-blue-50 border-blue-200 text-blue-700'
+              : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
+          ]"
+        >
+          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+          </svg>
+          Tasks
+        </button>
+
+        <button
+          v-if="results.projects.length > 0"
+          @click="activeTab = 'projects'"
+          :class="[
+            'px-4 py-1.5 rounded-full text-sm font-medium transition-all border',
+            activeTab === 'projects'
+              ? 'bg-blue-50 border-blue-200 text-blue-700'
+              : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
+          ]"
+        >
+          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+          </svg>
+          Projects
+        </button>
+      </div>
+
+      <!-- Recents Label -->
+      <div v-if="!loading && (results.tasks.length > 0 || results.projects.length > 0)" class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        Recents
+      </div>
+
+      <!-- Tasks Section -->
+      <div v-if="!loading && (activeTab === 'all' || activeTab === 'tasks') && results.tasks.length > 0">
         <div class="divide-y">
           <div
             v-for="task in results.tasks"
             :key="task.id"
-            class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition"
+            class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition flex items-start gap-3 group"
             @click="selectTask(task)"
           >
-            <p class="text-sm font-medium text-gray-900">{{ task.name }}</p>
-            <p v-if="task.project_name" class="text-xs text-gray-500">{{ task.project_name }}</p>
+            <!-- Checkbox (completed state) -->
+            <div class="w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 flex-shrink-0 transition-all"
+              :class="task.is_completed 
+                ? 'bg-green-600 border-green-600' 
+                : 'border-gray-300 group-hover:border-green-600'">
+              <svg v-if="task.is_completed" class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
+
+            <!-- Task Content -->
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 group-hover:text-blue-600"
+                :class="task.is_completed ? 'line-through text-gray-500' : ''">
+                {{ task.name }}
+              </p>
+              <p v-if="task.project_name" class="text-xs text-gray-500 mt-0.5">{{ task.project_name }}</p>
+            </div>
           </div>
         </div>
 
@@ -81,30 +149,22 @@
       </div>
 
       <!-- Projects Section -->
-      <div v-if="!loading && results.projects.length > 0">
-        <div class="px-4 py-2 text-xs font-semibold text-gray-600 uppercase tracking-wider bg-gray-50 border-t border-b">
-          Projects
-        </div>
+      <div v-if="!loading && (activeTab === 'all' || activeTab === 'projects') && results.projects.length > 0">
         <div class="divide-y">
           <div
             v-for="project in results.projects"
             :key="project.id"
-            class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition flex items-center gap-3"
+            class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition flex items-center gap-3 group"
             @click="selectProject(project)"
           >
             <!-- Project Icon/Color -->
             <div
-              v-if="project.icon"
-              class="w-5 h-5 flex items-center justify-center text-lg"
+              class="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 text-white font-semibold text-xs"
+              :style="{ backgroundColor: project.color || '#9CA3AF' }"
             >
-              {{ project.icon }}
+              {{ project.name.charAt(0).toUpperCase() }}
             </div>
-            <div
-              v-else
-              class="w-5 h-5 rounded"
-              :style="{ backgroundColor: project.color || '#999' }"
-            />
-            <p class="text-sm font-medium text-gray-900">{{ project.name }}</p>
+            <p class="text-sm font-medium text-gray-900 group-hover:text-blue-600">{{ project.name }}</p>
           </div>
         </div>
       </div>
@@ -112,12 +172,12 @@
       <!-- Empty State -->
       <div
         v-if="!loading && results.tasks.length === 0 && results.projects.length === 0"
-        class="px-4 py-8 text-center text-gray-500"
+        class="px-4 py-12 text-center"
       >
-        <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-        <p class="text-sm">
+        <p class="text-sm text-gray-600 font-medium">
           {{ searchQuery ? 'No tasks or projects found' : 'No recent tasks' }}
         </p>
       </div>
@@ -140,10 +200,12 @@ const searchQuery = ref('')
 const searchInput = ref(null)
 const isOpen = ref(false)
 const loading = ref(false)
+const activeTab = ref('all')
 const results = ref({
   tasks: [],
   projects: [],
   has_more_tasks: false,
+  length: undefined,
 })
 const currentPage = ref(1)
 const allTasks = ref([])
@@ -173,6 +235,7 @@ const handleSearch = async () => {
   clearTimeout(searchTimeout)
   currentPage.value = 1
   allTasks.value = []
+  activeTab.value = 'all'
 
   searchTimeout = setTimeout(async () => {
     await fetchResults()
@@ -193,17 +256,33 @@ const fetchResults = async () => {
       },
     })
 
+    // Axios returns data in response.data
+    const apiData = response.data || response
+
+    // Ensure response has the correct structure
+    const normalizedResponse = {
+      tasks: apiData?.tasks || [],
+      projects: apiData?.projects || [],
+      has_more_tasks: apiData?.has_more_tasks || false,
+    }
+
     if (currentPage.value === 1) {
-      results.value = response
-      allTasks.value = response.tasks
+      results.value = normalizedResponse
+      allTasks.value = normalizedResponse.tasks
     } else {
       // Append tasks for pagination
-      results.value.tasks = [...allTasks.value, ...response.tasks]
+      results.value.tasks = [...allTasks.value, ...normalizedResponse.tasks]
       allTasks.value = results.value.tasks
-      results.value.has_more_tasks = response.has_more_tasks
+      results.value.has_more_tasks = normalizedResponse.has_more_tasks
     }
   } catch (error) {
     console.error('Search error:', error)
+    // Set empty results on error to prevent undefined access
+    results.value = {
+      tasks: [],
+      projects: [],
+      has_more_tasks: false,
+    }
   } finally {
     loading.value = false
   }
