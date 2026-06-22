@@ -20,7 +20,7 @@
     <!-- Task Name -->
     <div class="flex-1 min-w-0">
       <button
-        @click="emit('click', task.id)"
+        @click="emit('click', task)"
         class="text-sm font-medium text-gray-800 hover:text-blue-600 truncate text-left transition-colors"
         :class="{ 'line-through text-gray-400': task.status === 'complete' }"
       >

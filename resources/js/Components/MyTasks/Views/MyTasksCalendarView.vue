@@ -1,11 +1,13 @@
 ﻿<template>
-  <CalendarView
-    :project="null"
-    :tasks="tasks"
-    :is-loading="isLoading"
-    @select-task="$emit('select-task', $event)"
-    @task-completed="$emit('task-completed', $event)"
-  />
+  <div class="p-5">
+    <CalendarView
+      :project="null"
+      :tasks="tasks"
+      :is-loading="isLoading"
+      @select-task="$emit('select-task', $event)"
+      @task-completed="$emit('task-completed', $event)"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

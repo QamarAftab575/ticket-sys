@@ -1,10 +1,12 @@
 ﻿<template>
-  <FilesView
-    :project="null"
-    :tasks="tasks"
-    :is-loading="isLoading"
-    @select-task="$emit('select-task', $event)"
-  />
+  <div class="p-5">
+    <FilesView
+      :project="null"
+      :tasks="tasks"
+      :is-loading="isLoading"
+      @select-task="$emit('select-task', $event)"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

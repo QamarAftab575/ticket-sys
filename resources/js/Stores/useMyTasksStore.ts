@@ -31,6 +31,15 @@ export const useMyTasksStore = defineStore('myTasks', () => {
   const perPage = ref(50);
 
   // Computed
+  const flatTasks = computed<Task[]>(() => {
+    if (Array.isArray(tasks.value)) {
+      return tasks.value;
+    } else if (tasks.value && typeof tasks.value === 'object') {
+      return Object.values(tasks.value).flat() as Task[];
+    }
+    return [];
+  });
+
   const groupedTasks = computed(() => {
     if (!groupBy.value || !Array.isArray(tasks.value)) {
       return {};
@@ -86,9 +95,10 @@ export const useMyTasksStore = defineStore('myTasks', () => {
         params.append('sort', JSON.stringify(sort.value));
       }
 
-      if (groupBy.value) {
-        params.append('grouping', groupBy.value);
-      }
+      // Don't send grouping parameter - always get flat array
+      // if (groupBy.value) {
+      //   params.append('grouping', groupBy.value);
+      // }
 
       const response = await fetch(`/my-tasks/api/tasks?${params.toString()}`, {
         headers: {
@@ -106,12 +116,14 @@ export const useMyTasksStore = defineStore('myTasks', () => {
       
       console.log('Fetched tasks data:', data);
       
-      if (groupBy.value && typeof data.tasks === 'object' && !Array.isArray(data.tasks)) {
-        // Tasks are grouped
+      // Always treat as flat array
+      if (Array.isArray(data.tasks)) {
         tasks.value = data.tasks;
+      } else if (typeof data.tasks === 'object' && data.tasks !== null) {
+        // Flatten if grouped
+        tasks.value = Object.values(data.tasks).flat() as Task[];
       } else {
-        // Tasks are flat array
-        tasks.value = data.tasks || [];
+        tasks.value = [];
       }
       
       console.log('Tasks after assignment:', tasks.value);
@@ -151,7 +163,7 @@ export const useMyTasksStore = defineStore('myTasks', () => {
 
   async function completeTask(taskId: string) {
     try {
-      const task = tasks.value.find(t => t.id === taskId);
+      const task = flatTasks.value.find(t => t.id === taskId);
       if (!task) return;
 
       const newStatus = task.status === 'complete' ? 'to_do' : 'complete';
@@ -207,9 +219,20 @@ export const useMyTasksStore = defineStore('myTasks', () => {
       }
       
       // Remove from local state
-      const index = tasks.value.findIndex(t => t.id === taskId);
-      if (index > -1) {
-        tasks.value.splice(index, 1);
+      if (Array.isArray(tasks.value)) {
+        const index = tasks.value.findIndex(t => t.id === taskId);
+        if (index > -1) {
+          tasks.value.splice(index, 1);
+        }
+      } else {
+        // Tasks are grouped - need to find and remove from the right group
+        Object.keys(tasks.value).forEach(groupKey => {
+          const groupTasks = tasks.value[groupKey];
+          const index = groupTasks.findIndex((t: Task) => t.id === taskId);
+          if (index > -1) {
+            groupTasks.splice(index, 1);
+          }
+        });
       }
 
       // Close sidebar if this task was selected
@@ -237,9 +260,10 @@ export const useMyTasksStore = defineStore('myTasks', () => {
 
   /** Merge incoming task data into the flat tasks array. */
   function patchTask(incoming: Partial<Task> & { id: string }) {
-    const idx = tasks.value.findIndex((t: Task) => t.id === incoming.id);
+    const allTasks = flatTasks.value;
+    const idx = allTasks.findIndex((t: Task) => t.id === incoming.id);
     if (idx !== -1) {
-      tasks.value[idx] = { ...tasks.value[idx], ...incoming };
+      Object.assign(allTasks[idx], incoming);
     }
     if (selectedTask.value?.id === incoming.id) {
       Object.assign(selectedTask.value, incoming);
@@ -248,9 +272,19 @@ export const useMyTasksStore = defineStore('myTasks', () => {
 
   /** Insert a brand-new task assigned to the current user. */
   function addTaskFromEvent(task: Task) {
-    const exists = tasks.value.some((t: Task) => t.id === task.id);
+    const allTasks = flatTasks.value;
+    const exists = allTasks.some((t: Task) => t.id === task.id);
     if (!exists) {
-      tasks.value.push(task);
+      if (Array.isArray(tasks.value)) {
+        tasks.value.push(task);
+      } else {
+        // If grouped, add to appropriate group
+        const groupKey = getDueDateGroup(task.due_date);
+        if (!tasks.value[groupKey]) {
+          tasks.value[groupKey] = [];
+        }
+        tasks.value[groupKey].push(task);
+      }
       totalTasks.value += 1;
     }
   }
@@ -647,6 +681,7 @@ export const useMyTasksStore = defineStore('myTasks', () => {
     perPage,
     
     // Computed
+    flatTasks,
     groupedTasks,
     
     // Actions

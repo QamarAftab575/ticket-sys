@@ -300,11 +300,8 @@ const loadMore = async () => {
  * Navigate to task detail
  */
 const selectTask = (task) => {
-  if (task.project_name) {
-    // Extract project ID from the task object if available
-    // For now, we'll emit the event and let the parent handle navigation
-    window.location.href = `/tasks/${task.id}`
-  }
+  // Redirect to My Tasks page with task ID as query parameter
+  window.location.href = `/my-tasks?task=${task.id}`
   closeDropdown()
 }
 

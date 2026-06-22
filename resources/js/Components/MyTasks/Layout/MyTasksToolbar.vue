@@ -1,295 +1,150 @@
 ﻿<template>
-  <div class="bg-white border-b border-gray-200 px-6 py-3">
-    <div class="flex items-center justify-between">
-      <!-- Left side: View options -->
-      <div class="flex items-center gap-4">
-        <!-- Filter Button -->
-        <div class="relative">
-          <button
-            @click="showFilters = !showFilters"
-            :class="[
-              'flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg border transition',
-              hasActiveFilters 
-                ? 'bg-blue-50 border-blue-200 text-blue-700' 
-                : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-            ]"
-          >
-            <FunnelIcon class="w-4 h-4" />
-            Filter
-            <span v-if="activeFilterCount > 0" class="ml-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">
-              {{ activeFilterCount }}
-            </span>
-          </button>
+  <!-- Toolbar wrapper with sticky positioning on desktop only -->
+  <div class="flex items-center gap-3">
+    <!-- Filter Button -->
+    <button
+      @click="showFilters = !showFilters"
+      :class="[
+        'flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-md transition-colors relative',
+        hasActiveFilters 
+          ? 'text-blue-600 hover:bg-blue-50' 
+          : 'text-gray-700 hover:bg-gray-100'
+      ]"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+      </svg>
+      Filter
+      <span v-if="activeFilterCount > 0" class="ml-0.5 px-1.5 min-w-[20px] h-5 flex items-center justify-center bg-blue-600 text-white text-xs font-semibold rounded-full">
+        {{ activeFilterCount }}
+      </span>
+    </button>
 
-          <!-- Filter Dropdown -->
-          <div
-            v-if="showFilters"
-            class="absolute top-full left-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-20"
-          >
-            <div class="p-4 space-y-4">
-              <div class="flex items-center justify-between">
-                <h3 class="font-medium text-gray-900">Filters</h3>
-                <button
-                  @click="clearAllFilters"
-                  class="text-sm text-gray-500 hover:text-gray-700"
-                >
-                  Clear all
-                </button>
-              </div>
+    <!-- Sort Button -->
+    <button
+      @click="showSort = !showSort"
+      :class="[
+        'flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-md transition-colors',
+        hasActiveSort 
+          ? 'text-blue-600 hover:bg-blue-50' 
+          : 'text-gray-700 hover:bg-gray-100'
+      ]"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+      </svg>
+      Sort
+    </button>
 
-              <!-- Status Filter -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select
-                  v-model="localFilters.status"
-                  @change="updateFilters"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                >
-                  <option value="">All statuses</option>
-                  <option value="to_do">To Do</option>
-                  <option value="in_progress">In Progress</option>
-                  <option value="blocked">Blocked</option>
-                  <option value="in_review">In Review</option>
-                  <option value="complete">Complete</option>
-                </select>
-              </div>
-
-              <!-- Priority Filter -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
-                <select
-                  v-model="localFilters.priority"
-                  @change="updateFilters"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                >
-                  <option value="">All priorities</option>
-                  <option value="urgent">Urgent</option>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
-                </select>
-              </div>
-
-              <!-- Due Date Filter -->
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
-                <select
-                  v-model="localFilters.due_date"
-                  @change="updateFilters"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                >
-                  <option value="">All dates</option>
-                  <option value="overdue">Overdue</option>
-                  <option value="today">Today</option>
-                  <option value="this_week">This Week</option>
-                  <option value="no_due_date">No Due Date</option>
-                </select>
-              </div>
-            </div>
+    <!-- Filter Dropdown Panel -->
+    <Teleport to="body">
+      <div
+        v-if="showFilters"
+        class="fixed inset-0 z-40"
+        @click="showFilters = false"
+      />
+      <div
+        v-if="showFilters"
+        class="fixed z-50 w-80 bg-white border border-gray-200 rounded-lg shadow-xl"
+        :style="filterDropdownStyle"
+      >
+        <div class="p-4">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-900">Filter</h3>
+            <button
+              @click="clearAllFilters"
+              class="text-xs text-gray-500 hover:text-gray-700 font-medium"
+            >
+              Clear all
+            </button>
           </div>
-        </div>
 
-        <!-- Sort Button -->
-        <div class="relative">
-          <button
-            @click="showSort = !showSort"
-            :class="[
-              'flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg border transition',
-              hasActiveSort 
-                ? 'bg-blue-50 border-blue-200 text-blue-700' 
-                : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-            ]"
-          >
-            <ArrowsUpDownIcon class="w-4 h-4" />
-            Sort
-          </button>
-
-          <!-- Sort Dropdown -->
-          <div
-            v-if="showSort"
-            class="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-20"
-          >
-            <div class="p-4 space-y-3">
-              <h3 class="font-medium text-gray-900">Sort by</h3>
-              
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="sort"
-                    value="due_date"
-                    v-model="localSort.field"
-                    @change="updateSort"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Due Date</span>
-                </label>
-                
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="sort"
-                    value="priority"
-                    v-model="localSort.field"
-                    @change="updateSort"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Priority</span>
-                </label>
-                
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="sort"
-                    value="name"
-                    v-model="localSort.field"
-                    @change="updateSort"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Task Name</span>
-                </label>
-                
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="sort"
-                    value="project_name"
-                    v-model="localSort.field"
-                    @change="updateSort"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Project</span>
-                </label>
-              </div>
-
-              <div class="pt-2 border-t">
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    v-model="localSort.descending"
-                    @change="updateSort"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Descending</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Group Button -->
-        <div class="relative">
-          <button
-            @click="showGroup = !showGroup"
-            :class="[
-              'flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg border transition',
-              hasActiveGroup 
-                ? 'bg-blue-50 border-blue-200 text-blue-700' 
-                : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-            ]"
-          >
-            <Squares2X2Icon class="w-4 h-4" />
-            Group
-          </button>
-
-          <!-- Group Dropdown -->
-          <div
-            v-if="showGroup"
-            class="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20"
-          >
-            <div class="p-4 space-y-3">
-              <h3 class="font-medium text-gray-900">Group by</h3>
-              
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="group"
-                    value=""
-                    v-model="localGroup"
-                    @change="updateGroup"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">None</span>
-                </label>
-                
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="group"
-                    value="project"
-                    v-model="localGroup"
-                    @change="updateGroup"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Project</span>
-                </label>
-                
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="group"
-                    value="status"
-                    v-model="localGroup"
-                    @change="updateGroup"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Status</span>
-                </label>
-                
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="group"
-                    value="priority"
-                    v-model="localGroup"
-                    @change="updateGroup"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Priority</span>
-                </label>
-                
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="group"
-                    value="due_date"
-                    v-model="localGroup"
-                    @change="updateGroup"
-                    class="text-blue-600"
-                  />
-                  <span class="text-sm">Due Date</span>
-                </label>
-              </div>
+          <!-- Filters -->
+          <div class="space-y-4">
+            <!-- Due Date Filter -->
+            <div>
+              <label class="block text-xs font-medium text-gray-700 mb-1.5">Due date</label>
+              <select
+                v-model="localFilters.due_date"
+                @change="updateFilters"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Any date</option>
+                <option value="overdue">Overdue</option>
+                <option value="today">Today</option>
+                <option value="this_week">This week</option>
+                <option value="next_week">Next week</option>
+                <option value="no_due_date">No due date</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
+    </Teleport>
 
-      <!-- Right side: Empty for now (view controls moved to header) -->
-    </div>
+    <!-- Sort Dropdown Panel -->
+    <Teleport to="body">
+      <div
+        v-if="showSort"
+        class="fixed inset-0 z-40"
+        @click="showSort = false"
+      />
+      <div
+        v-if="showSort"
+        class="fixed z-50 w-56 bg-white border border-gray-200 rounded-lg shadow-xl"
+        :style="sortDropdownStyle"
+      >
+        <div class="p-3">
+          <h3 class="text-xs font-semibold text-gray-900 mb-2 px-2">Sort by</h3>
+          
+          <div class="space-y-0.5">
+            <button
+              v-for="option in sortOptions"
+              :key="option.value"
+              @click="selectSort(option.value)"
+              class="w-full flex items-center justify-between px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+            >
+              <span>{{ option.label }}</span>
+              <svg v-if="localSort.field === option.value" class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="border-t border-gray-200 mt-2 pt-2">
+            <button
+              @click="toggleSortDirection"
+              class="w-full flex items-center justify-between px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+            >
+              <span>{{ localSort.descending ? 'Descending' : 'Ascending' }}</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="localSort.descending ? 'M19 9l-7 7-7-7' : 'M5 15l7-7 7 7'" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
-import {
-  FunnelIcon,
-  ArrowsUpDownIcon,
-  Squares2X2Icon,
-} from '@heroicons/vue/24/outline';
+import { ref, computed, onMounted, watch, nextTick, Fragment } from 'vue';
 import type { TaskFilter, TaskSort, TaskGroupBy } from '@/Types/tasks';
 
 interface Props {
   initialSort?: TaskSort[];
   initialGroup?: string;
   initialFilters?: any;
+  workspaceMembers?: any[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   initialSort: () => [],
   initialGroup: '',
   initialFilters: () => ({}),
+  workspaceMembers: () => [],
 });
 
 const emit = defineEmits<{
@@ -301,11 +156,11 @@ const emit = defineEmits<{
 // Local state
 const showFilters = ref(false);
 const showSort = ref(false);
-const showGroup = ref(false);
+
+const filterDropdownStyle = ref({});
+const sortDropdownStyle = ref({});
 
 const localFilters = ref({
-  status: '',
-  priority: '',
   due_date: '',
 });
 
@@ -314,39 +169,63 @@ const localSort = ref({
   descending: false,
 });
 
-const localGroup = ref('');
+const sortOptions = [
+  { label: 'Due date', value: 'due_date' },
+  { label: 'Alphabetically', value: 'name' },
+  { label: 'Project', value: 'project_name' },
+  { label: 'Created on', value: 'created_at' },
+];
+
+// Position dropdowns
+watch(showFilters, (show) => {
+  if (show) {
+    nextTick(() => {
+      const button = document.querySelector('button:has(svg path[d*="M3 4a1"])') as HTMLElement;
+      if (button) {
+        const rect = button.getBoundingClientRect();
+        filterDropdownStyle.value = {
+          top: `${rect.bottom + 8}px`,
+          right: `${window.innerWidth - rect.right}px`,
+        };
+      }
+    });
+  }
+});
+
+watch(showSort, (show) => {
+  if (show) {
+    nextTick(() => {
+      const buttons = Array.from(document.querySelectorAll('button'));
+      const button = buttons.find(b => b.textContent?.includes('Sort')) as HTMLElement;
+      if (button) {
+        const rect = button.getBoundingClientRect();
+        sortDropdownStyle.value = {
+          top: `${rect.bottom + 8}px`,
+          right: `${window.innerWidth - rect.right}px`,
+        };
+      }
+    });
+  }
+});
 
 // Initialize from saved preferences on mount
 onMounted(() => {
-  // Restore sort
   if (props.initialSort?.length) {
     const first = props.initialSort[0];
     localSort.value.field = first.field || 'due_date';
     localSort.value.descending = first.direction === 'desc';
   }
 
-  // Restore grouping
-  if (props.initialGroup) {
-    localGroup.value = props.initialGroup;
-  }
-
-  // Restore filters
   if (props.initialFilters && typeof props.initialFilters === 'object') {
     const filtersArr = Array.isArray(props.initialFilters)
       ? props.initialFilters
       : Object.values(props.initialFilters);
 
     for (const f of filtersArr as any[]) {
-      if (f?.field === 'status') localFilters.value.status = f.value || '';
-      if (f?.field === 'priority') localFilters.value.priority = f.value || '';
       if (f?.field === 'due_date') {
-        // Reverse-map operator back to select value
         if (f.operator === 'is_empty') localFilters.value.due_date = 'no_due_date';
         else if (f.operator === 'equals') localFilters.value.due_date = 'today';
-        else if (f.operator === 'less_than') {
-          const today = new Date().toISOString().split('T')[0];
-          localFilters.value.due_date = f.value === today ? 'overdue' : 'this_week';
-        }
+        else if (f.operator === 'less_than') localFilters.value.due_date = 'overdue';
       }
     }
   }
@@ -362,35 +241,14 @@ const activeFilterCount = computed(() => {
 });
 
 const hasActiveSort = computed(() => {
-  return localSort.value.field !== '';
-});
-
-const hasActiveGroup = computed(() => {
-  return localGroup.value !== '';
+  return localSort.value.field !== 'due_date' || localSort.value.descending;
 });
 
 // Methods
 function updateFilters() {
   const filters: any = {};
   
-  if (localFilters.value.status) {
-    filters.status = {
-      field: 'status',
-      operator: 'equals',
-      value: localFilters.value.status,
-    };
-  }
-  
-  if (localFilters.value.priority) {
-    filters.priority = {
-      field: 'priority',
-      operator: 'equals',
-      value: localFilters.value.priority,
-    };
-  }
-  
   if (localFilters.value.due_date) {
-    // Handle special due date filters
     const dueDateFilter = localFilters.value.due_date;
     if (dueDateFilter === 'overdue') {
       filters.due_date = {
@@ -411,8 +269,19 @@ function updateFilters() {
       endOfWeek.setDate(today.getDate() + (7 - today.getDay()));
       filters.due_date = {
         field: 'due_date',
-        operator: 'less_than',
+        operator: 'less_than_or_equal',
         value: endOfWeek.toISOString().split('T')[0],
+      };
+    } else if (dueDateFilter === 'next_week') {
+      const today = new Date();
+      const nextWeekStart = new Date(today);
+      nextWeekStart.setDate(today.getDate() + (7 - today.getDay() + 1));
+      const nextWeekEnd = new Date(nextWeekStart);
+      nextWeekEnd.setDate(nextWeekStart.getDate() + 6);
+      filters.due_date = {
+        field: 'due_date',
+        operator: 'between',
+        value: [nextWeekStart.toISOString().split('T')[0], nextWeekEnd.toISOString().split('T')[0]],
       };
     } else if (dueDateFilter === 'no_due_date') {
       filters.due_date = {
@@ -426,6 +295,17 @@ function updateFilters() {
   emit('filter-change', filters);
 }
 
+function selectSort(field: string) {
+  localSort.value.field = field;
+  updateSort();
+  showSort.value = false;
+}
+
+function toggleSortDirection() {
+  localSort.value.descending = !localSort.value.descending;
+  updateSort();
+}
+
 function updateSort() {
   const sortRules = [];
   
@@ -436,38 +316,13 @@ function updateSort() {
     });
   }
   
-  console.log('Emitting sort-change:', sortRules);
   emit('sort-change', sortRules);
-}
-
-function updateGroup() {
-  emit('group-change', localGroup.value as TaskGroupBy);
 }
 
 function clearAllFilters() {
   localFilters.value = {
-    status: '',
-    priority: '',
     due_date: '',
   };
   updateFilters();
 }
-
-// Close dropdowns when clicking outside
-function handleClickOutside(event: Event) {
-  const target = event.target as Element;
-  if (!target.closest('.relative')) {
-    showFilters.value = false;
-    showSort.value = false;
-    showGroup.value = false;
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
-});
 </script>

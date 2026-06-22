@@ -48,12 +48,14 @@
     </div>
 
     <!-- Right Sidebar - Task Detail -->
-    <TaskDetailSidebar
+    <TaskDetailPanel
       v-if="selectedTask"
       :task="selectedTask"
-      :project-id="projectId"
+      :project="project || null"
+      :current-user="currentUser"
       @close="handleCloseSidebar"
-      @task-update="handleTaskUpdate"
+      @update="syncTaskFromPanel"
+      @open-task="openTaskPanel"
     />
 
     <!-- Create Task Modal -->
@@ -68,12 +70,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import { PlusIcon } from '@heroicons/vue/24/outline';
 import { useTasksStore } from '@/Stores/useTasksStore';
 import type { Task, TaskFilter, TaskSort, TaskGroupBy } from '@/Types/tasks';
 import TaskToolbar from './TaskToolbar.vue';
 import TaskTable from './TaskTable.vue';
-import TaskDetailSidebar from '../Sidebar/TaskDetailSidebar.vue';
+import TaskDetailPanel from '@/Components/Projects/TaskDetailPanel.vue';
 import TaskCreateForm from '../Forms/TaskCreateForm.vue';
 
 interface Props {

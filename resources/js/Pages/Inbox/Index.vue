@@ -21,17 +21,21 @@
         </div>
 
         <!-- Notification list -->
-        <div class="flex-1 overflow-y-auto">
+        <div class="flex-1 overflow-y-auto flex flex-col">
           <!-- Loading state -->
-          <div v-if="loading && notifications.length === 0" class="flex items-center justify-center py-12">
+          <div v-if="loading && notifications.length === 0" class="flex items-center justify-center flex-1">
             <svg class="w-6 h-6 animate-spin text-indigo-600" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
             </svg>
           </div>
 
+          <!-- Empty state -->
+          <div v-else-if="notifications.length === 0 && !loading" class="flex-1">
+          </div>
+
           <!-- Grouped notifications -->
-          <div v-else>
+          <div v-else class="flex-1">
             <div v-for="group in groupedNotifications" :key="group.label" class="border-b border-gray-100">
               <div class="px-4 py-2 bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                 {{ group.label }}
@@ -59,15 +63,6 @@
                 <span v-else>Load more</span>
               </button>
             </div>
-
-            <!-- Empty state -->
-            <div v-if="notifications.length === 0 && !loading" class="flex flex-col items-center justify-center py-12 px-4">
-              <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-              </svg>
-              <p class="text-gray-500 text-sm">No notifications yet</p>
-              <p class="text-gray-400 text-xs mt-1">You'll see mentions and assignments here</p>
-            </div>
           </div>
         </div>
       </div>
@@ -85,8 +80,14 @@
           @open-task="openRelatedTask"
         />
 
-        <!-- Empty state when no notification selected -->
-        <div v-else class="h-full"></div>
+        <!-- Empty state when no notification selected or no notifications exist -->
+        <div v-else class="h-full flex flex-col items-center justify-center">
+          <EmptyStateAnimation
+            height="300px"
+            width="300px"
+            message="No notifications"
+          />
+        </div>
       </div>
     </div>
   </AppLayout>
@@ -97,6 +98,7 @@ import { ref, computed, onMounted } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import NotificationItem from '@/Components/Inbox/NotificationItem.vue'
 import TaskDetailPanel from '@/Components/Projects/TaskDetailPanel.vue'
+import EmptyStateAnimation from '@/Components/EmptyState/EmptyStateAnimation.vue'
 import { api } from '@/Services/api'
 import { useNotificationStore } from '@/Stores/useNotificationStore'
 
@@ -121,6 +123,11 @@ const unreadCount = computed({
 
 // Group notifications by date
 const groupedNotifications = computed(() => {
+  console.log('Computing groupedNotifications...')
+  console.log('Current notifications:', notifications.value)
+  console.log('Notifications is array?', Array.isArray(notifications.value))
+  console.log('Notifications length:', notifications.value.length)
+  
   const groups = {
     today: [],
     yesterday: [],
@@ -132,7 +139,10 @@ const groupedNotifications = computed(() => {
   const yesterday = new Date(today)
   yesterday.setDate(yesterday.getDate() - 1)
 
-  notifications.value.forEach(notification => {
+  // Ensure notifications is an array
+  const notifList = Array.isArray(notifications.value) ? notifications.value : []
+
+  notifList.forEach(notification => {
     const notifDate = new Date(notification.created_at)
     const notifDay = new Date(notifDate.getFullYear(), notifDate.getMonth(), notifDate.getDate())
 
@@ -150,24 +160,35 @@ const groupedNotifications = computed(() => {
   if (groups.yesterday.length) result.push({ label: 'Yesterday', items: groups.yesterday })
   if (groups.older.length) result.push({ label: 'Older', items: groups.older })
 
+  console.log('Grouped notifications result:', result)
   return result
 })
 
 async function loadNotifications(page = 1) {
   loading.value = true
+  console.log('Loading notifications, page:', page)
   try {
     const response = await api.get(`/inbox/notifications?page=${page}`)
+    console.log('Response from API:', response)
+    console.log('Response data:', response.data)
+    
+    // Extract the actual notifications array from response.data.data
+    const notificationsArray = response.data.data || []
+    console.log('Notifications array:', notificationsArray)
     
     if (page === 1) {
-      notifications.value = response.data
+      notifications.value = notificationsArray
     } else {
-      notifications.value.push(...response.data)
+      notifications.value.push(...notificationsArray)
     }
     
-    hasMore.value = response.has_more
-    nextPage.value = response.next_page || page + 1
+    console.log('Notifications after assignment:', notifications.value)
+    console.log('Notifications length:', notifications.value.length)
+    
+    hasMore.value = response.data.has_more
+    nextPage.value = response.data.next_page || page + 1
     // Sync the global store (Echo may already have updated it, take the max)
-    notificationStore.setUnreadCount(response.unread_count)
+    notificationStore.setUnreadCount(response.data.unread_count)
   } catch (error) {
     console.error('Failed to load notifications:', error)
   } finally {
@@ -279,9 +300,13 @@ async function openRelatedTask(task) {
 }
 
 onMounted(() => {
+  console.log('Inbox page mounted')
+  console.log('Initial unreadCount prop:', props.unreadCount)
   // Seed the store from the server-rendered prop (first page load)
   notificationStore.setUnreadCount(props.unreadCount)
+  console.log('Calling loadNotifications...')
   loadNotifications()
+  console.log('After loadNotifications call')
 })
 </script>
 

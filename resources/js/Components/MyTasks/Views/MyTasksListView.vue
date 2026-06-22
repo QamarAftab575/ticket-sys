@@ -62,7 +62,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  'select-task': [taskId: string];
+  'select-task': [task: Task];
   'task-completed': [taskId: string];
   'task-created': [data: any];
   'task-move': [data: any];

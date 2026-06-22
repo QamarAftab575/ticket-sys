@@ -1,56 +1,67 @@
 ﻿<template>
-  <div class="flex h-screen bg-gray-50">
+  <div class="flex h-screen bg-white">
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- Header with View Switcher -->
-      <div class="bg-white border-b border-gray-200 px-6 py-4">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-4">
+    <div class="flex-1 flex flex-col overflow-hidden bg-white">
+      <!-- Compact Header - Asana Style (Static, normal layout) -->
+      <div class="bg-white border-b border-gray-200">
+        <!-- Top Row: Title, Task Count, and Actions -->
+        <div class="px-6 py-3 flex items-center justify-between">
+          <!-- Left: Avatar + Title -->
+          <div class="flex items-center gap-3">
+            <Avatar
+              :name="currentUser?.name || 'User'"
+              :src="currentUser?.avatar"
+              size="sm"
+              class="flex-shrink-0"
+            />
             <div>
-              <h1 class="text-2xl font-bold text-gray-900">My Tasks</h1>
-              <p class="text-sm text-gray-500 mt-1">
-                {{ myTasksStore.tasks.length }} task{{ myTasksStore.tasks.length !== 1 ? 's' : '' }}
+              <h1 class="text-lg font-semibold text-gray-900">My tasks</h1>
+              <p class="text-xs text-gray-500">
+                {{ taskCount }} task{{ taskCount !== 1 ? 's' : '' }}
               </p>
             </div>
+          </div>
+
+          <!-- Right: View Switcher + Filter/Sort (Sticky on desktop) -->
+          <div class="flex items-center gap-3 md:sticky md:top-0 md:z-20 md:bg-white">
             <!-- View Type Selector -->
-            <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1 ml-4">
+            <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
               <button
                 v-for="view in viewOptions"
                 :key="view.id"
                 @click="currentView = view.id"
                 :title="view.label"
                 :class="[
-                  'p-2 rounded transition-colors',
+                  'px-2.5 py-1.5 text-gray-600 hover:bg-gray-50 transition-colors border-r border-gray-300 last:border-r-0',
                   currentView === view.id
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-gray-100 text-gray-900'
+                    : ''
                 ]"
               >
-                <component :is="view.icon" class="w-5 h-5" />
+                <component :is="view.icon" class="w-4 h-4" />
               </button>
             </div>
+
+            <!-- Toolbar Inline -->
+            <MyTasksToolbar
+              :initial-sort="myTasksStore.sort"
+              :initial-group="myTasksStore.groupBy"
+              :initial-filters="myTasksStore.filters"
+              :workspace-members="workspaceMembers"
+              @filter-change="handleFilterChange"
+              @sort-change="handleSortChange"
+              @group-change="handleGroupChange"
+            />
           </div>
-          <!-- Removed Add Task button - use inline creation in sections instead -->
         </div>
       </div>
 
-      <!-- Toolbar -->
-      <MyTasksToolbar
-        :initial-sort="myTasksStore.sort"
-        :initial-group="myTasksStore.groupBy"
-        :initial-filters="myTasksStore.filters"
-        @filter-change="handleFilterChange"
-        @sort-change="handleSortChange"
-        @group-change="handleGroupChange"
-      />
-
-      <!-- Content Area -->
-      <div class="flex-1 overflow-hidden">
-        <div class="h-full flex flex-col">
-          <!-- List View (Default) -->
-          <MyTasksListView
-            v-if="currentView === 'list'"
-            :tasks="displayedTasks"
+      <!-- Content Area (Scrollable) -->
+      <div class="flex-1 overflow-auto bg-white">
+        <!-- List View (Default) -->
+        <MyTasksListView
+          v-if="currentView === 'list'"
+          :tasks="displayedTasks"
             :filters="myTasksStore.filters"
             :sort="myTasksStore.sort"
             :grouping="myTasksStore.groupBy"
@@ -77,10 +88,15 @@
           <MyTasksBoardView
             v-else-if="currentView === 'board'"
             :tasks="displayedTasks"
+            :sections="myTasksStore.sections"
+            :section-order="myTasksStore.sectionOrder"
             :is-loading="myTasksStore.loading"
             @select-task="handleTaskSelect"
             @task-completed="handleTaskComplete"
             @task-move="handleTaskMove"
+            @task-created="handleTaskCreatedInline"
+            @add-section="handleAddSection"
+            @sections-reordered="handleSectionOrderChange"
           />
 
           <!-- Calendar View -->
@@ -99,17 +115,18 @@
             :is-loading="myTasksStore.loading"
             @select-task="handleTaskSelect"
           />
-        </div>
       </div>
     </div>
 
     <!-- Right Sidebar - Task Detail -->
-    <TaskDetailSidebar
+    <TaskDetailPanel
       v-if="selectedTask"
       :task="selectedTask"
-      :project-id="selectedTask?.project_id"
+      :project="selectedTask?.project || null"
+      :current-user="currentUser"
       @close="handleCloseSidebar"
-      @task-update="handleTaskUpdate"
+      @update="syncTaskFromPanel"
+      @open-task="openTaskPanel"
     />
 
     <!-- Removed Task Create Modal - use inline creation instead -->
@@ -117,7 +134,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import { PlusIcon, ListBulletIcon, Squares2X2Icon, CalendarIcon, PaperClipIcon } from '@heroicons/vue/24/outline';
 import { useMyTasksStore } from '@/Stores/useMyTasksStore';
 import { useRealtimeListeners } from '@/Composables/useRealtimeListeners';
@@ -128,8 +146,8 @@ import MyTasksListView from '@/Components/MyTasks/Views/MyTasksListView.vue';
 import MyTasksBoardView from '@/Components/MyTasks/Views/MyTasksBoardView.vue';
 import MyTasksCalendarView from '@/Components/MyTasks/Views/MyTasksCalendarView.vue';
 import MyTasksFilesView from '@/Components/MyTasks/Views/MyTasksFilesView.vue';
-import TaskDetailSidebar from '@/Components/Tasks/Sidebar/TaskDetailSidebar.vue';
-// Removed TaskCreateForm import - using inline creation only
+import TaskDetailPanel from '@/Components/Projects/TaskDetailPanel.vue';
+import Avatar from '@/Components/Avatar.vue';
 
 interface Props {
   savedPreferences?: {
@@ -151,7 +169,23 @@ const props = withDefaults(defineProps<Props>(), {
 
 const myTasksStore = useMyTasksStore();
 const { listenToProject } = useRealtimeListeners();
+const currentPage = usePage();
+const currentUser = computed(() => currentPage.props.auth?.user || null);
 const currentView = ref<'list' | 'board' | 'calendar' | 'files'>('list');
+
+// URL query parameter helpers
+const getQueryParam = (key: string) => new URLSearchParams(window.location.search).get(key);
+const setQueryParams = (params: Record<string, any>) => {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, value);
+    }
+  });
+  window.history.pushState({}, '', url.toString());
+};
 
 // View options with icons
 const viewOptions = [
@@ -161,8 +195,26 @@ const viewOptions = [
   { id: 'files', label: 'Files', icon: PaperClipIcon },
 ];
 
+// State
+const selectedTask = ref(null);
+
+// Initialize view from URL query parameter or default to 'list'
+const initializeViewFromUrl = () => {
+  const viewParam = getQueryParam('view');
+  if (viewParam && ['list', 'board', 'calendar', 'files'].includes(viewParam)) {
+    currentView.value = viewParam as 'list' | 'board' | 'calendar' | 'files';
+  }
+};
+
+// Watch for view changes and update URL
+watch(currentView, (newView) => {
+  setQueryParams({ view: newView });
+});
+
 // Computed
-const selectedTask = computed(() => myTasksStore.selectedTask);
+const taskCount = computed(() => {
+  return myTasksStore.flatTasks.length;
+});
 
 const displayedTasks = computed(() => {
   if (myTasksStore.groupBy) {
@@ -174,6 +226,9 @@ const displayedTasks = computed(() => {
 
 // Lifecycle
 onMounted(async () => {
+  // Initialize view from URL
+  initializeViewFromUrl();
+
   // Hydrate store from server-side saved preferences
   if (props.savedPreferences) {
     myTasksStore.loadPreferences(props.savedPreferences);
@@ -187,9 +242,13 @@ onMounted(async () => {
   // Subscribe to every project the loaded tasks belong to.
   // This keeps My Tasks in sync when teammates update shared tasks.
   // The user channel (in AppLayout) handles tasks assigned to this user directly.
+  const tasks = Array.isArray(myTasksStore.tasks) 
+    ? myTasksStore.tasks 
+    : Object.values(myTasksStore.tasks || {}).flat();
+    
   const projectIds = [
     ...new Set(
-      (myTasksStore.tasks as Task[])
+      tasks
         .map((t: Task) => t.project_id)
         .filter(Boolean) as string[]
     ),
@@ -201,6 +260,28 @@ onMounted(async () => {
       onTaskMoved({ task })   { myTasksStore.patchTaskMove(task); },
     });
   });
+
+  // Check for task in URL and open it
+  const taskId = getQueryParam('task');
+  if (taskId) {
+    const task = myTasksStore.tasks.find((t) => t.id === taskId);
+    if (task) {
+      selectedTask.value = task;
+    } else {
+      // If task not in current list, fetch it from API
+      try {
+        const response = await fetch(`/api/tasks/${taskId}`);
+        if (response.ok) {
+          const data = await response.json();
+          const taskData = data.data || data;
+          selectedTask.value = taskData;
+          myTasksStore.selectTask(taskId);
+        }
+      } catch (err) {
+        console.error('Failed to load task from URL:', err);
+      }
+    }
+  }
 });
 
 // Handlers
@@ -255,9 +336,12 @@ async function handleDeleteSection(sectionId: string) {
   }
 }
 
-async function handleTaskSelect(taskId: string) {
-  myTasksStore.selectTask(taskId);
-  await myTasksStore.fetchTask(taskId);
+async function handleTaskSelect(task) {
+  // Receive the full task object and set it directly
+  myTasksStore.selectTask(task.id);
+  selectedTask.value = task;
+  // Add task ID to URL
+  setQueryParams({ task: task.id });
 }
 
 async function handleTaskComplete(taskId: string) {
@@ -319,13 +403,52 @@ async function handleUpdateCustomField(data: any) {
 
 function handleCloseSidebar() {
   myTasksStore.deselectTask();
+  selectedTask.value = null;
+  // Remove task ID from URL
+  setQueryParams({ task: undefined });
 }
 
-async function handleTaskUpdate() {
-  if (myTasksStore.selectedTaskId) {
-    await myTasksStore.fetchTask(myTasksStore.selectedTaskId);
+// Called by TaskDetailPanel after it has already saved — just sync local state
+function syncTaskFromPanel(taskId, data) {
+  const task = myTasksStore.tasks.find((t) => t.id === taskId);
+  if (task) {
+    Object.assign(task, data);
   }
 }
+
+function openTaskPanel(task) {
+  myTasksStore.selectTask(task.id);
+  selectedTask.value = task;
+  // Add task ID to URL
+  setQueryParams({ task: task.id });
+}
+
+// Handle browser back/forward buttons
+const handlePopState = () => {
+  const taskId = getQueryParam('task');
+  if (taskId) {
+    const task = myTasksStore.tasks.find((t) => t.id === taskId);
+    if (task) {
+      selectedTask.value = task;
+    }
+  } else {
+    selectedTask.value = null;
+  }
+  
+  // Also update view from URL
+  const viewParam = getQueryParam('view');
+  if (viewParam && ['list', 'board', 'calendar', 'files'].includes(viewParam)) {
+    currentView.value = viewParam as 'list' | 'board' | 'calendar' | 'files';
+  }
+};
+
+// Add popstate listener
+window.addEventListener('popstate', handlePopState);
+
+// Cleanup on unmount
+onBeforeUnmount(() => {
+  window.removeEventListener('popstate', handlePopState);
+});
 
 // Removed handleTaskCreated - using inline creation only
 

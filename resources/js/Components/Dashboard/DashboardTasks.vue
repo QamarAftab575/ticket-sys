@@ -84,6 +84,8 @@ const props = defineProps({
   userInitials: { type: String, default: 'CF' },
 })
 
+const emit = defineEmits(['select-task'])
+
 const activeTab = ref('upcoming')
 const showCreateTask = ref(false)
 const loadingMore = ref(false)
@@ -348,8 +350,8 @@ const handleToggleComplete = async (taskId) => {
 }
 
 // Handle task click
-const handleTaskClick = (taskId) => {
-  window.location.href = `/tasks/${taskId}`
+const handleTaskClick = (task) => {
+  emit('select-task', task)
 }
 
 // Handle date update
