@@ -50,6 +50,10 @@ class HandleInertiaRequests extends Middleware
                 ->limit(50)
                 ->get()
                 : [],
+            
+            // Pass translations to frontend (cached, single source of truth)
+            'locale' => app()->getLocale(),
+            'translations' => \App\Helpers\TranslationHelper::getSiteTranslations(),
         ]);
     }
 }

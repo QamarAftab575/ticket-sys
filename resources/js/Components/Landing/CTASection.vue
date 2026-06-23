@@ -14,12 +14,12 @@ import { Link } from '@inertiajs/vue3';
     <div class="relative z-10 max-w-4xl mx-auto text-center">
       <!-- Main headline -->
       <h2 class="text-4xl sm:text-5xl font-bold text-white dark:text-slate-900 mb-6 tracking-tight">
-        Ready to build better?
+        {{ $t('messages.ready_to_build') }}
       </h2>
       
       <!-- Subheadline -->
       <p class="text-lg text-slate-300 dark:text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-        Join thousands of teams shipping faster with clarity and purpose.
+        {{ $t('messages.join_thousands') }}
       </p>
 
       <!-- CTA Buttons -->
@@ -28,7 +28,7 @@ import { Link } from '@inertiajs/vue3';
           href="/register" 
           class="group px-6 py-3.5 bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer inline-flex items-center gap-2"
         >
-          <span>Get started free</span>
+          <span>{{ $t('messages.get_started_free') }}</span>
           <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
@@ -37,13 +37,13 @@ import { Link } from '@inertiajs/vue3';
           href="/login" 
           class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 dark:bg-slate-100 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-medium rounded-lg border border-slate-700 dark:border-slate-300 transition-colors duration-200 cursor-pointer"
         >
-          Schedule demo
+          {{ $t('messages.schedule_demo') }}
         </Link>
       </div>
 
       <!-- Trust indicators -->
       <p class="text-sm text-slate-400 dark:text-slate-600">
-        No credit card • 14-day trial • Cancel anytime
+        {{ $t('messages.trust_indicators') }}
       </p>
     </div>
   </section>

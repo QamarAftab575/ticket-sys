@@ -16,13 +16,13 @@ defineProps({
       <!-- Section header -->
       <div class="text-center mb-16">
         <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium mb-6">
-          <span>Pricing</span>
+          <span>{{ $t('messages.pricing') }}</span>
         </div>
         <h2 class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-          Simple pricing
+          {{ $t('messages.simple_pricing') }}
         </h2>
         <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          Start free, scale as you grow. All plans include 14-day trial.
+          {{ $t('messages.start_free_scale') }}
         </p>
       </div>
 

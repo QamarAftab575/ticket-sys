@@ -26,18 +26,18 @@ defineProps({
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
           </svg>
-          <span>Trusted by 50,000+ teams</span>
+          <span>{{ $t('trusted_by_teams') }}</span>
         </div>
 
         <!-- Main headline -->
         <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white leading-tight tracking-tight mb-6 max-w-5xl mx-auto">
-          Build projects<br class="hidden sm:block" />
-          <span class="text-blue-600 dark:text-blue-400">like Linear</span>
+          {{ $t('build_projects') }}<br class="hidden sm:block" />
+          <span class="text-blue-600 dark:text-blue-400">{{ $t('like_linear') }}</span>
         </h1>
 
         <!-- Subheadline -->
         <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed mb-10">
-          The project management tool for teams who value speed, clarity, and craftsmanship. Built for modern workflow.
+          {{ $t('project_management_tool') }}
         </p>
 
         <!-- CTA Buttons -->
@@ -46,7 +46,7 @@ defineProps({
             href="/register" 
             class="group px-6 py-3.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer inline-flex items-center gap-2"
           >
-            <span>Start building for free</span>
+            <span>{{ $t('start_building_free') }}</span>
             <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
@@ -55,7 +55,7 @@ defineProps({
             href="/login" 
             class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer"
           >
-            View demo
+            {{ $t('view_demo') }}
           </Link>
         </div>
 
@@ -65,19 +65,19 @@ defineProps({
             <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
-            <span>No credit card</span>
+            <span>{{ $t('no_credit_card') }}</span>
           </div>
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
-            <span>14-day free trial</span>
+            <span>{{ $t('free_trial') }}</span>
           </div>
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
-            <span>Cancel anytime</span>
+            <span>{{ $t('cancel_anytime') }}</span>
           </div>
         </div>
       </div>

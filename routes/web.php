@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminLanguageController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminWorkspaceController;
 use App\Http\Controllers\ApiTokenController;
@@ -368,6 +369,18 @@ Route::prefix('admin')
         Route::patch('/contacts/{contact}/mark-as-read', [\App\Http\Controllers\Admin\AdminContactController::class, 'markAsRead'])->name('contacts.mark-as-read');
         Route::patch('/contacts/{contact}/mark-as-closed', [\App\Http\Controllers\Admin\AdminContactController::class, 'markAsClosed'])->name('contacts.mark-as-closed');
         Route::delete('/contacts/{contact}', [\App\Http\Controllers\Admin\AdminContactController::class, 'destroy'])->name('contacts.destroy');
+
+        // Languages management
+        Route::get('/languages', [AdminLanguageController::class, 'index'])->name('languages.index');
+        Route::post('/languages/set-site-language', [AdminLanguageController::class, 'setSiteLanguage'])->name('languages.set-site');
+        Route::get('/languages/create', [AdminLanguageController::class, 'create'])->name('languages.create');
+        Route::post('/languages', [AdminLanguageController::class, 'store'])->name('languages.store');
+        Route::get('/languages/{language}/edit', [AdminLanguageController::class, 'edit'])->name('languages.edit');
+        Route::put('/languages/{language}', [AdminLanguageController::class, 'update'])->name('languages.update');
+        Route::delete('/languages/{language}', [AdminLanguageController::class, 'destroy'])->name('languages.destroy');
+        Route::post('/languages/{language}/toggle', [AdminLanguageController::class, 'toggle'])->name('languages.toggle');
+        Route::get('/languages/{language}/translations', [AdminLanguageController::class, 'manageTranslations'])->name('languages.translations');
+        Route::post('/languages/{language}/translations', [AdminLanguageController::class, 'saveTranslations'])->name('languages.translations.save');
     });
 
 

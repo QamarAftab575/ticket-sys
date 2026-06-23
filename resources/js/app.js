@@ -7,6 +7,7 @@ import Vue3Toastify from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import 'tippy.js/dist/tippy.css';
 import { setupCacheInvalidation } from '@/Composables/useCacheInvalidation';
+import i18n from '@/Plugins/i18n';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Asira';
 
@@ -23,7 +24,8 @@ createInertiaApp({
                 autoClose: 5000,
                 position: 'top-right',
                 theme: 'light',
-            });
+            })
+            .use(i18n);
         
         // Make route() available globally in all components
         app.config.globalProperties.$route = window.route;

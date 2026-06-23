@@ -32,6 +32,13 @@
                 Users
               </Link>
               <Link 
+                href="/admin/languages" 
+                class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
+                :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/languages') }"
+              >
+                Languages
+              </Link>
+              <Link 
                 href="/admin/contacts" 
                 class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
                 :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/contacts') }"
@@ -128,6 +135,14 @@
             @click="mobileMenuOpen = false"
           >
             Users
+          </Link>
+          <Link 
+            href="/admin/languages" 
+            class="block px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm rounded-lg transition-colors"
+            :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/languages') }"
+            @click="mobileMenuOpen = false"
+          >
+            Languages
           </Link>
           <Link 
             href="/admin/contacts" 
