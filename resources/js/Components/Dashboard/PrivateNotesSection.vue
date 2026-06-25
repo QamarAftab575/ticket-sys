@@ -2,7 +2,7 @@
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-full">
     <div class="flex items-center justify-between mb-5">
       <div class="flex items-center gap-2">
-        <h2 class="text-base font-semibold text-gray-900">Private notepad</h2>
+        <h2 class="text-base font-semibold text-gray-900">{{ $t('private_notepad') }}</h2>
         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
         </svg>
@@ -11,16 +11,16 @@
         <!-- Auto-save indicator -->
         <div v-if="isSaving" class="flex items-center gap-1.5">
           <div class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse" />
-          <span class="text-xs text-gray-500">Saving...</span>
+          <span class="text-xs text-gray-500">{{ $t('saving') }}</span>
         </div>
         <div v-else-if="lastSaved" class="text-xs text-gray-500">
-          Saved {{ lastSaved }}
+          {{ $t('saved') }} {{ lastSaved }}
         </div>
 
         <button
           @click="showMenu = !showMenu"
           class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
-          title="Menu"
+          :title="$t('menu')"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
@@ -31,7 +31,7 @@
             @click="clearNotes; showMenu = false"
             class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
           >
-            Clear all
+            {{ $t('clear_all') }}
           </button>
         </div>
       </div>
@@ -44,7 +44,7 @@
         <button
           @click="toggleFormat('bold')"
           :class="['p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer', isFormatActive('bold') ? 'bg-blue-100 text-blue-600' : 'text-gray-600']"
-          title="Bold (Ctrl+B)"
+          :title="`${$t('bold')} (Ctrl+B)`"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/>
@@ -53,7 +53,7 @@
         <button
           @click="toggleFormat('italic')"
           :class="['p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer', isFormatActive('italic') ? 'bg-blue-100 text-blue-600' : 'text-gray-600']"
-          title="Italic (Ctrl+I)"
+          :title="`${$t('italic')} (Ctrl+I)`"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"/>
@@ -62,7 +62,7 @@
         <button
           @click="toggleFormat('underline')"
           :class="['p-2 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer', isFormatActive('underline') ? 'bg-blue-100 text-blue-600' : 'text-gray-600']"
-          title="Underline (Ctrl+U)"
+          :title="`${$t('underline')} (Ctrl+U)`"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 3v8a6 6 0 0012 0V3M4 19h16"/>
@@ -74,7 +74,7 @@
         <button
           @click="insertList('unordered')"
           class="p-2 rounded-lg hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer"
-          title="Bullet list"
+          :title="$t('bullet_list')"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -83,7 +83,7 @@
         <button
           @click="insertList('ordered')"
           class="p-2 rounded-lg hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer"
-          title="Numbered list"
+          :title="$t('numbered_list')"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M3 6h18M3 18h18"/>
@@ -95,7 +95,7 @@
         <button
           @click="insertLink"
           class="p-2 rounded-lg hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer"
-          title="Insert link"
+          :title="$t('insert_link')"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
@@ -104,7 +104,7 @@
 
         <div class="flex-1" />
 
-        <span class="text-xs text-gray-500">{{ wordCount }} words</span>
+        <span class="text-xs text-gray-500">{{ wordCount }} {{ $t('words') }}</span>
       </div>
 
       <!-- Text Editor -->
@@ -112,7 +112,7 @@
         v-model="noteContent"
         @input="handleContentUpdate"
         @keydown.tab="handleTab"
-        placeholder="Jot down a quick note or add a link to an important resource."
+        :placeholder="$t('jot_down_note')"
         class="w-full h-64 px-4 py-4 resize-none focus:outline-none text-sm text-gray-700 leading-relaxed"
       />
     </div>

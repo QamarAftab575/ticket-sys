@@ -29,7 +29,7 @@
 
     <!-- Task Content -->
     <div class="h-full flex items-center px-3 text-white text-xs font-medium overflow-hidden pointer-events-none gap-1.5">
-      <span v-if="task.is_milestone" class="flex-shrink-0">â—†</span>
+      <span v-if="task.is_milestone" class="flex-shrink-0"></span>
       <!-- Checkmark for completed -->
       <svg v-if="isCompleted" class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
@@ -66,7 +66,7 @@
         <div class="text-gray-300">
           {{ formatDate(task.start_date || task.due_date) }}
           <span v-if="task.start_date && task.due_date && task.start_date !== task.due_date">
-            â†’ {{ formatDate(task.due_date) }}
+             {{ formatDate(task.due_date) }}
           </span>
         </div>
       </div>
@@ -86,7 +86,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update', 'click'])
 
-// â”€â”€â”€ Date Utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Date Utilities 
 /**
  * Normalize any date input to local midnight Date object
  * Prevents timezone offset issues
@@ -135,7 +135,7 @@ const addDays = (dateStr, days) => {
   return dateToISO(d)
 }
 
-// â”€â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  State 
 const showTooltip = ref(false)
 const isDragging = ref(false)
 const dragMode = ref(null) // 'move' | 'resize-left' | 'resize-right'
@@ -145,23 +145,23 @@ const tooltipY = ref(0)
 // Live visual offsets while dragging (in pixels, snapped to days)
 const dragDeltaDays = ref(0)
 
-// â”€â”€â”€ Colors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Colors 
 const isCompleted = computed(() => !!props.task.completed_at || props.task.status === 'complete')
 
 const taskColor = computed(() => {
-  if (isCompleted.value) return '#6ee7b7' // muted green â€” opacity-50 on the bar handles the fade
+  if (isCompleted.value) return '#6ee7b7' // muted green   opacity-50 on the bar handles the fade
   const colors = { urgent: '#dc2626', high: '#ef4444', medium: '#f59e0b', low: '#3b82f6' }
   return colors[props.task.priority] || '#6366f1'
 })
 
-// â”€â”€â”€ Parse ISO date string as LOCAL date (avoids UTC-offset shift) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Parse ISO date string as LOCAL date (avoids UTC-offset shift) 
 // DEPRECATED: Use normalizeDate instead
 const parseLocalDate = (dateStr) => {
   const [y, m, d] = dateStr.split('-').map(Number)
-  return new Date(y, m - 1, d) // local midnight â€” no timezone shift
+  return new Date(y, m - 1, d) // local midnight   no timezone shift
 }
 
-// â”€â”€â”€ Base position (from saved dates) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Base position (from saved dates) 
 const baseLeft = computed(() => {
   const taskStart = normalizeDate(props.task.start_date || props.task.due_date)
   const origin = normalizeDate(props.startDate)
@@ -180,7 +180,7 @@ const baseWidth = computed(() => {
   return Math.max(props.cellWidth, days * props.cellWidth)
 })
 
-// â”€â”€â”€ Live position (includes drag delta) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Live position (includes drag delta) 
 const currentLeft = computed(() => {
   if (!isDragging.value) return baseLeft.value
   if (dragMode.value === 'move') return baseLeft.value + dragDeltaDays.value * props.cellWidth
@@ -196,8 +196,8 @@ const currentWidth = computed(() => {
   return baseWidth.value
 })
 
-// Only render bars that could be visible â€” bars more than 1 viewport-width
-// outside the timeline start are skipped. 20000px â‰ˆ 500 days at 40px/day,
+// Only render bars that could be visible   bars more than 1 viewport-width
+// outside the timeline start are skipped. 20000px ˆ 500 days at 40px/day,
 // which covers the full 365-day window plus drag headroom.
 const isVisible = computed(() => {
   const left = baseLeft.value
@@ -206,7 +206,7 @@ const isVisible = computed(() => {
   return left + width > 0 && left < 365 * props.cellWidth
 })
 
-// â”€â”€â”€ Drag logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Drag logic 
 let dragStartX = 0
 let clickPrevented = false
 
@@ -278,7 +278,7 @@ const onBarClick = () => {
   if (!clickPrevented) emit('click')
 }
 
-// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Helpers 
 // DEPRECATED: Use addDays utility instead
 const addDaysOld = (dateStr, days) => {
   const d = new Date(dateStr)

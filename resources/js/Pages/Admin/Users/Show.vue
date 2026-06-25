@@ -162,7 +162,7 @@
             </div>
             <div class="pb-5 border-b border-slate-200 dark:border-slate-700">
               <p class="text-slate-600 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Timezone</p>
-              <p class="text-slate-900 dark:text-white font-semibold text-lg">{{ user.timezone || 'â€”' }}</p>
+              <p class="text-slate-900 dark:text-white font-semibold text-lg">{{ user.timezone || ' ' }}</p>
             </div>
             <div class="pb-5 border-b border-slate-200 dark:border-slate-700">
               <p class="text-slate-600 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Account Created</p>
@@ -170,7 +170,7 @@
             </div>
             <div>
               <p class="text-slate-600 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Last Login</p>
-              <p class="text-slate-900 dark:text-white font-semibold text-lg">{{ stats.last_login || 'â€”' }}</p>
+              <p class="text-slate-900 dark:text-white font-semibold text-lg">{{ stats.last_login || ' ' }}</p>
             </div>
           </div>
         </div>
@@ -218,10 +218,10 @@
             <div v-else-if="stats.trial_ends_at && !activePlan" class="p-6 rounded-lg" :class="isTrialActive ? 'bg-white dark:bg-slate-800 border border-yellow-300 dark:border-yellow-700' : 'bg-white dark:bg-slate-800 border border-red-300 dark:border-red-700'">
               <p class="text-sm font-bold flex items-center gap-2" :class="isTrialActive ? 'text-yellow-900 dark:text-yellow-200' : 'text-red-900 dark:text-red-200'">
                 <span :class="['w-3 h-3 rounded-full', isTrialActive ? 'bg-yellow-500 animate-pulse' : 'bg-red-500 animate-pulse']"></span>
-                {{ isTrialActive ? 'ðŸ”„ Active Trial' : 'â° Trial Expired' }}
+                {{ isTrialActive ? 'ðŸ”„ Active Trial' : ' Trial Expired' }}
               </p>
               <p class="text-slate-700 dark:text-slate-300 text-sm mt-3">Trial ends: <span class="font-semibold">{{ formatDate(stats.trial_ends_at) }}</span></p>
-              <p v-if="isTrialActive" class="text-slate-700 dark:text-slate-300 text-sm font-medium mt-2">â³ {{ daysUntilTrialExpires }} days remaining</p>
+              <p v-if="isTrialActive" class="text-slate-700 dark:text-slate-300 text-sm font-medium mt-2"> {{ daysUntilTrialExpires }} days remaining</p>
 
               <div class="grid grid-cols-2 gap-3 mt-4">
                 <button
@@ -243,7 +243,7 @@
             <div v-else class="p-6 rounded-lg bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700">
               <p class="text-sm font-bold text-gray-900 dark:text-gray-200 flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-gray-500"></span>
-                âš ï¸ No Plan or Trial
+                No Plan or Trial
               </p>
               <p class="text-gray-700 dark:text-gray-300 text-sm mt-3">This user doesn't have an active trial or plan. Assign them a plan to get started.</p>
 

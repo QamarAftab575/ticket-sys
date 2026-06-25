@@ -6,7 +6,7 @@
       <button
         @click="toggleSidebar"
         class="lg:hidden text-gray-300 hover:text-white hover:bg-gray-700 p-2 rounded transition"
-        title="Toggle Sidebar"
+        :title="$t('toggle_sidebar')"
       >
         <svg 
           class="w-4 h-4 transition-transform duration-300" 
@@ -28,7 +28,7 @@
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10.5 1.5H9.5V9.5H1.5V10.5H9.5V18.5H10.5V10.5H18.5V9.5H10.5V1.5Z" fill="currentColor"/>
           </svg>
-          <span>Create</span>
+          <span>{{ $t('create') }}</span>
         </button>
 
         <!-- Create Dropdown Menu -->
@@ -45,7 +45,7 @@
             <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
             </svg>
-            <span class="text-sm font-medium">Project</span>
+            <span class="text-sm font-medium">{{ $t('project') }}</span>
           </Link>
         </div>
       </div>
@@ -72,13 +72,13 @@
           @click.stop
         >
           <Link href="/profile" class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer">
-            Profile
+            {{ $t('profile') }}
           </Link>
           <Link href="/settings" class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer">
-            Settings
+            {{ $t('settings') }}
           </Link>
           <Link href="/logout" method="post" class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 border-t border-gray-200 cursor-pointer">
-            Logout
+            {{ $t('logout') }}
           </Link>
         </div>
       </div>

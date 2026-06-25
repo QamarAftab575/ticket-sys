@@ -2,11 +2,11 @@
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-full">
     <div class="flex items-center justify-between mb-5">
       <div class="flex items-center gap-2">
-        <h2 class="text-base font-semibold text-gray-900">Projects</h2>
+        <h2 class="text-base font-semibold text-gray-900">{{ $t('projects') }}</h2>
         <button
           @click="showMenu = !showMenu"
           class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
-          title="Sort"
+          :title="$t('sort')"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
@@ -17,13 +17,13 @@
             @click="sortBy = 'recent'; showMenu = false"
             :class="['w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 cursor-pointer transition-colors', sortBy === 'recent' ? 'text-blue-600 font-medium' : 'text-gray-700']"
           >
-            Recents
+            {{ $t('recents') }}
           </button>
           <button
             @click="sortBy = 'name'; showMenu = false"
             :class="['w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 border-t border-gray-100 cursor-pointer transition-colors', sortBy === 'name' ? 'text-blue-600 font-medium' : 'text-gray-700']"
           >
-            A-Z
+            {{ $t('a_z') }}
           </button>
         </div>
       </div>
@@ -41,7 +41,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
         </div>
-        <span class="text-sm font-medium text-gray-600 group-hover:text-blue-600">Create project</span>
+        <span class="text-sm font-medium text-gray-600 group-hover:text-blue-600">{{ $t('create_project_btn') }}</span>
       </Link>
 
       <!-- Project Cards -->
@@ -96,7 +96,7 @@
       v-if="sortedProjects.length > 6"
       class="w-full text-left px-4 py-3 text-sm text-gray-600 hover:text-gray-900 font-medium cursor-pointer transition-colors mt-3"
     >
-      Show more
+      {{ $t('show_more') }}
     </button>
 
     <!-- Empty State (only show when NO projects) -->
@@ -106,18 +106,18 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
         </svg>
       </div>
-      <p class="text-gray-600 font-medium text-sm">No projects yet</p>
-      <p class="text-gray-500 text-xs mt-1">Create your first project to get started</p>
+      <p class="text-gray-600 font-medium text-sm">{{ $t('no_projects_yet_desc') }}</p>
+      <p class="text-gray-500 text-xs mt-1">{{ $t('create_first_project') }}</p>
 
     <!-- Color/Icon Editor Modal -->
     <div v-if="selectedProject" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
         <div class="p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-6">Edit {{ selectedProject.name }}</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ $t('edit') }} {{ selectedProject.name }}</h3>
 
           <!-- Color Picker -->
           <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-3">Color</label>
+            <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('color') }}</label>
             <div class="grid grid-cols-5 gap-3">
               <button
                 v-for="color in colorPalette"
@@ -134,7 +134,7 @@
 
           <!-- Icon Picker -->
           <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-3">Icon</label>
+            <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('icon') }}</label>
             <div class="grid grid-cols-4 gap-3">
               <!-- Default Icon Option -->
               <button
@@ -144,7 +144,7 @@
                   !editForm.icon ? 'ring-2 ring-offset-2 ring-blue-500 scale-110' : 'hover:scale-105 hover:bg-gray-50'
                 ]"
                 :style="{ backgroundColor: !editForm.icon ? editForm.color : 'transparent' }"
-                title="Default"
+                :title="$t('default')"
               >
                 <svg :class="!editForm.icon ? 'w-6 h-6 text-white' : 'w-6 h-6 text-gray-400'" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M5 5C5 6.3805 3.8805 7.5 2.5 7.5C1.1195 7.5 0 6.3805 0 5C0 3.6195 1.1195 2.5 2.5 2.5C3.8805 2.5 5 3.6195 5 5ZM2.5 9.5C1.1195 9.5 0 10.6195 0 12C0 13.3805 1.1195 14.5 2.5 14.5C3.8805 14.5 5 13.3805 5 12C5 10.6195 3.8805 9.5 2.5 9.5ZM2.5 16.5C1.1195 16.5 0 17.6195 0 19C0 20.3805 1.1195 21.5 2.5 21.5C3.8805 21.5 5 20.3805 5 19C5 17.6195 3.8805 16.5 2.5 16.5ZM9 3V7H24V3H9ZM9 14H24V10H9V14ZM9 21H24V17H9V21Z"/>
@@ -171,7 +171,7 @@
 
           <!-- Preview -->
           <div class="mb-6 p-4 bg-gray-50 rounded-xl text-center">
-            <p class="text-xs text-gray-600 mb-3 font-medium">Preview</p>
+            <p class="text-xs text-gray-600 mb-3 font-medium">{{ $t('preview') }}</p>
             <div
               class="w-16 h-16 rounded-xl flex items-center justify-center mx-auto shadow-lg overflow-hidden"
               :style="{ backgroundColor: editForm.color }"
@@ -191,14 +191,14 @@
               @click="selectedProject = null"
               class="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 text-sm font-medium cursor-pointer transition-colors"
             >
-              Cancel
+              {{ $t('cancel') }}
             </button>
             <button
               @click="updateProjectStyle"
               :disabled="isUpdating"
               class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium cursor-pointer transition-colors"
             >
-              {{ isUpdating ? 'Saving...' : 'Save' }}
+              {{ isUpdating ? $t('saving') : $t('save') }}
             </button>
           </div>
         </div>

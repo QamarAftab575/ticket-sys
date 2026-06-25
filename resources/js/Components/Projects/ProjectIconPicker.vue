@@ -103,7 +103,7 @@
             @click="save"
             :disabled="saving"
             class="px-3 py-1.5 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
-          >{{ saving ? 'Savingâ€¦' : 'Save' }}</button>
+          >{{ saving ? 'Saving ¦' : 'Save' }}</button>
         </div>
       </div>
     </Teleport>
@@ -124,7 +124,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update'])
 
-// â”€â”€ Local state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Local state 
 const open    = ref(false)
 const saving  = ref(false)
 const localColor = ref(props.color || '#6366f1')
@@ -133,7 +133,7 @@ const localIcon  = ref(props.icon  || null)
 watch(() => props.color, v => { localColor.value = v || '#6366f1' })
 watch(() => props.icon,  v => { localIcon.value  = v || null })
 
-// â”€â”€ Size helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Size helpers 
 const sizeClass = computed(() => ({
   sm: 'w-5 h-5',
   md: 'w-7 h-7',
@@ -146,7 +146,7 @@ const iconTextSize = computed(() => ({
   lg: 'text-2xl',
 }[props.size] ?? 'text-sm'))
 
-// â”€â”€ Color palette â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Color palette 
 const COLORS = [
   '#ef4444','#f97316','#eab308','#22c55e','#10b981',
   '#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6',
@@ -156,15 +156,10 @@ const COLORS = [
   '#7c3aed','#1d4ed8','#0369a1','#065f46','#92400e',
 ]
 
-// â”€â”€ Emoji icons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const EMOJI_ICONS = [
-  'ðŸš€','ðŸ“‹','ðŸ“Œ','ðŸŽ¯','ðŸ’¡','âš¡','ðŸ”¥','ðŸŒŸ','âœ…','ðŸ“Š',
-  'ðŸ› ï¸','ðŸŽ¨','ðŸ“±','ðŸ’»','ðŸŒ','ðŸ“¦','ðŸ”’','ðŸ“','ðŸ—‚ï¸','ðŸ“…',
-  'ðŸ†','ðŸ’¬','ðŸ””','ðŸ“£','ðŸ¤','ðŸ§©','ðŸ”','ðŸ“ˆ','ðŸŽª','ðŸŒˆ',
-  'ðŸ¦‹','ðŸ›','ðŸŒ±','ðŸŒ¿','ðŸ€','ðŸŽµ','ðŸŽ¸','ðŸŽ®','ðŸ‹ï¸','ðŸš—',
-]
+//  Emoji icons 
+const EMOJI_ICONS = []
 
-// â”€â”€ SVG icons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  SVG icons 
 const SVG_ICONS = [
   {
     id: 'svg:list', label: 'List',
@@ -232,7 +227,7 @@ const SVG_ICONS = [
   },
 ]
 
-// â”€â”€ Icon helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Icon helpers 
 const isSvgIcon = (icon) => icon?.startsWith('svg:')
 
 const getSvgIcon = (iconId) => {
@@ -240,7 +235,7 @@ const getSvgIcon = (iconId) => {
   return found?.svg ?? ''
 }
 
-// â”€â”€ Popover positioning â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Popover positioning 
 const containerRef = ref(null)
 const popoverRef   = ref(null)
 const popoverStyle = ref({})
@@ -274,11 +269,11 @@ const handleOutsideClick = (e) => {
 onMounted(() => document.addEventListener('mousedown', handleOutsideClick))
 onBeforeUnmount(() => document.removeEventListener('mousedown', handleOutsideClick))
 
-// â”€â”€ Selection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Selection 
 const selectColor = (c) => { localColor.value = c }
 const selectIcon  = (i) => { localIcon.value  = i }
 
-// â”€â”€ Save â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Save 
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
 
 const save = async () => {
@@ -293,7 +288,7 @@ const save = async () => {
     emit('update', { color: localColor.value, icon: localIcon.value })
     open.value = false
   } catch {
-    // silently fail â€” parent can add toast if desired
+    // silently fail   parent can add toast if desired
   } finally {
     saving.value = false
   }

@@ -7,7 +7,7 @@
           {{ userInitials }}
         </div>
         <div>
-          <h2 class="text-lg font-semibold text-gray-900">My tasks</h2>
+          <h2 class="text-lg font-semibold text-gray-900">{{ page.props.translations?.my_tasks || 'My Tasks' }}</h2>
           <p class="text-xs text-gray-500 mt-0.5">{{ taskStats }}</p>
         </div>
       </div>
@@ -32,7 +32,7 @@
               : 'border-transparent text-gray-600 hover:text-gray-900'
           ]"
         >
-          {{ tab.label }}
+          {{ page.props.translations?.[tab.label] || tab.label }}
         </button>
       </div>
     </div>
@@ -69,7 +69,7 @@
           :disabled="loadingMore"
           class="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors disabled:opacity-50"
         >
-          {{ loadingMore ? 'Loading...' : 'Show more' }}
+          {{ loadingMore ? (page.props.translations?.loading || 'Loading') : (page.props.translations?.show_more || 'Show More') }}
         </button>
       </div>
     </div>
@@ -78,6 +78,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 import DashboardTaskRow from './DashboardTaskRow.vue'
 
 const props = defineProps({
@@ -85,6 +86,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['select-task'])
+const page = usePage()
 
 const activeTab = ref('upcoming')
 const showCreateTask = ref(false)
@@ -104,9 +106,9 @@ const displayCounts = ref({
 })
 
 const tabs = [
-  { id: 'upcoming', label: 'Upcoming' },
-  { id: 'overdue', label: 'Overdue' },
-  { id: 'completed', label: 'Completed' },
+  { id: 'upcoming', label: 'upcoming' },
+  { id: 'overdue', label: 'overdue' },
+  { id: 'completed', label: 'completed' },
 ]
 
 const displayedTasks = computed(() => {
@@ -125,12 +127,15 @@ const taskStats = computed(() => {
   const totalOverdue = allTasks.value.overdue?.length || 0
   const totalActive = totalUpcoming + totalOverdue
   
-  // Show count only if we have fetched data
   if (loading.value) {
-    return 'Loading...'
+    return page.props.translations?.loading || 'Loading'
   }
   
-  return `${totalCompleted} tasks completed, ${totalActive} active`
+  const taskText = page.props.translations?.task || 'task'
+  const completedText = page.props.translations?.completed || 'completed'
+  const activeText = page.props.translations?.active || 'active'
+  
+  return `${totalCompleted} ${taskText.toLowerCase()}s ${completedText.toLowerCase()}, ${totalActive} ${activeText.toLowerCase()}`
 })
 
 // Fetch all tabs on mount

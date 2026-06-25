@@ -30,7 +30,7 @@
             :class="{ 'line-through text-gray-400': dep.completed_at }"
           >{{ dep.name }}</span>
           <span v-if="dep.start_date || dep.due_date" class="text-xs text-gray-400 flex-shrink-0">
-            Â· {{ formatDateRange(dep.start_date, dep.due_date) }}
+           {{ formatDateRange(dep.start_date, dep.due_date) }}
           </span>
         </button>
 
@@ -53,7 +53,7 @@
                 <p class="text-sm font-medium text-gray-900 truncate">{{ dep.name }}</p>
                 <p class="text-xs text-gray-500 mt-0.5">
                   <span v-if="dep.assignee">{{ dep.assignee.name }}</span>
-                  <span v-if="dep.assignee && (dep.start_date || dep.due_date)"> Â· </span>
+                  <span v-if="dep.assignee && (dep.start_date || dep.due_date)"> </span>
                   <span v-if="dep.start_date || dep.due_date">{{ formatDateRange(dep.start_date, dep.due_date) }}</span>
                   <span v-if="!dep.assignee && !dep.start_date && !dep.due_date" class="italic">No assignee or date</span>
                 </p>
@@ -107,7 +107,7 @@ function formatDate(date: string): string {
 }
 
 function formatDateRange(start?: string | null, end?: string | null): string {
-  if (start && end) return `${formatDate(start)} â€“ ${formatDate(end)}`;
+  if (start && end) return `${formatDate(start)}  “ ${formatDate(end)}`;
   if (end) return formatDate(end);
   if (start) return formatDate(start);
   return '';

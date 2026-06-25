@@ -114,7 +114,7 @@ export const useMyTasksStore = defineStore('myTasks', () => {
       
       const data = await response.json();
       
-      console.log('Fetched tasks data:', data);
+       
       
       // Always treat as flat array
       if (Array.isArray(data.tasks)) {
@@ -126,7 +126,7 @@ export const useMyTasksStore = defineStore('myTasks', () => {
         tasks.value = [];
       }
       
-      console.log('Tasks after assignment:', tasks.value);
+       
       
       totalTasks.value = data.total || 0;
       totalPages.value = data.pages || 1;

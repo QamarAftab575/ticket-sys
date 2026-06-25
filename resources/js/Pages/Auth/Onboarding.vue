@@ -23,7 +23,7 @@
                 Start building your workspace by inviting members to join.
               </p>
               <Link href="/invitations" class="mt-2 inline-block text-blue-600 hover:text-blue-900">
-                Go to Invitations â†’
+                Go to Invitations ’
               </Link>
             </div>
           </li>

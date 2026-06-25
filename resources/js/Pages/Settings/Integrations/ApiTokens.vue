@@ -342,7 +342,7 @@ const handleCreateToken = async () => {
 const copyTokenToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(newToken.value.plain_token)
-    copyButtonText.value = 'âœ“ Copied!'
+    copyButtonText.value = ' Copied!'
     setTimeout(() => {
       copyButtonText.value = 'Copy Token'
     }, 2000)

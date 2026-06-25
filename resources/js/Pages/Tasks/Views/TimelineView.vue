@@ -31,7 +31,7 @@
             :style="getMilestoneStyle(task)"
             @click="selectTask(task)"
           >
-            â—†
+          
           </div>
         </div>
       </div>

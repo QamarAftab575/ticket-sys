@@ -349,7 +349,7 @@ const listViewHiddenColumns = ref([])
 const files = ref([])
 const stats = ref({})
 
-// Reactive appearance â€” updated optimistically when picker saves
+// Reactive appearance   updated optimistically when picker saves
 const projectColor = ref(props.project.color || '#6366f1')
 const projectIcon  = ref(props.project.icon  || null)
 
@@ -405,7 +405,7 @@ const loadViewData = async () => {
         throw new Error('Failed to load tasks')
       }
       const data = await response.json()
-      // If grouping is active, data.tasks is an object â€” flatten it to an array
+      // If grouping is active, data.tasks is an object   flatten it to an array
       tasks.value = Array.isArray(data.tasks)
         ? data.tasks
         : Object.values(data.tasks || {}).flat()
@@ -463,7 +463,7 @@ const updateTask = async (taskId, data) => {
   }
 }
 
-// Called by TaskDetailPanel after it has already saved â€” just sync local state
+// Called by TaskDetailPanel after it has already saved   just sync local state
 const syncTaskFromPanel = (taskId, data) => {
   const task = tasks.value.find((t) => t.id === taskId)
   if (task) Object.assign(task, data)
@@ -591,7 +591,7 @@ const handleTaskCreated = async (taskData) => {
   }
 }
 
-// â”€â”€ Blocked-by modal state (for row checkbox) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Blocked-by modal state (for row checkbox) 
 const blockedModalTaskId = ref(null)
 const blockedModalDeps = ref([])
 
@@ -812,7 +812,7 @@ const handleDeleteSection = async ({ sectionId, deleteTasks, targetSectionId }) 
       if (t.section_id === sectionId) t.section_id = targetSectionId
     })
   } else {
-    // Tasks moved to "Untitled Section" on backend â€” reload to get correct state
+    // Tasks moved to "Untitled Section" on backend   reload to get correct state
     await loadViewData()
   }
 
@@ -827,7 +827,7 @@ const handleSectionsReordered = async (sectionIds) => {
   await syncSectionOrder(sectionIds)
 }
 
-// BoardView reorder â€” needs to apply optimistic update to sections ref too
+// BoardView reorder   needs to apply optimistic update to sections ref too
 const handleBoardSectionsReordered = async (sectionIds) => {
   const original = [...sections.value]
   sections.value = sectionIds
@@ -912,7 +912,7 @@ onMounted(async () => {
   await loadViewData()
 
   // Subscribe to real-time events for this project.
-  // Events patch the local `tasks` array directly â€” no page refresh.
+  // Events patch the local `tasks` array directly   no page refresh.
   listenToProject(props.project.id, {
     onTaskCreated({ task: incoming }) {
       const exists = tasks.value.some(t => t.id === incoming.id)

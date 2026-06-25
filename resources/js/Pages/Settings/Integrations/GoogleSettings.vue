@@ -54,8 +54,8 @@
                 <div>
                   <h3 class="text-lg font-semibold text-gray-900">Configuration Status</h3>
                   <p class="text-gray-600 mt-1">
-                    <span v-if="status.enabled" class="text-green-600 font-medium">âœ“ Enabled</span>
-                    <span v-else class="text-red-600 font-medium">âœ— Disabled</span>
+                    <span v-if="status.enabled" class="text-green-600 font-medium"> Enabled</span>
+                    <span v-else class="text-red-600 font-medium"> Disabled</span>
                   </p>
                   <p v-if="status.last_updated" class="text-sm text-gray-500 mt-2">
                     Last updated: {{ formatDate(status.last_updated) }}
@@ -63,10 +63,10 @@
                 </div>
                 <div class="text-right">
                   <div v-if="status.configured" class="text-green-600 text-sm font-medium">
-                    âœ“ Credentials Configured
+                     Credentials Configured
                   </div>
                   <div v-else class="text-amber-600 text-sm font-medium">
-                    âš  Credentials Missing
+                     Credentials Missing
                   </div>
                 </div>
               </div>

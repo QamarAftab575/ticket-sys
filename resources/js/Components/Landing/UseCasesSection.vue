@@ -55,10 +55,10 @@ defineProps({
       <!-- Section header - Minimal Apple style -->
       <div class="text-center mb-16">
         <h2 class="text-5xl sm:text-6xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight leading-tight">
-          Built for every team
+          {{ $t('built_for_every_team') }}
         </h2>
         <p class="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto font-medium">
-          From engineering to operations, adapt to your unique workflow.
+          {{ $t('adapt_unique_workflow') }}
         </p>
       </div>
 

@@ -37,7 +37,7 @@
           </svg>
         </button>
 
-        <!-- Resize handle â€” overlays the column border on hover -->
+        <!-- Resize handle   overlays the column border on hover -->
         <div
           v-if="idx < visibleColumns.length - 1"
           @mousedown="startResize(column.id, $event)"
@@ -102,7 +102,7 @@ const resizingColumn    = ref(null)
 const resizeStartX      = ref(0)
 const isResizing        = ref(false)
 
-// â”€â”€ column drag-to-reorder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  column drag-to-reorder 
 const draggingIdx  = ref(null)
 const dragOverIdx  = ref(null)
 const isDraggingCol = ref(false)
@@ -143,7 +143,7 @@ function onDrop(event, toIdx) {
   emit('reorder-column', { fromIndex: fromIdx, toIndex: toIdx })
 }
 
-// â”€â”€ sort â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  sort 
 const getSortDirection = (columnId) => props.sortRules?.find(r => r.field === columnId)?.direction ?? null
 
 const handleSort = (columnId) => {
@@ -151,13 +151,13 @@ const handleSort = (columnId) => {
   emit('sort', { field: columnId, direction: current === 'asc' ? 'desc' : 'asc' })
 }
 
-// â”€â”€ hide column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  hide column 
 const hideColumn = (columnId) => {
   emit('hide-column', columnId)
   activeColumnMenu.value = null
 }
 
-// â”€â”€ resize â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  resize 
 const startResize = (columnId, event) => {
   event.preventDefault()   // prevent text selection
   event.stopPropagation()  // prevent drag start on the parent
@@ -183,7 +183,7 @@ const stopResize = () => {
   setTimeout(() => { isResizing.value = false }, 50)
 }
 
-// â”€â”€ add field â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  add field 
 const onFieldCreated = (field) => {
   if (!fields.value.find(f => f.id === field.id)) fields.value.push(field)
   emit('create-field', field)

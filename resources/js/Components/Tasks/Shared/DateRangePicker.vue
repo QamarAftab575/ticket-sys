@@ -146,7 +146,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-// â”€â”€ state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  state 
 const open = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 const popoverRef = ref<HTMLElement | null>(null);
@@ -160,7 +160,7 @@ const localEnd = ref<string | null>(props.endDate ?? null);
 const activeInput = ref<'start' | 'end'>('end');
 const hoverDate = ref<Date | null>(null);
 
-// â”€â”€ debounced save â€” single request, last-write-wins â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  debounced save   single request, last-write-wins 
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 function scheduleSave() {
@@ -171,11 +171,11 @@ function scheduleSave() {
   }, 300);
 }
 
-// â”€â”€ sync props â†’ local â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  sync props ’ local 
 watch(() => props.startDate, v => { localStart.value = v ?? null; });
 watch(() => props.endDate,   v => { localEnd.value   = v ?? null; });
 
-// â”€â”€ computed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  computed 
 const hasAnyDate = computed(() => !!(props.startDate || props.endDate));
 
 const isOverdue = computed(() => {
@@ -193,9 +193,9 @@ const dateLabel = computed(() => {
     if (isNaN(s.getTime()) || isNaN(e.getTime())) return '';
     const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
     if (sameMonth) {
-      return `${s.getDate()} â€“ ${e.getDate()} ${e.toLocaleDateString('en-US', { month: 'short' })}`;
+      return `${s.getDate()}  “ ${e.getDate()} ${e.toLocaleDateString('en-US', { month: 'short' })}`;
     }
-    return `${fmtSmart(start)} â€“ ${fmtSmart(end)}`;
+    return `${fmtSmart(start)}  “ ${fmtSmart(end)}`;
   }
 
   const iso = end || start;
@@ -231,7 +231,7 @@ const monthLabel = computed(() =>
 const calendarCells = computed(() => {
   const cells: { key: string; date: Date | null; day: number | null }[] = [];
   const first = new Date(viewYear.value, viewMonth.value, 1);
-  // Mon=0 â€¦ Sun=6
+  // Mon=0  ¦ Sun=6
   let startOffset = (first.getDay() + 6) % 7;
   // pad with nulls
   for (let i = 0; i < startOffset; i++) cells.push({ key: `e${i}`, date: null, day: null });
@@ -246,7 +246,7 @@ const calendarCells = computed(() => {
   return cells;
 });
 
-// â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  helpers 
 
 // Build YYYY-MM-DD from a local Date without UTC shift
 function toDateStr(d: Date): string {
@@ -286,7 +286,7 @@ function isToday(d: Date): boolean {
   return isSameDay(d, new Date());
 }
 
-// â”€â”€ day styling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  day styling 
 function dayClass(cell: { date: Date | null }): string[] {
   if (!cell.date) return [];
   const classes: string[] = [];
@@ -339,7 +339,7 @@ function dayInnerClass(cell: { date: Date | null }): string[] {
   return classes;
 }
 
-// â”€â”€ actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  actions 
 function setActiveInput(input: 'start' | 'end') {
   activeInput.value = input;
 }
@@ -390,7 +390,7 @@ function nextMonth() {
   else viewMonth.value++;
 }
 
-// â”€â”€ popover positioning â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  popover positioning 
 function positionPopover() {
   if (!containerRef.value) return;
   const rect = containerRef.value.getBoundingClientRect();

@@ -8,7 +8,7 @@
           class="px-3 py-1 border rounded hover:bg-gray-200 transition-colors"
           :aria-label="viewMode === 'month' ? 'Previous month' : 'Previous week'"
         >
-          â† Previous
+           Previous
         </button>
         <button
           @click="goToToday"
@@ -22,7 +22,7 @@
           class="px-3 py-1 border rounded hover:bg-gray-200 transition-colors"
           :aria-label="viewMode === 'month' ? 'Next month' : 'Next week'"
         >
-          Next â†’
+          Next 
         </button>
       </div>
       <h3 class="text-lg font-semibold">{{ displayTitle }}</h3>
@@ -157,13 +157,13 @@ const displayTitle = computed(() => {
     const startDay = start.getDate()
     const endDay = end.getDate()
     
-    // If same month: "May 10 â€“ 16"
+    // If same month: "May 10  “ 16"
     if (start.getMonth() === end.getMonth()) {
-      return `${startMonth} ${startDay} â€“ ${endDay}`
+      return `${startMonth} ${startDay}  “ ${endDay}`
     }
-    // If different months: "May 30 â€“ Jun 5"
+    // If different months: "May 30  “ Jun 5"
     else {
-      return `${startMonth} ${startDay} â€“ ${endMonth} ${endDay}`
+      return `${startMonth} ${startDay}  “ ${endMonth} ${endDay}`
     }
   }
 })

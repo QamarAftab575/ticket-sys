@@ -151,6 +151,7 @@ onMounted(() => {
               <li><Link href="/privacy" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">{{ $t('privacy') }}</Link></li>
               <li><Link href="/terms" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">{{ $t('terms') }}</Link></li>
               <li><Link href="/security" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">{{ $t('security') }}</Link></li>
+              <li><Link href="/cookie-policy" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">{{ $t('cookie_policy') }}</Link></li>
             </ul>
           </div>
         </div>

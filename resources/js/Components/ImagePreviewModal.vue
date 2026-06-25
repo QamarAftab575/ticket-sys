@@ -53,7 +53,7 @@
             </div>
           </div>
 
-          <!-- Image area â€” overflow scroll, drag to pan -->
+          <!-- Image area   overflow scroll, drag to pan -->
           <div
             ref="containerRef"
             class="overflow-auto flex-1 bg-gray-50 rounded-b-xl select-none"
@@ -155,7 +155,7 @@ function zoomIn()    { scale.value = Math.min(MAX_SCALE, +(scale.value + STEP).t
 function zoomOut()   { scale.value = Math.max(MIN_SCALE, +(scale.value - STEP).toFixed(2)) }
 function resetZoom() { fitToContainer() }
 
-// â”€â”€ Click-and-drag pan â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Click-and-drag pan 
 const isDragging = ref(false)
 let dragStartX = 0
 let dragStartY = 0

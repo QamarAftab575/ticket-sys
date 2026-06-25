@@ -15,7 +15,7 @@
         >
           {{ selectedOption.name }}
         </span>
-        <span v-else class="text-gray-400">â€”</span>
+        <span v-else class="text-gray-400"> </span>
       </template>
 
       <!-- Multi select: chips -->
@@ -30,7 +30,7 @@
             {{ opt.name }}
           </span>
         </template>
-        <span v-else class="text-gray-400">â€”</span>
+        <span v-else class="text-gray-400"> </span>
       </template>
     </button>
 

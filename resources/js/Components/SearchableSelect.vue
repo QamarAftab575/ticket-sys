@@ -137,7 +137,7 @@ const props = defineProps({
   },
   clearLabel: {
     type: String,
-    default: 'â€” Clear selection â€”',
+    default: '  Clear selection  ',
   },
   disabled: {
     type: Boolean,

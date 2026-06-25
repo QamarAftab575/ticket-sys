@@ -106,7 +106,7 @@ const collapsedSectionsArray = computed(() => {
   return [];
 });
 
-// Tasks already have a real section_id from the DB â€” no mapping needed
+// Tasks already have a real section_id from the DB   no mapping needed
 const processedTasks = computed(() => props.tasks);
 
 // Compute members map: task.id -> members array

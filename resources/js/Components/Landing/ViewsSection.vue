@@ -18,13 +18,13 @@ const activeView = ref('kanban');
       <!-- Section header -->
       <div class="text-center mb-16">
         <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium mb-6">
-          <span>{{ $t('messages.views') }}</span>
+          <span>{{ $t('views') }}</span>
         </div>
         <h2 class="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-          {{ $t('messages.see_work_your_way') }}
+          {{ $t('see_work_your_way') }}
         </h2>
         <p class="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-          {{ $t('messages.multiple_views_subtitle') }}
+          {{ $t('multiple_views_subtitle') }}
         </p>
       </div>
 
@@ -88,7 +88,7 @@ const activeView = ref('kanban');
                     'w-2 h-2 rounded-full',
                     col.color === 'slate' ? 'bg-slate-400' : col.color === 'blue' ? 'bg-blue-500' : 'bg-green-500'
                   ]"></div>
-                  <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $t(`messages.${col.name}`) }}</span>
+                  <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $t(col.name) }}</span>
                   <span class="text-xs text-slate-500 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-full">{{ col.count }}</span>
                 </div>
                 <button class="p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded cursor-pointer transition-colors">
@@ -107,7 +107,7 @@ const activeView = ref('kanban');
                 ]"
               >
                 <div class="flex items-start justify-between mb-3">
-                  <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('messages.task_id', { id: 100 + index * 10 + cardIdx }) }}</span>
+                  <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ $t('task_id', { id: 100 + index * 10 + cardIdx }) }}</span>
                   <div :class="[
                     'w-2 h-2 rounded-full',
                     cardIdx === 1 ? 'bg-red-500' : cardIdx === 2 ? 'bg-orange-500' : 'bg-yellow-500'
@@ -117,10 +117,10 @@ const activeView = ref('kanban');
                   'text-sm font-medium mb-2',
                   col.name === 'done' ? 'text-slate-500 dark:text-slate-400 line-through' : 'text-slate-900 dark:text-white'
                 ]">
-                  {{ ['redesign_dashboard', 'api_integration', 'bug_fix_login'].map(k => $t(`messages.${k}`))[cardIdx - 1] }}
+                  {{ ['redesign_dashboard', 'api_integration', 'bug_fix_login'].map(k => $t(k))[cardIdx - 1] }}
                 </h4>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                  {{ ['update_analytics', 'connect_services', 'fix_oauth'].map(k => $t(`messages.${k}`))[cardIdx - 1] }}
+                  {{ ['update_analytics', 'connect_services', 'fix_oauth'].map(k => $t(k))[cardIdx - 1] }}
                 </p>
                 <div class="flex items-center justify-between">
                   <div class="flex -space-x-2">
@@ -132,7 +132,7 @@ const activeView = ref('kanban');
                     ></div>
                   </div>
                   <span class="text-xs text-slate-400 dark:text-slate-500">
-                    {{ col.name === 'done' ? $t('messages.completed') : $t('messages.due_in_days', { days: cardIdx + 1 }) }}
+                    {{ col.name === 'done' ? $t('completed') : $t('due_in_days', { days: cardIdx + 1 }) }}
                   </span>
                 </div>
               </div>
@@ -146,11 +146,11 @@ const activeView = ref('kanban');
               <div class="col-span-1">
                 <input type="checkbox" class="rounded border-slate-300 dark:border-slate-700 cursor-pointer" />
               </div>
-              <div class="col-span-4">{{ $t('messages.task') }}</div>
-              <div class="col-span-2">{{ $t('messages.assignee') }}</div>
-              <div class="col-span-2">{{ $t('messages.status') }}</div>
-              <div class="col-span-2">{{ $t('messages.priority') }}</div>
-              <div class="col-span-1">{{ $t('messages.due') }}</div>
+              <div class="col-span-4">{{ $t('task') }}</div>
+              <div class="col-span-2">{{ $t('assignee') }}</div>
+              <div class="col-span-2">{{ $t('status') }}</div>
+              <div class="col-span-2">{{ $t('priority') }}</div>
+              <div class="col-span-1">{{ $t('due') }}</div>
             </div>
 
             <!-- Rows -->
@@ -162,9 +162,9 @@ const activeView = ref('kanban');
               </div>
               <div class="col-span-4">
                 <div class="flex items-center gap-2">
-                  <span class="text-xs text-slate-500 dark:text-slate-400">{{ $t('messages.task_id', { id: 200 + idx }) }}</span>
+                  <span class="text-xs text-slate-500 dark:text-slate-400">{{ $t('task_id', { id: 200 + idx }) }}</span>
                   <span class="text-sm font-medium text-slate-900 dark:text-white">
-                    {{ ['implement_auth', 'design_landing', 'setup_cicd', 'write_docs', 'performance_optimization', 'add_tests'].map(k => $t(`messages.${k}`))[idx] }}
+                    {{ ['implement_auth', 'design_landing', 'setup_cicd', 'write_docs', 'performance_optimization', 'add_tests'].map(k => $t(k))[idx] }}
                   </span>
                 </div>
               </div>
@@ -190,7 +190,7 @@ const activeView = ref('kanban');
                     'w-1.5 h-1.5 rounded-full',
                     idx % 3 === 0 ? 'bg-blue-500' : idx % 3 === 1 ? 'bg-green-500' : 'bg-slate-400'
                   ]"></div>
-                  {{ idx % 3 === 0 ? $t('messages.in_progress') : idx % 3 === 1 ? $t('messages.done') : $t('messages.todo') }}
+                  {{ idx % 3 === 0 ? $t('in_progress') : idx % 3 === 1 ? $t('done') : $t('todo') }}
                 </span>
               </div>
               <div class="col-span-2">
@@ -201,7 +201,7 @@ const activeView = ref('kanban');
                   idx % 4 === 2 ? 'bg-yellow-100 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-300' :
                   'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                 ]">
-                  {{ idx % 4 === 0 ? $t('messages.urgent') : idx % 4 === 1 ? $t('messages.high') : idx % 4 === 2 ? $t('messages.medium') : $t('messages.low') }}
+                  {{ idx % 4 === 0 ? $t('urgent') : idx % 4 === 1 ? $t('high') : idx % 4 === 2 ? $t('medium') : $t('low') }}
                 </span>
               </div>
               <div class="col-span-1">
@@ -216,9 +216,9 @@ const activeView = ref('kanban');
           <div v-else-if="activeView === 'timeline'" class="space-y-1">
             <!-- Timeline header -->
             <div class="flex items-center gap-4 mb-6 px-4">
-              <div class="w-32 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{ $t('messages.task') }}</div>
+              <div class="w-32 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{ $t('task') }}</div>
               <div class="flex-1 grid grid-cols-7 gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 text-center">
-                <div v-for="day in ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']" :key="day">{{ $t(`messages.${day}`) }}</div>
+                <div v-for="day in ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']" :key="day">{{ $t(day) }}</div>
               </div>
             </div>
 
@@ -261,7 +261,7 @@ const activeView = ref('kanban');
           <div v-else class="space-y-4">
             <!-- Calendar header -->
             <div class="flex items-center justify-between mb-6">
-              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{{ $t('messages.june_2026') }}</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{{ $t('june_2026') }}</h3>
               <div class="flex items-center gap-2">
                 <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer">
                   <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,7 +281,7 @@ const activeView = ref('kanban');
               <div v-for="day in ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']" :key="day" 
                 class="text-center text-xs font-semibold text-slate-500 dark:text-slate-400 py-2"
               >
-                {{ $t(`messages.${day}`) }}
+                {{ $t(day) }}
               </div>
               <div v-for="date in 35" :key="date" 
                 class="aspect-square bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-2 hover:border-blue-300 dark:hover:border-blue-700 cursor-pointer transition-all duration-200"

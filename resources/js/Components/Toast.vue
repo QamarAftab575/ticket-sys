@@ -12,7 +12,7 @@
         @click="close"
         class="ml-2 text-white hover:opacity-75"
       >
-        âœ•
+        
       </button>
     </div>
   </div>

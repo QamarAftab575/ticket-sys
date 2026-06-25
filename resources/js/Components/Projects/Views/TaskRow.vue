@@ -75,7 +75,7 @@
             :style="{ backgroundColor: task.project.color || '#6366f1' }"
           />
           <span class="truncate text-gray-700 text-[13px]">
-            {{ task.project?.name || 'â€”' }}
+            {{ task.project?.name || ' ' }}
           </span>
         </div>
 
@@ -92,7 +92,7 @@
         </div>
 
         <!-- Fallback -->
-        <span v-else class="truncate text-gray-500 text-[13px]">{{ task[column.id] ?? 'â€”' }}</span>
+        <span v-else class="truncate text-gray-500 text-[13px]">{{ task[column.id] ?? ' ' }}</span>
       </div>
     </div>
   </div>

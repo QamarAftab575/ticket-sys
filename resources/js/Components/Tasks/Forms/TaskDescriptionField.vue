@@ -2,7 +2,7 @@
   <div class="border border-gray-200 rounded-lg overflow-hidden focus-within:border-indigo-300 focus-within:ring-1 focus-within:ring-indigo-200 transition-all">
     <RichEditor
       v-model="localDescription"
-      placeholder="Add a descriptionâ€¦"
+      placeholder="Add a description ¦"
       :show-toolbar="true"
       :task-id="task.id"
       :project-id="projectId"

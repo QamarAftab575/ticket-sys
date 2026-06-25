@@ -57,6 +57,10 @@ Route::get('/gdpr', function () {
     return inertia('GDPR');
 })->name('gdpr');
 
+Route::get('/cookie-policy', function () {
+    return inertia('CookiePolicy');
+})->name('cookie-policy');
+
 // Authenticated routes
 Route::middleware(['auth', 'password.set'])->group(function () {
     Route::middleware('check.subscription')->group(function () {

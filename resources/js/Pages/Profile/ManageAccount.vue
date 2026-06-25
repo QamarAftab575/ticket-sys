@@ -104,10 +104,10 @@
                 :options="timezoneOptions"
                 value-key="timezone"
                 label-key="label"
-                placeholder="â€” Select Timezone â€”"
+                placeholder="  Select Timezone  "
                 search-placeholder="Search timezone..."
                 clearable
-                clear-label="â€” No timezone â€”"
+                clear-label="  No timezone  "
                 class="mt-1"
               />
               <p v-if="errors.timezone" class="mt-1 text-sm text-red-600">{{ errors.timezone }}</p>

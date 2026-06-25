@@ -8,8 +8,8 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
     <!-- Hero Section -->
     <section class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 via-white to-orange-50">
       <div class="max-w-4xl mx-auto text-center">
-        <h1 class="text-5xl font-bold text-slate-900 mb-6">About Asira</h1>
-        <p class="text-xl text-slate-600">The Complete Ticketing & Project Management Solution</p>
+        <h1 class="text-5xl font-bold text-slate-900 mb-6">{{ $t('about_asira') }}</h1>
+        <p class="text-xl text-slate-600">{{ $t('complete_ticketing_solution') }}</p>
       </div>
     </section>
 
@@ -19,33 +19,33 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
         <div class="space-y-16">
           <!-- Our Mission -->
           <div>
-            <h2 class="text-4xl font-bold text-slate-900 mb-6">Our Mission</h2>
+            <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('our_mission') }}</h2>
             <p class="text-lg text-slate-600 leading-relaxed mb-6">
-              Asira is a comprehensive ticketing and project management platform designed to empower teams, streamline workflows, and maximize productivity. We believe that organizations deserve a powerful, intuitive system that brings all their work together in one placeâ€”without unnecessary complexity.
+              {{ $t('mission_description_1') }}
             </p>
             <p class="text-lg text-slate-600 leading-relaxed">
-              Our mission is to transform how teams collaborate, communicate, and deliver results. Whether you're managing support tickets, organizing projects, or coordinating complex workflows, Asira provides the tools you need to succeed.
+              {{ $t('mission_description_2') }}
             </p>
           </div>
 
           <!-- What is Asira -->
           <div>
-            <h2 class="text-4xl font-bold text-slate-900 mb-6">What is Asira?</h2>
+            <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('what_is_asira') }}</h2>
             <p class="text-lg text-slate-600 leading-relaxed mb-8">
-              Asira is an all-in-one ticketing and project management system built for modern teams. It combines powerful ticketing capabilities with flexible project management views, making it the perfect solution for support teams, IT departments, marketing groups, and organizations of any size.
+              {{ $t('asira_description') }}
             </p>
             
             <div class="grid md:grid-cols-2 gap-8">
               <div class="bg-orange-50 rounded-xl p-8 border border-orange-100">
-                <h3 class="text-xl font-bold text-slate-900 mb-4">Advanced Ticketing</h3>
+                <h3 class="text-xl font-bold text-slate-900 mb-4">{{ $t('advanced_ticketing') }}</h3>
                 <p class="text-slate-600 leading-relaxed">
-                  Handle customer inquiries, support requests, and issues with ease. Track ticket status, assign priorities, and manage workflows efficiently.
+                  {{ $t('ticketing_description') }}
                 </p>
               </div>
               <div class="bg-orange-50 rounded-xl p-8 border border-orange-100">
-                <h3 class="text-xl font-bold text-slate-900 mb-4">Project Management</h3>
+                <h3 class="text-xl font-bold text-slate-900 mb-4">{{ $t('project_management') }}</h3>
                 <p class="text-slate-600 leading-relaxed">
-                  Organize projects with multiple flexible views including Kanban boards, timeline views, and calendar layouts for complete visibility.
+                  {{ $t('project_mgmt_description') }}
                 </p>
               </div>
             </div>
@@ -53,9 +53,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 
           <!-- Core Features -->
           <div>
-            <h2 class="text-4xl font-bold text-slate-900 mb-6">Powerful Features</h2>
+            <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('powerful_features') }}</h2>
             <p class="text-lg text-slate-600 leading-relaxed mb-8">
-              Asira comes packed with nearly all the functionality organizations need to succeed:
+              {{ $t('features_intro') }}
             </p>
             
             <div class="space-y-6">
@@ -69,9 +69,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-slate-900 mb-2">Comprehensive Ticketing System</h3>
+                  <h3 class="text-xl font-bold text-slate-900 mb-2">{{ $t('comprehensive_ticketing_system') }}</h3>
                   <p class="text-slate-600 leading-relaxed">
-                    Create, track, and manage tickets with custom fields, priority levels, due dates, and automated workflows. Support multiple ticket types and categories to match your organization's needs.
+                    {{ $t('ticketing_system_desc') }}
                   </p>
                 </div>
               </div>
@@ -86,9 +86,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-slate-900 mb-2">Multiple Flexible Views</h3>
+                  <h3 class="text-xl font-bold text-slate-900 mb-2">{{ $t('multiple_flexible_views') }}</h3>
                   <p class="text-slate-600 leading-relaxed">
-                    Switch between Kanban boards, list views, timeline/Gantt charts, and calendar layouts. See your work in the way that works best for you, all from the same data.
+                    {{ $t('flexible_views_desc') }}
                   </p>
                 </div>
               </div>
@@ -103,9 +103,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-slate-900 mb-2">Payment Gateway Integration</h3>
+                  <h3 class="text-xl font-bold text-slate-900 mb-2">{{ $t('payment_gateway_integration') }}</h3>
                   <p class="text-slate-600 leading-relaxed">
-                    Easily integrate with popular payment gateways for seamless billing, subscriptions, and transaction management. Support multiple payment methods and currencies.
+                    {{ $t('payment_gateway_desc') }}
                   </p>
                 </div>
               </div>
@@ -120,9 +120,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-slate-900 mb-2">Extensive API Integrations</h3>
+                  <h3 class="text-xl font-bold text-slate-900 mb-2">{{ $t('extensive_api_integrations') }}</h3>
                   <p class="text-slate-600 leading-relaxed">
-                    Connect with your favorite tools and services. Asira integrates with leading platforms for CRM, communication, documentation, and more. Build custom integrations with our comprehensive REST API.
+                    {{ $t('api_integrations_desc') }}
                   </p>
                 </div>
               </div>
@@ -137,9 +137,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-slate-900 mb-2">Team Collaboration & Communication</h3>
+                  <h3 class="text-xl font-bold text-slate-900 mb-2">{{ $t('team_collaboration') }}</h3>
                   <p class="text-slate-600 leading-relaxed">
-                    Comment on tickets, mention team members, share files, and track all activities. Keep conversations organized and maintain full context of decisions.
+                    {{ $t('collaboration_desc') }}
                   </p>
                 </div>
               </div>
@@ -154,9 +154,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-slate-900 mb-2">Advanced Analytics & Reporting</h3>
+                  <h3 class="text-xl font-bold text-slate-900 mb-2">{{ $t('advanced_analytics') }}</h3>
                   <p class="text-slate-600 leading-relaxed">
-                    Track key metrics, generate detailed reports, and gain insights into your team's performance. Monitor ticket resolution times, workload distribution, and productivity trends.
+                    {{ $t('analytics_desc') }}
                   </p>
                 </div>
               </div>
@@ -171,9 +171,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-slate-900 mb-2">Custom Workflows & Automation</h3>
+                  <h3 class="text-xl font-bold text-slate-900 mb-2">{{ $t('custom_workflows') }}</h3>
                   <p class="text-slate-600 leading-relaxed">
-                    Design custom workflows that match your process. Automate repetitive tasks with rules, triggers, and actions to save time and reduce errors.
+                    {{ $t('workflows_desc') }}
                   </p>
                 </div>
               </div>
@@ -188,9 +188,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   </div>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-slate-900 mb-2">Enterprise Security</h3>
+                  <h3 class="text-xl font-bold text-slate-900 mb-2">{{ $t('enterprise_security') }}</h3>
                   <p class="text-slate-600 leading-relaxed">
-                    Bank-grade encryption, multi-factor authentication, role-based access control, and compliance with GDPR, CCPA, and other regulations to protect your data.
+                    {{ $t('security_desc') }}
                   </p>
                 </div>
               </div>
@@ -199,15 +199,15 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 
           <!-- Why Choose Asira -->
           <div>
-            <h2 class="text-4xl font-bold text-slate-900 mb-6">Why Choose Asira?</h2>
+            <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('why_choose_asira') }}</h2>
             <div class="grid md:grid-cols-2 gap-6">
               <div class="flex items-start gap-4">
                 <svg class="w-6 h-6 text-orange-600 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 <div>
-                  <h3 class="font-bold text-slate-900 mb-1">All-in-One Solution</h3>
-                  <p class="text-slate-600">No need for multiple toolsâ€”everything you need is in one integrated platform.</p>
+                  <h3 class="font-bold text-slate-900 mb-1">{{ $t('all_in_one_solution') }}</h3>
+                  <p class="text-slate-600">{{ $t('all_in_one_desc') }}</p>
                 </div>
               </div>
               <div class="flex items-start gap-4">
@@ -215,8 +215,8 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 <div>
-                  <h3 class="font-bold text-slate-900 mb-1">Easy to Use</h3>
-                  <p class="text-slate-600">Intuitive interface that requires minimal trainingâ€”your team will be productive from day one.</p>
+                  <h3 class="font-bold text-slate-900 mb-1">{{ $t('easy_to_use') }}</h3>
+                  <p class="text-slate-600">{{ $t('easy_to_use_desc') }}</p>
                 </div>
               </div>
               <div class="flex items-start gap-4">
@@ -224,8 +224,8 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 <div>
-                  <h3 class="font-bold text-slate-900 mb-1">Scalable & Flexible</h3>
-                  <p class="text-slate-600">Grows with your organization, from startups to enterprisesâ€”adapt the system to your needs.</p>
+                  <h3 class="font-bold text-slate-900 mb-1">{{ $t('scalable_flexible') }}</h3>
+                  <p class="text-slate-600">{{ $t('scalable_desc') }}</p>
                 </div>
               </div>
               <div class="flex items-start gap-4">
@@ -233,8 +233,8 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
                 <div>
-                  <h3 class="font-bold text-slate-900 mb-1">Powerful Integrations</h3>
-                  <p class="text-slate-600">Connect with your favorite tools and services through our extensive API.</p>
+                  <h3 class="font-bold text-slate-900 mb-1">{{ $t('powerful_integrations') }}</h3>
+                  <p class="text-slate-600">{{ $t('integrations_desc') }}</p>
                 </div>
               </div>
             </div>
@@ -242,12 +242,12 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 
           <!-- Call to Action -->
           <div class="bg-gradient-to-br from-orange-50 to-white rounded-2xl p-12 text-center border border-orange-100">
-            <h3 class="text-3xl font-bold text-slate-900 mb-4">Ready to Transform Your Workflow?</h3>
+            <h3 class="text-3xl font-bold text-slate-900 mb-4">{{ $t('ready_to_transform_workflow') }}</h3>
             <p class="text-lg text-slate-600 mb-8">
-              Join thousands of teams already using Asira to manage their tickets and projects more effectively.
+              {{ $t('join_thousands_teams') }}
             </p>
             <Link href="/register" class="inline-block px-8 py-4 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors cursor-pointer">
-              Start Your Free Trial
+              {{ $t('start_free_trial_button') }}
             </Link>
           </div>
         </div>
@@ -255,4 +255,3 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
     </section>
   </GuestLayout>
 </template>
-

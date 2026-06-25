@@ -6,17 +6,17 @@
         <!-- Header -->
         <div class="px-4 py-4 border-b border-gray-100">
           <div class="flex items-center justify-between mb-3">
-            <h1 class="text-xl font-semibold text-gray-900">Inbox</h1>
+            <h1 class="text-xl font-semibold text-gray-900">{{ $t('inbox') }}</h1>
             <button
               v-if="unreadCount > 0"
               @click="markAllAsRead"
               class="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              Mark all as read
+              {{ $t('mark_all_as_read') }}
             </button>
           </div>
           <div class="text-sm text-gray-500">
-            {{ unreadCount }} unread notification{{ unreadCount !== 1 ? 's' : '' }}
+            {{ unreadCount }} {{ unreadCount === 1 ? $t('unread_notification') : $t('unread_notifications') }}
           </div>
         </div>
 
@@ -59,8 +59,8 @@
                 :disabled="loading"
                 class="px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-md border border-indigo-200 transition-colors disabled:opacity-50"
               >
-                <span v-if="loading">Loading...</span>
-                <span v-else>Load more</span>
+                <span v-if="loading">{{ $t('loading') }}</span>
+                <span v-else>{{ $t('load_more') }}</span>
               </button>
             </div>
           </div>
@@ -85,7 +85,7 @@
           <EmptyStateAnimation
             height="300px"
             width="300px"
-            message="No notifications"
+            :message="$t('no_notifications')"
           />
         </div>
       </div>
@@ -95,6 +95,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import NotificationItem from '@/Components/Inbox/NotificationItem.vue'
 import TaskDetailPanel from '@/Components/Projects/TaskDetailPanel.vue'
@@ -102,6 +103,7 @@ import EmptyStateAnimation from '@/Components/EmptyState/EmptyStateAnimation.vue
 import { api } from '@/Services/api'
 import { useNotificationStore } from '@/Stores/useNotificationStore'
 
+const page = usePage()
 const props = defineProps({
   unreadCount: { type: Number, default: 0 },
 })
@@ -156,9 +158,9 @@ const groupedNotifications = computed(() => {
   })
 
   const result = []
-  if (groups.today.length) result.push({ label: 'Today', items: groups.today })
-  if (groups.yesterday.length) result.push({ label: 'Yesterday', items: groups.yesterday })
-  if (groups.older.length) result.push({ label: 'Older', items: groups.older })
+  if (groups.today.length) result.push({ label: page.props.translations?.today || 'Today', items: groups.today })
+  if (groups.yesterday.length) result.push({ label: page.props.translations?.yesterday || 'Yesterday', items: groups.yesterday })
+  if (groups.older.length) result.push({ label: page.props.translations?.older || 'Older', items: groups.older })
 
   console.log('Grouped notifications result:', result)
   return result
@@ -268,7 +270,7 @@ async function markAllAsRead() {
 }
 
 async function deleteNotification(notification) {
-  if (!confirm('Delete this notification?')) return
+  if (!confirm(page.props.translations?.delete_notification_confirm || 'Delete this notification?')) return
 
   try {
     const response = await api.delete(`/notifications/${notification.id}`)

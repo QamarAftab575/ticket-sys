@@ -43,13 +43,13 @@
           download
           class="p-1 text-gray-500 hover:text-gray-700 transition"
         >
-          â†“
+          
         </a>
         <button
           @click="handleDeleteAttachment(attachment.id)"
           class="p-1 text-red-500 hover:text-red-700 transition"
         >
-          âœ•
+        
         </button>
       </div>
     </div>

@@ -1,9 +1,9 @@
 ﻿<template>
   <div class="calendar-view">
     <div class="calendar-header">
-      <button @click="previousMonth" class="btn-nav">â†</button>
+      <button @click="previousMonth" class="btn-nav"></button>
       <h2 class="month-year">{{ monthYear }}</h2>
-      <button @click="nextMonth" class="btn-nav">â†’</button>
+      <button @click="nextMonth" class="btn-nav"></button>
     </div>
 
     <div class="calendar-grid">

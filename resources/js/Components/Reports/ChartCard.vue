@@ -5,7 +5,7 @@
       <h3 class="text-sm font-semibold text-gray-900">{{ title }}</h3>
       <p v-if="subtitle" class="text-xs text-gray-400 mt-0.5">{{ subtitle }}</p>
     </div>
-    <!-- Chart area â€” fixed height so charts don't grow unbounded -->
+    <!-- Chart area   fixed height so charts don't grow unbounded -->
     <div class="flex-1 relative" style="height: 240px">
       <slot />
     </div>

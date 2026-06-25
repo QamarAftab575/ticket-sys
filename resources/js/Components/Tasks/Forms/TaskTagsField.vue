@@ -14,7 +14,7 @@
         @click="handleRemoveTag(tag.id)"
         class="ml-1 text-current hover:opacity-70"
       >
-        âœ•
+        •
       </button>
     </span>
     <button

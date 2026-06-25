@@ -47,7 +47,7 @@
             />
             <span>{{ notification.task?.project?.name }}</span>
           </div>
-          <span>Â·</span>
+          <span></span>
           <span>{{ formatTime(notification.created_at) }}</span>
           <span v-if="!notification.is_read" class="w-2 h-2 bg-indigo-600 rounded-full ml-1"/>
         </div>
@@ -108,7 +108,7 @@ function closeMenu() {
 function formatTime(ts) {
   if (!ts) return ''
   let str = typeof ts === 'string' ? ts.trim() : String(ts)
-  // Normalize MySQL "YYYY-MM-DD HH:MM:SS" â†’ ISO UTC
+  // Normalize MySQL "YYYY-MM-DD HH:MM:SS"’ ISO UTC
   if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str)) str = str.replace(' ', 'T') + 'Z'
   else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(str)) str = str + 'Z'
   const d = new Date(str)

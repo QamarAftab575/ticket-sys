@@ -60,7 +60,7 @@
             @click.prevent="showContextMenu($event, project)"
             class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 flex-shrink-0"
           >
-            â‹¯
+           
           </button>
         </Link>
 

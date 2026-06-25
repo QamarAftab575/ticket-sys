@@ -219,7 +219,7 @@ const getTaskTitle = (task) => {
     return task.name
   }
   
-  return `${task.name} (${taskStart} â†’ ${taskEnd})`
+  return `${task.name} (${taskStart}  ${taskEnd})`
 }
 
 const handleCellClick = () => {

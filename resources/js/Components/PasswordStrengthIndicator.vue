@@ -13,13 +13,13 @@
     </p>
     <ul class="text-xs text-gray-600 space-y-1">
       <li :class="{ 'text-green-600': hasMinLength, 'text-gray-400': !hasMinLength }">
-        âœ“ At least 8 characters
+         At least 8 characters
       </li>
       <li :class="{ 'text-green-600': hasMixedCase, 'text-gray-400': !hasMixedCase }">
-        âœ“ Mix of uppercase and lowercase
+         Mix of uppercase and lowercase
       </li>
       <li :class="{ 'text-green-600': hasNumbers, 'text-gray-400': !hasNumbers }">
-        âœ“ Contains numbers
+         Contains numbers
       </li>
     </ul>
   </div>

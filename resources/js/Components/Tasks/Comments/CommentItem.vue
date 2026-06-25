@@ -55,7 +55,7 @@
             :disabled="deleting"
             class="text-xs text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
           >
-            {{ deleting ? 'Deletingâ€¦' : 'Delete' }}
+            {{ deleting ? 'Deleting ¦' : 'Delete' }}
           </button>
         </div>
       </template>
@@ -67,7 +67,7 @@
           :show-toolbar="true"
           :task-id="task.id"
           :project-id="task.project_id"
-          placeholder="Edit commentâ€¦"
+          placeholder="Edit comment ¦"
         />
         <div class="flex gap-2 px-3 py-2 bg-gray-50 border-t border-gray-100">
           <button
@@ -79,7 +79,7 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
             </svg>
-            {{ saving ? 'Savingâ€¦' : 'Save' }}
+            {{ saving ? 'Saving ¦' : 'Save' }}
           </button>
           <button
             @click="cancelEdit"
@@ -117,7 +117,7 @@ const page = usePage();
 const currentUserId = computed(() => (page.props as any).auth?.user?.id ?? null);
 const isOwnComment = computed(() => props.comment.user_id === currentUserId.value);
 
-// â”€â”€ Edit state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Edit state 
 const isEditing = ref(false);
 const editContent = ref('');
 const saving = ref(false);
@@ -169,7 +169,7 @@ async function handleDelete() {
   }
 }
 
-// â”€â”€ Date formatting â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  Date formatting 
 function formatDate(date: string): string {
   const now = new Date();
   const d = new Date(date);

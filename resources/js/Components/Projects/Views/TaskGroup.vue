@@ -102,7 +102,7 @@ const emit = defineEmits([
   'task-move', 'update-dates', 'update-assignee', 'update-custom-field', 'edit-field',
 ])
 
-// â”€â”€ inline creation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  inline creation 
 const isCreating = ref(false)
 const newName = ref('')
 const inputRef = ref(null)
@@ -139,7 +139,7 @@ const onBlur = () => {
 
 defineExpose({ start })
 
-// â”€â”€ drag & drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  drag & drop 
 const draggingTaskId = ref(null)
 const insertBeforeId = ref(null)   // task id or '__end__'
 

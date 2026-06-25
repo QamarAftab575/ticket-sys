@@ -30,19 +30,21 @@ const userName = computed(() => {
 
 // Format: "Sunday, June 21"
 const dayOfWeek = computed(() => {
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
   const day = currentTime.value.getDay()
-  return days[day]
+  const dayKey = days[day]
+  return page.props.translations?.[dayKey] || dayKey
 })
 
 const formattedDate = computed(() => {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'january', 'february', 'march', 'april', 'may', 'june',
+    'july', 'august', 'september', 'october', 'november', 'december'
   ]
   const month = months[currentTime.value.getMonth()]
   const date = currentTime.value.getDate()
-  return `${month} ${date}`
+  const monthTranslation = page.props.translations?.[month] || month
+  return `${monthTranslation} ${date}`
 })
 
 // Time-based greeting
@@ -50,26 +52,21 @@ const greeting = computed(() => {
   const hour = currentTime.value.getHours()
 
   if (hour >= 5 && hour < 12) {
-    // 5:00 AM - 11:59 AM: Morning
-    return 'Good morning'
+    return page.props.translations?.good_morning || 'Good Morning'
   } else if (hour >= 12 && hour < 17) {
-    // 12:00 PM - 4:59 PM: Afternoon (Lunch + After Noon)
     if (hour >= 12 && hour < 13) {
-      return 'Good lunch time'
+      return page.props.translations?.good_lunch_time || 'Good Lunch Time'
     } else if (hour >= 13 && hour < 17) {
-      return 'Good afternoon'
+      return page.props.translations?.good_afternoon || 'Good Afternoon'
     }
   } else if (hour >= 17 && hour < 21) {
-    // 5:00 PM - 8:59 PM: Evening (Great thinking time)
-    return 'Good evening'
+    return page.props.translations?.good_evening || 'Good Evening'
   } else if (hour >= 21 && hour < 24) {
-    // 9:00 PM - 11:59 PM: Night (Very late)
-    return 'Night Time'
+    return page.props.translations?.night_time || 'Good Night'
   } else if (hour >= 0 && hour < 5) {
-    // 12:00 AM - 4:59 AM: Very late/Early
-    return 'Very late'
+    return page.props.translations?.very_late || 'Late Night'
   }
 
-  return 'Hello'
+  return page.props.translations?.hello || 'Hello'
 })
 </script>

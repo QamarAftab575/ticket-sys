@@ -14,7 +14,7 @@
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
       </svg>
-      Filter
+      {{ $t('filter') }}
       <span v-if="activeFilterCount > 0" class="ml-0.5 px-1.5 min-w-[20px] h-5 flex items-center justify-center bg-blue-600 text-white text-xs font-semibold rounded-full">
         {{ activeFilterCount }}
       </span>
@@ -33,7 +33,7 @@
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
       </svg>
-      Sort
+      {{ $t('sort') }}
     </button>
 
     <!-- Filter Dropdown Panel -->
@@ -51,12 +51,12 @@
         <div class="p-4">
           <!-- Header -->
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-sm font-semibold text-gray-900">Filter</h3>
+            <h3 class="text-sm font-semibold text-gray-900">{{ $t('filter') }}</h3>
             <button
               @click="clearAllFilters"
               class="text-xs text-gray-500 hover:text-gray-700 font-medium"
             >
-              Clear all
+              {{ $t('clear_all') }}
             </button>
           </div>
 
@@ -64,18 +64,18 @@
           <div class="space-y-4">
             <!-- Due Date Filter -->
             <div>
-              <label class="block text-xs font-medium text-gray-700 mb-1.5">Due date</label>
+              <label class="block text-xs font-medium text-gray-700 mb-1.5">{{ $t('due_date') }}</label>
               <select
                 v-model="localFilters.due_date"
                 @change="updateFilters"
                 class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="">Any date</option>
-                <option value="overdue">Overdue</option>
-                <option value="today">Today</option>
-                <option value="this_week">This week</option>
-                <option value="next_week">Next week</option>
-                <option value="no_due_date">No due date</option>
+                <option value="">{{ $t('any_date') }}</option>
+                <option value="overdue">{{ $t('overdue') }}</option>
+                <option value="today">{{ $t('today') }}</option>
+                <option value="this_week">{{ $t('this_week') }}</option>
+                <option value="next_week">{{ $t('next_week') }}</option>
+                <option value="no_due_date">{{ $t('no_due_date') }}</option>
               </select>
             </div>
           </div>
@@ -96,7 +96,7 @@
         :style="sortDropdownStyle"
       >
         <div class="p-3">
-          <h3 class="text-xs font-semibold text-gray-900 mb-2 px-2">Sort by</h3>
+          <h3 class="text-xs font-semibold text-gray-900 mb-2 px-2">{{ $t('sort_by') }}</h3>
           
           <div class="space-y-0.5">
             <button
@@ -117,7 +117,7 @@
               @click="toggleSortDirection"
               class="w-full flex items-center justify-between px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
             >
-              <span>{{ localSort.descending ? 'Descending' : 'Ascending' }}</span>
+              <span>{{ localSort.descending ? $t('descending') : $t('ascending') }}</span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="localSort.descending ? 'M19 9l-7 7-7-7' : 'M5 15l7-7 7 7'" />
               </svg>
@@ -131,6 +131,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick, Fragment } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import type { TaskFilter, TaskSort, TaskGroupBy } from '@/Types/tasks';
 
 interface Props {
@@ -153,6 +154,8 @@ const emit = defineEmits<{
   'group-change': [groupBy: TaskGroupBy];
 }>();
 
+const page = usePage();
+
 // Local state
 const showFilters = ref(false);
 const showSort = ref(false);
@@ -169,12 +172,12 @@ const localSort = ref({
   descending: false,
 });
 
-const sortOptions = [
-  { label: 'Due date', value: 'due_date' },
-  { label: 'Alphabetically', value: 'name' },
-  { label: 'Project', value: 'project_name' },
-  { label: 'Created on', value: 'created_at' },
-];
+const sortOptions = computed(() => [
+  { label: page.props.translations?.due_date || 'Due date', value: 'due_date' },
+  { label: page.props.translations?.alphabetically || 'Alphabetically', value: 'name' },
+  { label: page.props.translations?.project || 'Project', value: 'project_name' },
+  { label: page.props.translations?.created_on || 'Created on', value: 'created_at' },
+]);
 
 // Position dropdowns
 watch(showFilters, (show) => {

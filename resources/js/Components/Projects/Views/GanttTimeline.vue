@@ -8,7 +8,7 @@
           class="px-3 py-1 border rounded hover:bg-gray-200 text-sm"
           title="Zoom out"
         >
-          âˆ’
+          
         </button>
         <span class="text-sm font-medium min-w-16 text-center">{{ zoomLevel }}</span>
         <button
@@ -25,7 +25,7 @@
           @click="previousPeriod"
           class="px-3 py-1 border rounded hover:bg-gray-200 text-sm"
         >
-          â† Previous
+           Previous
         </button>
         <button
           @click="goToToday"
@@ -37,7 +37,7 @@
           @click="nextPeriod"
           class="px-3 py-1 border rounded hover:bg-gray-200 text-sm"
         >
-          Next â†’
+          Next 
         </button>
       </div>
 

@@ -27,7 +27,7 @@
       </span>
 
       <!-- Placeholder -->
-      <span v-if="!selectedMembers.length && !open" class="text-gray-400 text-xs px-1">â€”</span>
+      <span v-if="!selectedMembers.length && !open" class="text-gray-400 text-xs px-1"> </span>
     </div>
 
     <!-- Dropdown -->

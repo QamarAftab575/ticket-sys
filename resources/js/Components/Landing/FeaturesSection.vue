@@ -84,13 +84,13 @@ const isHighlighted = (index) => {
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z" />
           </svg>
-          <span>{{ $t('messages.features') }}</span>
+          <span>{{ $t('features') }}</span>
         </div>
         <h2 class="text-5xl sm:text-6xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight" style="font-family: 'Poppins', sans-serif;">
-          {{ $t('messages.everything_you_need') }}
+          {{ $t('everything_you_need') }}
         </h2>
         <p class="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed" style="font-family: 'Open Sans', sans-serif;">
-          {{ $t('messages.powerful_features_subtitle') }}
+          {{ $t('powerful_features_subtitle') }}
         </p>
       </div>
 

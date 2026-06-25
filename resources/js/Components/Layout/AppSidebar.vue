@@ -7,7 +7,7 @@
       mobileOpen ? 'translate-x-0 !w-64' : '-translate-x-full lg:translate-x-0',
     ]"
   >
-    <!-- â”€â”€ Logo + Collapse Toggle â”€â”€ -->
+    <!-- Logo + Collapse Toggle -->
     <div
       :class="[
         'flex items-center h-14 border-b border-gray-800 shrink-0 transition-all duration-300',
@@ -27,7 +27,7 @@
       <button
         v-if="!mobileOpen"
         @click="toggleCollapse"
-        :title="collapsed ? 'Expand' : 'Collapse'"
+        :title="collapsed ? $t('expand_sidebar') : $t('collapse_sidebar')"
         class="cursor-pointer hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-gray-400 hover:text-gray-300 hover:bg-gray-700 transition shrink-0"
       >
         <svg class="w-4 h-4 transition-transform duration-300" :class="collapsed ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,7 +42,7 @@
       </button>
     </div>
 
-    <!-- â”€â”€ Scrollable nav area â”€â”€ -->
+    <!-- Scrollable nav area -->
     <nav :class="['flex-1 py-3 overflow-y-auto transition-all duration-300', collapsed ? 'px-2' : 'px-3']">
 
       <!-- Main nav items -->
@@ -58,7 +58,7 @@
         />
       </div>
 
-      <!-- â”€â”€ Projects Section â”€â”€ -->
+      <!-- Projects Section -->
       <div class="border-t border-gray-800 pt-3">
         <!-- Section header -->
         <div
@@ -72,7 +72,7 @@
             v-if="!collapsed"
             @click="projectsExpanded = !projectsExpanded"
             class="flex items-center gap-1.5 flex-1 min-w-0 group cursor-pointer"
-            title="Toggle projects"
+            :title="$t('toggle_projects')"
           >
             <svg
               class="w-3 h-3 text-gray-400 transition-transform duration-200 shrink-0"
@@ -82,7 +82,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
             </svg>
             <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest group-hover:text-gray-300 transition-colors">
-              Projects
+              {{ $t('projects') }}
             </span>
           </button>
 
@@ -91,24 +91,24 @@
             v-if="collapsed"
             @click="projectsExpanded = !projectsExpanded"
             class="group relative flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-700 transition cursor-pointer"
-            title="Projects"
+            :title="$t('projects')"
           >
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
             </svg>
             <span class="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg">
-              Projects
+              {{ $t('projects') }}
               <span class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900"/>
             </span>
           </button>
 
-          <!-- + New project button (only when expanded) -->
+          <!-- New project button (only when expanded) -->
           <Link
             v-if="!collapsed"
             href="/projects/create"
             @click="$emit('close')"
             class="ml-auto flex items-center justify-center w-5 h-5 rounded text-gray-400 hover:text-gray-300 hover:bg-gray-700 transition cursor-pointer"
-            title="New project"
+            :title="$t('create_project')"
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
@@ -120,9 +120,9 @@
         <div v-if="projectsExpanded && !collapsed" class="space-y-0.5">
           <!-- Empty state -->
           <div v-if="visibleProjects.length === 0" class="px-3 py-3 text-center">
-            <p class="text-xs text-gray-400">No projects yet</p>
+            <p class="text-xs text-gray-400">{{ $t('no_projects_yet') }}</p>
             <Link href="/projects/create" class="text-xs text-blue-600 hover:underline mt-0.5 inline-block">
-              Create one â†’
+              {{ $t('create_one') }} →
             </Link>
           </div>
 
@@ -175,15 +175,15 @@
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
               </svg>
-              View all projects
+              {{ $t('view_all_projects') }}
             </Link>
           </div>
         </div>
       </div>
 
-      <!-- â”€â”€ Account section â”€â”€ -->
+      <!-- Account section -->
       <div class="pt-3 mt-3 border-t border-gray-800 space-y-0.5">
-        <p v-if="!collapsed" class="px-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Account</p>
+        <p v-if="!collapsed" class="px-3 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{{ $t('account') }}</p>
         <SidebarNavItem
           v-for="item in accountNav" :key="item.href"
           :href="item.href" :label="item.label" :icon="item.icon"
@@ -194,7 +194,6 @@
       </div>
     </nav>
 
-    <!-- â”€â”€ Invite Button â”€â”€ -->
     <!-- Subscription Alert -->
     <div v-if="subscriptionStatus && subscriptionStatus.status !== 'active'" 
       :class="[
@@ -210,9 +209,9 @@
           <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
         </svg>
         <div class="flex-1 min-w-0">
-          <p v-if="!collapsed" class="text-xs font-semibold text-yellow-800 mb-1">Expiring Soon</p>
+          <p v-if="!collapsed" class="text-xs font-semibold text-yellow-800 mb-1">{{ $t('expiring_soon') }}</p>
           <p v-if="!collapsed" class="text-xs text-yellow-700 line-clamp-2">{{ subscriptionStatus.message }}</p>
-          <Link v-if="!collapsed" href="/settings/subscriptions" class="text-xs text-yellow-700 hover:text-yellow-900 font-semibold cursor-pointer">Renew →</Link>
+          <Link v-if="!collapsed" href="/settings/subscriptions" class="text-xs text-yellow-700 hover:text-yellow-900 font-semibold cursor-pointer">{{ $t('renew') }} →</Link>
         </div>
       </div>
 
@@ -222,11 +221,11 @@
           <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
         </svg>
         <div class="flex-1 min-w-0">
-          <p v-if="!collapsed" class="text-xs font-semibold text-orange-800 mb-1">Grace Period</p>
+          <p v-if="!collapsed" class="text-xs font-semibold text-orange-800 mb-1">{{ $t('grace_period') }}</p>
           <p v-if="!collapsed" class="text-xs text-orange-700">{{ subscriptionStatus.message }}</p>
           <div v-if="!collapsed" class="flex items-center gap-2 mt-1">
-            <Link href="/settings/subscriptions" class="text-xs text-orange-700 hover:text-orange-900 font-semibold cursor-pointer">Renew →</Link>
-            <span class="text-xs text-orange-600 font-semibold">{{ subscriptionStatus.days_in_grace_period }}d left</span>
+            <Link href="/settings/subscriptions" class="text-xs text-orange-700 hover:text-orange-900 font-semibold cursor-pointer">{{ $t('renew') }} →</Link>
+            <span class="text-xs text-orange-600 font-semibold">{{ subscriptionStatus.days_in_grace_period }}d {{ $t('left') }}</span>
           </div>
         </div>
       </div>
@@ -237,9 +236,9 @@
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
         </svg>
         <div class="flex-1 min-w-0">
-          <p v-if="!collapsed" class="text-xs font-semibold text-red-800 mb-1">Suspended</p>
+          <p v-if="!collapsed" class="text-xs font-semibold text-red-800 mb-1">{{ $t('suspended') }}</p>
           <p v-if="!collapsed" class="text-xs text-red-700 line-clamp-2">{{ subscriptionStatus.message }}</p>
-          <Link v-if="!collapsed" href="/settings/subscriptions" class="text-xs text-red-700 hover:text-red-900 font-semibold cursor-pointer">Renew Now →</Link>
+          <Link v-if="!collapsed" href="/settings/subscriptions" class="text-xs text-red-700 hover:text-red-900 font-semibold cursor-pointer">{{ $t('renew_now') }} →</Link>
         </div>
       </div>
 
@@ -251,19 +250,19 @@
                   subscriptionStatus.status === 'suspended' ? 'bg-red-500' : 'bg-gray-400'"
         />
         <span class="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg">
-          {{ subscriptionStatus.status === 'warning' ? 'Expiring Soon' :
-             subscriptionStatus.status === 'expired_grace' ? 'Grace Period' :
-             subscriptionStatus.status === 'suspended' ? 'Suspended' : 'Status' }}
+          {{ subscriptionStatus.status === 'warning' ? $t('expiring_soon') :
+             subscriptionStatus.status === 'expired_grace' ? $t('grace_period') :
+             subscriptionStatus.status === 'suspended' ? $t('suspended') : $t('status') }}
           <span class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-gray-900"/>
         </span>
       </div>
     </div>
 
-    <!-- ── Workspace Switcher (moved to bottom) ── -->
+    <!-- Workspace Switcher (moved to bottom) -->
     <div v-if="userWorkspaces && userWorkspaces.length > 0"
       :class="['border-t border-gray-800 py-3 transition-all duration-300 shrink-0', collapsed ? 'px-2' : 'px-3']"
     >
-      <p v-if="!collapsed" class="px-2 mb-2.5 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Workspace</p>
+      <p v-if="!collapsed" class="px-2 mb-2.5 text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{{ $t('workspace') }}</p>
       <WorkspaceSwitcher
         :user-workspaces="userWorkspaces"
         :current-workspace-id="currentWorkspaceId"
@@ -288,11 +287,11 @@ const INITIAL_SHOW     = 5
 
 const props = defineProps({
   currentRoute:   String,
-  userWorkspaces: Array, // Optional, will use composable
-  currentWorkspaceId: String, // Optional, will use composable
+  userWorkspaces: Array,
+  currentWorkspaceId: String,
   userRole:       String,
   mobileOpen:     Boolean,
-  subscriptionStatus: Object, // Subscription status passed as prop
+  subscriptionStatus: Object,
 })
 
 const emit = defineEmits(['invite', 'close', 'collapsed-change'])
@@ -302,17 +301,14 @@ const collapsed        = ref(false)
 const projectsExpanded = ref(true)
 const unreadCount      = ref(0)
 
-// Use composable for independent workspace data loading
 const { userWorkspaces, currentWorkspaceId } = useSidebarData()
 
 onMounted(() => {
   collapsed.value        = localStorage.getItem(STORAGE_KEY)  === 'true'
-  projectsExpanded.value = localStorage.getItem(PROJECTS_KEY) !== 'false' // default open
+  projectsExpanded.value = localStorage.getItem(PROJECTS_KEY) !== 'false'
   
-  // Fetch unread notification count
   fetchUnreadCount()
   
-  // Poll for updates every 30 seconds
   setInterval(fetchUnreadCount, 30000)
 })
 
@@ -325,7 +321,6 @@ async function fetchUnreadCount() {
   }
 }
 
-// Handle logo error (fallback to text)
 const handleLogoError = (e) => {
   e.target.style.display = 'none'
   e.target.parentElement.innerHTML = '<span class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center shrink-0"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span> '
@@ -337,53 +332,48 @@ const toggleCollapse = () => {
   emit('collapsed-change', collapsed.value)
 }
 
-// Projects from shared Inertia props (set by HandleInertiaRequests middleware)
 const allProjects = computed(() => page.props.sidebarProjects || [])
 
-// Only non-archived
 const activeProjects = computed(() =>
   allProjects.value.filter(p => !p.archived_at)
 )
 
-// Slice to INITIAL_SHOW â€” "View all" link handles the rest
 const visibleProjects = computed(() =>
   activeProjects.value.slice(0, INITIAL_SHOW)
 )
 
-// Detect active project from URL
 const isActiveProject = (id) => {
   return page.url.includes(`/projects/${id}`)
 }
 
 const mainNav = [
   {
-    route: 'dashboard', href: '/dashboard', label: 'Dashboard',
+    route: 'dashboard', href: '/dashboard', label: page.props.translations?.dashboard || 'Dashboard',
     icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
   },
   {
-    route: 'my-tasks', href: '/my-tasks', label: 'My Tasks',
+    route: 'my-tasks', href: '/my-tasks', label: page.props.translations?.my_tasks || 'My Tasks',
     icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
   },
   {
-    route: 'inbox', href: '/inbox', label: 'Inbox',
+    route: 'inbox', href: '/inbox', label: page.props.translations?.inbox || 'Inbox',
     icon: 'M3 8a6 6 0 016-6h8a6 6 0 016 6v9a6 6 0 01-6 6H9a6 6 0 01-6-6V8z',
     badge: true,
   },
   {
-    route: 'reports', href: '/reports', label: 'Reports',
+    route: 'reports', href: '/reports', label: page.props.translations?.reports || 'Reports',
     icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
   },
 ]
 
 const accountNav = [
   {
-    route: 'profile', href: '/profile', label: 'Profile',
+    route: 'profile', href: '/profile', label: page.props.translations?.profile || 'Profile',
     icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
   },
   {
-    route: 'settings', href: '/settings', label: 'Settings',
+    route: 'settings', href: '/settings', label: page.props.translations?.settings || 'Settings',
     icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
   },
 ]
 </script>
-

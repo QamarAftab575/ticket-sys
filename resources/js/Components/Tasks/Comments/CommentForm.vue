@@ -11,12 +11,12 @@
         :show-toolbar="'auto'"
         :task-id="task.id"
         :project-id="task.project_id"
-        placeholder="Add a commentâ€¦"
+        placeholder="Add a comment ¦"
         @focus="isFocused = true"
         @blur="onEditorBlur"
       />
 
-      <!-- Action bar â€” visible when focused or has content -->
+      <!-- Action bar   visible when focused or has content -->
       <Transition
         enter-active-class="transition-all duration-150 ease-out overflow-hidden"
         enter-from-class="max-h-0 opacity-0"
@@ -47,7 +47,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
               </svg>
-              {{ loading ? 'Postingâ€¦' : 'Comment' }}
+              {{ loading ? 'Posting ¦' : 'Comment' }}
             </button>
           </div>
         </div>

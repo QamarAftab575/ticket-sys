@@ -110,7 +110,7 @@ defineProps({
                 <div class="flex items-center justify-between mb-4">
                   <div class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                     <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-600"></div>
-                    To Do
+                    {{ $t('todo') }}
                     <span class="text-xs text-slate-500 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-full">3</span>
                   </div>
                 </div>
@@ -119,8 +119,8 @@ defineProps({
                     <span class="text-xs font-medium text-slate-500 dark:text-slate-400">TASK-101</span>
                     <div class="w-2 h-2 rounded-full bg-orange-500"></div>
                   </div>
-                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2">Redesign dashboard</h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Update the analytics view</p>
+                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2">{{ $t('redesign_dashboard') }}</h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">{{ $t('update_analytics_view') }}</p>
                   <div class="flex items-center justify-between">
                     <div class="flex -space-x-2">
                       <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white dark:border-slate-800"></div>
@@ -134,8 +134,8 @@ defineProps({
                     <span class="text-xs font-medium text-slate-500 dark:text-slate-400">TASK-102</span>
                     <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
                   </div>
-                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2">API integration</h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Connect third-party services</p>
+                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2">{{ $t('api_integration') }}</h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">{{ $t('connect_third_party') }}</p>
                   <div class="flex items-center justify-between">
                     <div class="w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-white dark:border-slate-800"></div>
                     <span class="text-xs text-slate-400 dark:text-slate-500">Due in 5d</span>
@@ -148,7 +148,7 @@ defineProps({
                 <div class="flex items-center justify-between mb-4">
                   <div class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                     <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                    In Progress
+                    {{ $t('in_progress') }}
                     <span class="text-xs text-slate-500 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-full">2</span>
                   </div>
                 </div>
@@ -157,13 +157,13 @@ defineProps({
                     <span class="text-xs font-medium text-blue-600 dark:text-blue-400">TASK-98</span>
                     <div class="w-2 h-2 rounded-full bg-red-500"></div>
                   </div>
-                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2">Bug fix: Login flow</h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Fix OAuth redirect issue</p>
+                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2">{{ $t('bug_fix_login') }}</h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">{{ $t('fix_oauth_redirect') }}</p>
                   <div class="flex items-center justify-between">
                     <div class="flex -space-x-2">
                       <div class="w-6 h-6 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 border-2 border-white dark:border-slate-800"></div>
                     </div>
-                    <span class="text-xs text-blue-500 dark:text-blue-400 font-medium">In progress</span>
+                    <span class="text-xs text-blue-500 dark:text-blue-400 font-medium">{{ $t('in_progress') }}</span>
                   </div>
                 </div>
                 <div class="bg-white dark:bg-slate-800 rounded-lg p-4 border border-blue-200 dark:border-blue-800 shadow-sm cursor-pointer hover:shadow-md transition-all duration-200">
@@ -171,11 +171,11 @@ defineProps({
                     <span class="text-xs font-medium text-blue-600 dark:text-blue-400">TASK-99</span>
                     <div class="w-2 h-2 rounded-full bg-orange-500"></div>
                   </div>
-                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2">Mobile optimization</h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Improve responsive design</p>
+                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2">{{ $t('mobile_optimization') }}</h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">{{ $t('improve_responsive') }}</p>
                   <div class="flex items-center justify-between">
                     <div class="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 border-2 border-white dark:border-slate-800"></div>
-                    <span class="text-xs text-blue-500 dark:text-blue-400 font-medium">In progress</span>
+                    <span class="text-xs text-blue-500 dark:text-blue-400 font-medium">{{ $t('in_progress') }}</span>
                   </div>
                 </div>
               </div>
@@ -185,7 +185,7 @@ defineProps({
                 <div class="flex items-center justify-between mb-4">
                   <div class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                     <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                    Done
+                    {{ $t('done') }}
                     <span class="text-xs text-slate-500 dark:text-slate-400 bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-full">4</span>
                   </div>
                 </div>
@@ -196,11 +196,11 @@ defineProps({
                       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
                   </div>
-                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2 line-through">Email notifications</h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Setup transactional emails</p>
+                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2 line-through">{{ $t('email_notifications') }}</h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">{{ $t('setup_transactional_emails') }}</p>
                   <div class="flex items-center justify-between">
                     <div class="w-6 h-6 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 border-2 border-white dark:border-slate-800"></div>
-                    <span class="text-xs text-green-500 dark:text-green-400 font-medium">Completed</span>
+                    <span class="text-xs text-green-500 dark:text-green-400 font-medium">{{ $t('completed') }}</span>
                   </div>
                 </div>
                 <div class="bg-white dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700 shadow-sm opacity-75">
@@ -210,14 +210,14 @@ defineProps({
                       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
                   </div>
-                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2 line-through">User onboarding</h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Create welcome tutorial</p>
+                  <h4 class="text-sm font-medium text-slate-900 dark:text-white mb-2 line-through">{{ $t('user_onboarding') }}</h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">{{ $t('create_welcome_tutorial') }}</p>
                   <div class="flex items-center justify-between">
                     <div class="flex -space-x-2">
                       <div class="w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 border-2 border-white dark:border-slate-800"></div>
                       <div class="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 border-2 border-white dark:border-slate-800"></div>
                     </div>
-                    <span class="text-xs text-green-500 dark:text-green-400 font-medium">Completed</span>
+                    <span class="text-xs text-green-500 dark:text-green-400 font-medium">{{ $t('completed') }}</span>
                   </div>
                 </div>
               </div>

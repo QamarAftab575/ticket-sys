@@ -21,7 +21,7 @@
         @click="handleDeleteSubtask(subtask.id)"
         class="text-red-600 hover:text-red-700 text-sm"
       >
-        âœ•
+        •
       </button>
     </div>
 

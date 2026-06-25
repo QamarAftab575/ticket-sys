@@ -79,7 +79,7 @@
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Add blocked by
       </button>
-      <span class="text-gray-300 text-xs">Â·</span>
+      <span class="text-gray-300 text-xs"></span>
       <button
         @click="startAdding('blocks')"
         class="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
