@@ -30,8 +30,19 @@
             </svg>
           </div>
 
-          <!-- Empty state -->
-          <div v-else-if="notifications.length === 0 && !loading" class="flex-1">
+          <!-- Left panel empty state -->
+          <div v-else-if="notifications.length === 0 && !loading" class="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+            <div class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </div>
+            <p class="text-sm font-semibold text-gray-800 mb-1">
+              {{ page.props.translations?.no_notifications_yet || 'No notifications yet' }}
+            </p>
+            <p class="text-xs text-gray-400 leading-relaxed">
+              {{ page.props.translations?.inbox_empty_hint || 'New activity will appear here when it happens.' }}
+            </p>
           </div>
 
           <!-- Grouped notifications -->
@@ -81,12 +92,35 @@
         />
 
         <!-- Empty state when no notification selected or no notifications exist -->
-        <div v-else class="h-full flex flex-col items-center justify-center">
-          <EmptyStateAnimation
-            height="300px"
-            width="300px"
-            :message="$t('no_notifications')"
-          />
+        <div v-else class="h-full flex flex-col items-center justify-center px-6 gap-5">
+          <EmptyStateAnimation height="220px" width="220px" />
+
+          <div class="text-center max-w-sm">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">
+              {{ page.props.translations?.no_notifications || 'No notifications' }}
+            </h2>
+            <p class="text-sm text-gray-500 leading-relaxed">
+              {{ page.props.translations?.inbox_empty_description || "When someone assigns you a task, mentions you, or updates a project, you'll see it here." }}
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <a
+              href="/my-tasks"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors duration-150 cursor-pointer"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+              {{ page.props.translations?.go_to_my_tasks || 'Go to My Tasks' }}
+            </a>
+            <a
+              href="/dashboard"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg border border-gray-200 transition-colors duration-150 cursor-pointer"
+            >
+              {{ page.props.translations?.view_projects || 'View Projects' }}
+            </a>
+          </div>
         </div>
       </div>
     </div>

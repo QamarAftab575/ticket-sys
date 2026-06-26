@@ -77,60 +77,54 @@
 
       <!-- View tabs + toolbar row -->
       <div class="flex items-center justify-between">
-        <!-- Add task button (list view only) -->
-        <button
-          v-if="activeView === 'list'"
-          @click="listViewRef?.startCreatingInFirstSection()"
-          class="flex items-center gap-1.5 mr-3 px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition flex-shrink-0"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Add task
-        </button>
-
-        <!-- Tabs -->
-        <div class="flex gap-0 overflow-x-auto" role="tablist">
+        <!-- Left side: Add task button + Tabs -->
+        <div class="flex items-center gap-0">
+          <!-- Add task button (list view only) -->
           <button
-            v-for="view in availableViews"
-            :key="view"
-            @click="switchView(view)"
-            :class="[
-              'flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors flex-shrink-0',
-              activeView === view
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300',
-            ]"
-            :aria-selected="activeView === view"
-            role="tab"
+            v-if="activeView === 'list'"
+            @click="listViewRef?.startCreatingInFirstSection()"
+            class="flex items-center gap-1.5 mr-3 px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition flex-shrink-0"
           >
-            <span v-if="view === 'list'">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-            </span>
-            <span v-else-if="view === 'board'">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>
-            </span>
-            <span v-else-if="view === 'timeline'">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            </span>
-            <span v-else-if="view === 'dashboard'">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            </span>
-            {{ formatViewName(view) }}
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Add task
           </button>
+
+          <!-- Tabs -->
+          <div class="flex gap-0 overflow-x-auto" role="tablist">
+            <button
+              v-for="view in availableViews"
+              :key="view"
+              @click="switchView(view)"
+              :class="[
+                'flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors flex-shrink-0',
+                activeView === view
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300',
+              ]"
+              :aria-selected="activeView === view"
+              role="tab"
+            >
+              <span v-if="view === 'list'">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+              </span>
+              <span v-else-if="view === 'board'">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>
+              </span>
+              <span v-else-if="view === 'timeline'">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </span>
+              <span v-else-if="view === 'dashboard'">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </span>
+              {{ formatViewName(view) }}
+            </button>
+          </div>
         </div>
 
-        <!-- Toolbar actions (Filter / Sort / Group + Columns) -->
-        <div v-if="activeView !== 'dashboard'" class="flex items-center gap-2">
-          <ViewToolbar
-            :filters="filters"
-            :sort="sort"
-            :grouping="grouping"
-            @filter-changed="updateFilters"
-            @sort-changed="updateSort"
-            @grouping-changed="updateGrouping"
-          />
-
+        <!-- Right side: Columns button -->
+        <div v-if="activeView !== 'dashboard'" class="flex items-center gap-2 ml-auto">
           <!-- Columns button (List View only) -->
           <button
             v-if="activeView === 'list'"
@@ -296,7 +290,6 @@ import CalendarView from '@/Components/Projects/Views/CalendarView.vue'
 import FilesView from '@/Components/Projects/Views/FilesView.vue'
 import DashboardView from '@/Components/Projects/Views/DashboardView.vue'
 import TaskDetailPanel from '@/Components/Projects/TaskDetailPanel.vue'
-import ViewToolbar from '@/Components/Projects/ViewToolbar.vue'
 import ToastContainer from '@/Components/ToastContainer.vue'
 import BlockedByWarningModal from '@/Components/Tasks/BlockedByWarningModal.vue'
 import Avatar from '@/Components/Avatar.vue'

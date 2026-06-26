@@ -1,39 +1,50 @@
 ﻿<template>
-  <div class="space-y-4">
+  <div class="space-y-6">
     <!-- Calendar header -->
-    <div class="flex items-center justify-between p-4 bg-gray-50 rounded">
+    <div class="flex items-center justify-between">
+      <!-- Navigation buttons -->
       <div class="flex gap-2">
         <button
           @click="navigatePrevious"
-          class="px-3 py-1 border rounded hover:bg-gray-200 transition-colors"
+          class="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700 cursor-pointer"
           :aria-label="viewMode === 'month' ? 'Previous month' : 'Previous week'"
         >
-           Previous
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Previous
         </button>
         <button
           @click="goToToday"
-          class="px-3 py-1 border rounded hover:bg-gray-200 transition-colors"
+          class="px-4 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors font-medium text-gray-700 cursor-pointer"
           aria-label="Go to today"
         >
           Today
         </button>
         <button
           @click="navigateNext"
-          class="px-3 py-1 border rounded hover:bg-gray-200 transition-colors"
+          class="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700 cursor-pointer"
           :aria-label="viewMode === 'month' ? 'Next month' : 'Next week'"
         >
-          Next 
+          Next
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
         </button>
       </div>
-      <h3 class="text-lg font-semibold">{{ displayTitle }}</h3>
-      <div class="flex gap-1 border rounded overflow-hidden">
+
+      <!-- Title -->
+      <h3 class="text-2xl font-bold text-gray-900">{{ displayTitle }}</h3>
+
+      <!-- View mode toggle -->
+      <div class="flex gap-1 bg-gray-100 rounded-lg p-1">
         <button
           @click="viewMode = 'month'"
           :class="[
-            'px-4 py-1.5 text-sm font-medium transition-colors',
-            viewMode === 'month' 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-white text-gray-700 hover:bg-gray-100'
+            'px-4 py-2 text-sm font-medium rounded transition-all cursor-pointer',
+            viewMode === 'month'
+              ? 'bg-indigo-600 text-white shadow-md'
+              : 'bg-transparent text-gray-700 hover:text-gray-900'
           ]"
           :aria-pressed="viewMode === 'month'"
         >
@@ -42,10 +53,10 @@
         <button
           @click="viewMode = 'week'"
           :class="[
-            'px-4 py-1.5 text-sm font-medium transition-colors',
-            viewMode === 'week' 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-white text-gray-700 hover:bg-gray-100'
+            'px-4 py-2 text-sm font-medium rounded transition-all cursor-pointer',
+            viewMode === 'week'
+              ? 'bg-indigo-600 text-white shadow-md'
+              : 'bg-transparent text-gray-700 hover:text-gray-900'
           ]"
           :aria-pressed="viewMode === 'week'"
         >
@@ -55,38 +66,40 @@
     </div>
 
     <!-- Month View -->
-    <div v-if="viewMode === 'month'" class="border rounded overflow-hidden">
+    <div v-if="viewMode === 'month'" class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
       <!-- Day headers -->
-      <div class="grid grid-cols-7 bg-gray-100">
+      <div class="grid grid-cols-7 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-200">
         <div
           v-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
           :key="day"
-          class="p-2 text-center font-semibold text-sm"
+          class="p-4 text-center font-bold text-sm text-gray-700"
         >
           {{ day }}
         </div>
       </div>
 
       <!-- Calendar cells -->
-      <div class="grid grid-cols-7 gap-px bg-gray-200">
-        <CalendarCell
-          v-for="date in calendarDates"
-          :key="dateKey(date)"
-          :date="date"
-          :tasks="getTasksForDate(date)"
-          :is-today="isToday(date)"
-          :is-other-month="isOtherMonth(date)"
-          :expanded-days="expandedDays"
-          @select-task="$emit('select-task', $event)"
-          @toggle-expand="toggleExpandDay"
-          @create-task="handleCreateTask"
-          @update-due-date="handleUpdateDueDate"
-        />
+      <div class="divide-y divide-gray-200">
+        <div class="grid grid-cols-7 divide-x divide-gray-200">
+          <CalendarCell
+            v-for="date in calendarDates"
+            :key="dateKey(date)"
+            :date="date"
+            :tasks="getTasksForDate(date)"
+            :is-today="isToday(date)"
+            :is-other-month="isOtherMonth(date)"
+            :expanded-days="expandedDays"
+            @select-task="$emit('select-task', $event)"
+            @toggle-expand="toggleExpandDay"
+            @create-task="handleCreateTask"
+            @update-due-date="handleUpdateDueDate"
+          />
+        </div>
       </div>
     </div>
 
     <!-- Week View -->
-    <div v-else class="border rounded overflow-hidden">
+    <div v-else class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
       <CalendarWeekView
         :start-date="weekStartDate"
         :tasks="tasks"
@@ -157,13 +170,13 @@ const displayTitle = computed(() => {
     const startDay = start.getDate()
     const endDay = end.getDate()
     
-    // If same month: "May 10  “ 16"
+    // If same month: "May 10  " 16"
     if (start.getMonth() === end.getMonth()) {
-      return `${startMonth} ${startDay}  “ ${endDay}`
+      return `${startMonth} ${startDay}  " ${endDay}`
     }
-    // If different months: "May 30  “ Jun 5"
+    // If different months: "May 30  " Jun 5"
     else {
-      return `${startMonth} ${startDay}  “ ${endMonth} ${endDay}`
+      return `${startMonth} ${startDay}  " ${endMonth} ${endDay}`
     }
   }
 })
@@ -260,4 +273,3 @@ const handleUpdateDueDate = (taskId, newDate) => {
   emit('update-due-date', { taskId, newDate: dateKey(newDate) })
 }
 </script>
-

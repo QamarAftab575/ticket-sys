@@ -1,342 +1,294 @@
 <template>
-  <div class="relative w-full">
-    <!-- Search Input -->
+  <!-- Desktop: Inline search bar -->
+  <div v-if="!isMobile" class="relative w-full">
     <div class="relative">
       <input
-        ref="searchInput"
+        ref="desktopInput"
         v-model="searchQuery"
         type="text"
-        placeholder="Search"
-        class="w-full pl-10 pr-20 py-2 bg-[#1F2021] border border-gray-700 text-gray-200 placeholder-gray-500 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+        :placeholder="$t ? $t('search') : 'Search'"
+        class="w-full pl-10 pr-20 py-2 bg-[#1F2021] border border-gray-700 text-gray-200 placeholder-gray-500 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition-colors duration-200"
         @focus="openDropdown"
-        @keyup="handleSearch"
+        @input="handleSearch"
+        @keydown.escape="closeAll"
       />
-
-      <!-- Search Icon -->
-      <svg
-        class="absolute left-3 top-2.5 w-4 h-4 text-gray-500 pointer-events-none"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        />
+      <!-- Search icon left -->
+      <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
-
-      <!-- Keyboard Shortcut Badge -->
-      <div class="absolute right-3 top-2 flex items-center gap-0.5 px-1.5 py-0.5 bg-[#2D2E2F] border border-gray-700 rounded text-xs text-gray-500 font-medium">
-        <span>⌘</span>
-        <span>K</span>
+      <!-- Keyboard shortcut badge -->
+      <div class="absolute right-3 top-2 flex items-center gap-0.5 px-1.5 py-0.5 bg-[#2D2E2F] border border-gray-700 rounded text-xs text-gray-500 font-medium select-none">
+        <span>⌘</span><span>K</span>
       </div>
     </div>
 
-    <!-- Dropdown Content -->
-    <div
-      v-if="isOpen"
-      class="absolute top-full left-0 right-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-2xl z-50 max-h-[600px] overflow-y-auto"
-    >
-      <!-- Loading State -->
-      <div v-if="loading" class="px-4 py-8 text-center text-gray-500">
-        <div class="inline-block">
-          <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-          </svg>
-        </div>
-      </div>
-
-      <!-- Filter Tabs -->
-      <div v-if="!loading && (results.tasks.length > 0 || results.projects.length > 0)" class="flex gap-2 px-4 py-3 border-b border-gray-100 flex-wrap">
-        <button
-          @click="activeTab = 'all'"
-          :class="[
-            'px-4 py-1.5 rounded-full text-sm font-medium transition-all border',
-            activeTab === 'all'
-              ? 'bg-blue-50 border-blue-200 text-blue-700'
-              : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
-          ]"
-        >
-          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
-          All
-        </button>
-
-        <button
-          v-if="results.tasks.length > 0"
-          @click="activeTab = 'tasks'"
-          :class="[
-            'px-4 py-1.5 rounded-full text-sm font-medium transition-all border',
-            activeTab === 'tasks'
-              ? 'bg-blue-50 border-blue-200 text-blue-700'
-              : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
-          ]"
-        >
-          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-          </svg>
-          Tasks
-        </button>
-
-        <button
-          v-if="results.projects.length > 0"
-          @click="activeTab = 'projects'"
-          :class="[
-            'px-4 py-1.5 rounded-full text-sm font-medium transition-all border',
-            activeTab === 'projects'
-              ? 'bg-blue-50 border-blue-200 text-blue-700'
-              : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
-          ]"
-        >
-          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-          </svg>
-          Projects
-        </button>
-      </div>
-
-      <!-- Recents Label -->
-      <div v-if="!loading && (results.tasks.length > 0 || results.projects.length > 0)" class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-        Recents
-      </div>
-
-      <!-- Tasks Section -->
-      <div v-if="!loading && (activeTab === 'all' || activeTab === 'tasks') && results.tasks.length > 0">
-        <div class="divide-y">
-          <div
-            v-for="task in results.tasks"
-            :key="task.id"
-            class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition flex items-start gap-3 group"
-            @click="selectTask(task)"
-          >
-            <!-- Checkbox (completed state) -->
-            <div class="w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 flex-shrink-0 transition-all"
-              :class="task.is_completed 
-                ? 'bg-green-600 border-green-600' 
-                : 'border-gray-300 group-hover:border-green-600'">
-              <svg v-if="task.is_completed" class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-            </div>
-
-            <!-- Task Content -->
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 group-hover:text-blue-600"
-                :class="task.is_completed ? 'line-through text-gray-500' : ''">
-                {{ task.name }}
-              </p>
-              <p v-if="task.project_name" class="text-xs text-gray-500 mt-0.5">{{ task.project_name }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Load More Button -->
-        <div
-          v-if="results.has_more_tasks"
-          class="px-4 py-3 text-center border-t border-gray-200"
-        >
-          <button
-            @click="loadMore"
-            class="text-sm text-blue-600 hover:text-blue-700 font-medium transition"
-          >
-            Load More
-          </button>
-        </div>
-      </div>
-
-      <!-- Projects Section -->
-      <div v-if="!loading && (activeTab === 'all' || activeTab === 'projects') && results.projects.length > 0">
-        <div class="divide-y">
-          <div
-            v-for="project in results.projects"
-            :key="project.id"
-            class="px-4 py-3 hover:bg-gray-50 cursor-pointer transition flex items-center gap-3 group"
-            @click="selectProject(project)"
-          >
-            <!-- Project Icon/Color -->
-            <div
-              class="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 text-white font-semibold text-xs"
-              :style="{ backgroundColor: project.color || '#9CA3AF' }"
-            >
-              {{ project.name.charAt(0).toUpperCase() }}
-            </div>
-            <p class="text-sm font-medium text-gray-900 group-hover:text-blue-600">{{ project.name }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Empty State -->
+    <!-- Desktop dropdown -->
+    <Transition name="dropdown">
       <div
-        v-if="!loading && results.tasks.length === 0 && results.projects.length === 0"
-        class="px-4 py-12 text-center"
+        v-if="isOpen"
+        class="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden"
+        style="max-height: 520px;"
       >
-        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <p class="text-sm text-gray-600 font-medium">
-          {{ searchQuery ? 'No tasks or projects found' : 'No recent tasks' }}
-        </p>
+        <SearchResults
+          :results="results"
+          :loading="loading"
+          :active-tab="activeTab"
+          :search-query="searchQuery"
+          @tab-change="activeTab = $event"
+          @select-task="selectTask"
+          @select-project="selectProject"
+          @load-more="loadMore"
+        />
       </div>
-    </div>
+    </Transition>
 
-    <!-- Overlay to close dropdown -->
-    <div
-      v-if="isOpen"
-      class="fixed inset-0 z-40"
-      @click="closeDropdown"
-    />
+    <!-- Desktop backdrop -->
+    <div v-if="isOpen" class="fixed inset-0 z-40" @click="closeAll" />
   </div>
+
+  <!-- Mobile: Full-screen overlay (teleported to body) -->
+  <Teleport to="body">
+    <Transition name="mobile-search">
+      <div
+        v-if="isMobile && showSearchMobile"
+        class="fixed inset-0 z-[9999] flex flex-col bg-[#1A1A1A]"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search"
+      >
+        <!-- Mobile search header -->
+        <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-700 bg-[#2C2C2C]">
+          <button
+            @click="closeMobileSearch"
+            class="flex-shrink-0 p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+            aria-label="Close search"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <div class="relative flex-1">
+            <input
+              ref="mobileInput"
+              v-model="searchQuery"
+              type="search"
+              :placeholder="$t ? $t('search') : 'Search tasks, projects...'"
+              enterkeyhint="search"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              class="w-full pl-10 pr-4 py-2.5 bg-[#1F2021] border border-gray-600 text-gray-100 placeholder-gray-500 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base transition-colors duration-200"
+              @input="handleSearch"
+              @keydown.escape="closeMobileSearch"
+            />
+            <svg class="absolute left-3 top-3 w-4 h-4 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <!-- Clear button -->
+            <button
+              v-if="searchQuery"
+              @click="clearSearch"
+              class="absolute right-3 top-2.5 p-0.5 rounded-full text-gray-400 hover:text-gray-200 transition-colors duration-200 cursor-pointer"
+              aria-label="Clear search"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile results (scrollable) -->
+        <div class="flex-1 overflow-y-auto bg-white">
+          <SearchResults
+            :results="results"
+            :loading="loading"
+            :active-tab="activeTab"
+            :search-query="searchQuery"
+            :mobile="true"
+            @tab-change="activeTab = $event"
+            @select-task="selectTask"
+            @select-project="selectProject"
+            @load-more="loadMore"
+          />
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { api } from '@/Services/api'
+import SearchResults from './SearchResults.vue'
 
-const searchQuery = ref('')
-const searchInput = ref(null)
-const isOpen = ref(false)
-const loading = ref(false)
-const activeTab = ref('all')
-const results = ref({
-  tasks: [],
-  projects: [],
-  has_more_tasks: false,
-  length: undefined,
-})
+// ─── Emits ───────────────────────────────────────────────────────────────────
+const emit = defineEmits(['open-mobile-search'])
+
+// ─── Refs ─────────────────────────────────────────────────────────────────────
+const searchQuery    = ref('')
+const desktopInput   = ref(null)
+const mobileInput    = ref(null)
+const isOpen         = ref(false)
+const loading        = ref(false)
+const activeTab      = ref('all')
+const showSearchMobile = ref(false)
+const isMobile       = ref(false)
+
+const results = ref({ tasks: [], projects: [], has_more_tasks: false })
 const currentPage = ref(1)
-const allTasks = ref([])
+const allTasks    = ref([])
 
-/**
- * Open the dropdown and fetch initial results
- */
-const openDropdown = async () => {
+// ─── Expose open method so AppHeader can trigger it ──────────────────────────
+defineExpose({ openMobileSearch })
+
+// ─── Lifecycle ────────────────────────────────────────────────────────────────
+onMounted(() => {
+  const checkMobile = () => { isMobile.value = window.innerWidth < 768 }
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+  document.addEventListener('keydown', handleKeyboardShortcut)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', () => {})
+  document.removeEventListener('keydown', handleKeyboardShortcut)
+})
+
+// ─── Open / Close ─────────────────────────────────────────────────────────────
+async function openMobileSearch() {
+  showSearchMobile.value = true
+  searchQuery.value = ''
+  results.value = { tasks: [], projects: [], has_more_tasks: false }
+  activeTab.value = 'all'
+  await nextTick()
+  // Small delay to ensure the DOM is rendered and keyboard opens
+  setTimeout(() => {
+    mobileInput.value?.focus()
+  }, 80)
+  // Pre-load recents
+  await fetchResults()
+}
+
+function closeMobileSearch() {
+  showSearchMobile.value = false
+  searchQuery.value = ''
+  results.value = { tasks: [], projects: [], has_more_tasks: false }
+}
+
+async function openDropdown() {
   isOpen.value = true
   if (results.value.tasks.length === 0 && results.value.projects.length === 0) {
     await fetchResults()
   }
 }
 
-/**
- * Close the dropdown
- */
-const closeDropdown = () => {
+function closeAll() {
   isOpen.value = false
+  if (isMobile.value) closeMobileSearch()
 }
 
-/**
- * Handle search with debounce
- */
+function clearSearch() {
+  searchQuery.value = ''
+  currentPage.value = 1
+  allTasks.value = []
+  fetchResults()
+  nextTick(() => mobileInput.value?.focus())
+}
+
+// ─── Search ───────────────────────────────────────────────────────────────────
 let searchTimeout
-const handleSearch = async () => {
+function handleSearch() {
   clearTimeout(searchTimeout)
   currentPage.value = 1
   allTasks.value = []
   activeTab.value = 'all'
-
-  searchTimeout = setTimeout(async () => {
-    await fetchResults()
-  }, 300)
+  // Open desktop dropdown on type
+  if (!isMobile.value) isOpen.value = true
+  searchTimeout = setTimeout(() => fetchResults(), 300)
 }
 
-/**
- * Fetch search results from API
- */
-const fetchResults = async () => {
+async function fetchResults() {
   loading.value = true
   try {
     const response = await api.get('/search', {
-      params: {
-        q: searchQuery.value || null,
-        page: currentPage.value,
-        limit: 10,
-      },
+      params: { q: searchQuery.value || null, page: currentPage.value, limit: 10 },
     })
-
-    // Axios returns data in response.data
     const apiData = response.data || response
-
-    // Ensure response has the correct structure
-    const normalizedResponse = {
+    const normalized = {
       tasks: apiData?.tasks || [],
       projects: apiData?.projects || [],
       has_more_tasks: apiData?.has_more_tasks || false,
     }
-
     if (currentPage.value === 1) {
-      results.value = normalizedResponse
-      allTasks.value = normalizedResponse.tasks
+      results.value = normalized
+      allTasks.value = normalized.tasks
     } else {
-      // Append tasks for pagination
-      results.value.tasks = [...allTasks.value, ...normalizedResponse.tasks]
+      results.value.tasks = [...allTasks.value, ...normalized.tasks]
       allTasks.value = results.value.tasks
-      results.value.has_more_tasks = normalizedResponse.has_more_tasks
+      results.value.has_more_tasks = normalized.has_more_tasks
     }
-  } catch (error) {
-    console.error('Search error:', error)
-    // Set empty results on error to prevent undefined access
-    results.value = {
-      tasks: [],
-      projects: [],
-      has_more_tasks: false,
-    }
+  } catch (e) {
+    console.error('Search error:', e)
+    results.value = { tasks: [], projects: [], has_more_tasks: false }
   } finally {
     loading.value = false
   }
 }
 
-/**
- * Load more tasks
- */
-const loadMore = async () => {
+async function loadMore() {
   currentPage.value += 1
   await fetchResults()
 }
 
-/**
- * Navigate to task detail
- */
-const selectTask = (task) => {
-  // Redirect to My Tasks page with task ID as query parameter
+// ─── Navigation ───────────────────────────────────────────────────────────────
+function selectTask(task) {
   window.location.href = `/my-tasks?task=${task.id}`
-  closeDropdown()
+  closeAll()
 }
 
-/**
- * Navigate to project
- */
-const selectProject = (project) => {
+function selectProject(project) {
   window.location.href = `/projects/${project.id}`
-  closeDropdown()
+  closeAll()
 }
 
-/**
- * Handle Cmd+K / Ctrl+K keyboard shortcut
- */
-const handleKeyboardShortcut = (e) => {
-  // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+// ─── Keyboard shortcut ────────────────────────────────────────────────────────
+function handleKeyboardShortcut(e) {
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
     e.preventDefault()
-    if (searchInput.value) {
-      searchInput.value.focus()
+    if (isMobile.value) {
+      openMobileSearch()
+    } else {
+      desktopInput.value?.focus()
+      openDropdown()
     }
   }
-  
-  // ESC to close dropdown
-  if (e.key === 'Escape' && isOpen.value) {
-    closeDropdown()
-  }
+  if (e.key === 'Escape') closeAll()
 }
-
-onMounted(() => {
-  document.addEventListener('keydown', handleKeyboardShortcut)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeyboardShortcut)
-})
 </script>
 
+<style scoped>
+/* Desktop dropdown slide-in */
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Mobile full-screen slide-up */
+.mobile-search-enter-active,
+.mobile-search-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.mobile-search-enter-from,
+.mobile-search-leave-to {
+  opacity: 0;
+  transform: translateY(12px);
+}
+</style>

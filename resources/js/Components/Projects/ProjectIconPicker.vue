@@ -14,7 +14,7 @@
       <!-- emoji / text icon -->
       <span v-if="localIcon && !isSvgIcon(localIcon)" :class="iconTextSize">{{ localIcon }}</span>
       <!-- svg icon -->
-      <span v-else-if="localIcon && isSvgIcon(localIcon)" class="text-white" v-html="getSvgIcon(localIcon)" />
+      <span v-else-if="localIcon && isSvgIcon(localIcon)" class="flex items-center justify-center text-white" :class="iconSvgSize" v-html="getSvgIcon(localIcon)" />
       <!-- fallback: first letter -->
       <span v-else class="font-bold text-white" :class="iconTextSize">
         {{ (name || '?').charAt(0).toUpperCase() }}
@@ -86,7 +86,10 @@
               :title="icon.label"
             >
               <span
-                class="w-4 h-4 text-gray-600"
+                :class="[
+                  'w-4 h-4',
+                  localIcon === icon.id ? 'text-indigo-600' : 'text-gray-600',
+                ]"
                 v-html="icon.svg"
               />
             </button>
@@ -145,6 +148,12 @@ const iconTextSize = computed(() => ({
   md: 'text-sm',
   lg: 'text-2xl',
 }[props.size] ?? 'text-sm'))
+
+const iconSvgSize = computed(() => ({
+  sm: 'w-3 h-3',
+  md: 'w-4 h-4',
+  lg: 'w-6 h-6',
+}[props.size] ?? 'w-4 h-4'))
 
 //  Color palette 
 const COLORS = [
@@ -232,7 +241,9 @@ const isSvgIcon = (icon) => icon?.startsWith('svg:')
 
 const getSvgIcon = (iconId) => {
   const found = SVG_ICONS.find(i => i.id === iconId)
-  return found?.svg ?? ''
+  if (!found) return ''
+  // Add inline stroke styling to the SVG
+  return found.svg.replace('<svg', '<svg style="stroke: currentColor"')
 }
 
 //  Popover positioning 

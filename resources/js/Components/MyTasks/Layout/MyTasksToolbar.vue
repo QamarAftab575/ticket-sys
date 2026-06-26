@@ -4,18 +4,19 @@
     <!-- Filter Button -->
     <button
       @click="showFilters = !showFilters"
+      :title="$t('filter')"
       :class="[
-        'flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-md transition-colors relative',
+        'flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-md transition-colors relative cursor-pointer',
         hasActiveFilters 
           ? 'text-blue-600 hover:bg-blue-50' 
           : 'text-gray-700 hover:bg-gray-100'
       ]"
     >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
       </svg>
-      {{ $t('filter') }}
-      <span v-if="activeFilterCount > 0" class="ml-0.5 px-1.5 min-w-[20px] h-5 flex items-center justify-center bg-blue-600 text-white text-xs font-semibold rounded-full">
+      <span class="hidden sm:inline">{{ $t('filter') }}</span>
+      <span v-if="activeFilterCount > 0" class="px-1.5 min-w-[20px] h-5 flex items-center justify-center bg-blue-600 text-white text-xs font-semibold rounded-full">
         {{ activeFilterCount }}
       </span>
     </button>
@@ -23,17 +24,18 @@
     <!-- Sort Button -->
     <button
       @click="showSort = !showSort"
+      :title="$t('sort')"
       :class="[
-        'flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-md transition-colors',
+        'flex items-center gap-1.5 px-2.5 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer',
         hasActiveSort 
           ? 'text-blue-600 hover:bg-blue-50' 
           : 'text-gray-700 hover:bg-gray-100'
       ]"
     >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
       </svg>
-      {{ $t('sort') }}
+      <span class="hidden sm:inline">{{ $t('sort') }}</span>
     </button>
 
     <!-- Filter Dropdown Panel -->

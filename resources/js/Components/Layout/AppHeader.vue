@@ -51,13 +51,24 @@
       </div>
     </div>
 
-    <!-- Center Section: Search Bar -->
-    <div class="flex-1 max-w-2xl mx-auto px-6">
-      <SearchDropdown />
+    <!-- Center Section: Search Bar (desktop only) -->
+    <div class="hidden md:flex flex-1 max-w-2xl mx-auto px-6">
+      <SearchDropdown ref="searchDropdownRef" />
     </div>
 
-    <!-- Right Section: User Profile -->
-    <div class="flex items-center gap-4">
+    <!-- Right Section: Search icon (mobile) + User Profile -->
+    <div class="flex items-center gap-1 md:gap-4">
+      <!-- Mobile search icon (right side of navbar) -->
+      <button
+        class="md:hidden p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+        aria-label="Open search"
+        @click="openMobileSearch"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
+
       <!-- User Profile Dropdown -->
       <div class="relative" data-profile-menu>
         <button
@@ -97,6 +108,11 @@ const emit = defineEmits(['toggle-sidebar'])
 const showProfileMenu = ref(false)
 const showCreateMenu = ref(false)
 const sidebarOpen = ref(false)
+const searchDropdownRef = ref(null)
+
+function openMobileSearch() {
+  searchDropdownRef.value?.openMobileSearch()
+}
 
 const page = usePage()
 const userName = computed(() => page.props.auth?.user?.name || '')

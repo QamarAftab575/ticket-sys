@@ -676,6 +676,10 @@ return array (
   'load_more' => 'Load more',
   'no_notifications' => 'No notifications',
   'delete_notification_confirm' => 'Delete this notification?',
+  'no_notifications_yet' => 'No notifications yet',
+  'inbox_empty_hint' => 'New activity will appear here when it happens.',
+  'inbox_empty_description' => "When someone assigns you a task, mentions you, or updates a project, you'll see it here.",
+  'go_to_my_tasks' => 'Go to My Tasks',
 
   // ===== REPORTS PAGE TRANSLATIONS =====
   'reporting_dashboard' => 'Reporting Dashboard',

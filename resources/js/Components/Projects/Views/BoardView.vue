@@ -1,12 +1,12 @@
 ﻿<template>
-  <div ref="scrollContainerRef" class="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-    <div class="flex gap-4 min-w-full pb-4 md:min-w-0 items-start">
+  <div ref="scrollContainerRef" class="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+    <div class="flex gap-6 min-w-full pb-4 md:min-w-0 items-start">
 
       <div
         v-for="section in sections"
         :key="section.id"
-        class="flex-shrink-0 w-72 bg-gray-50 rounded-lg p-3 flex flex-col transition-opacity"
-        :class="{ 'opacity-40': draggingSectionId === section.id }"
+        class="flex-shrink-0 w-80 bg-gradient-to-b from-slate-50 to-slate-50/50 rounded-2xl border border-slate-200/60 p-4 flex flex-col transition-all duration-200 hover:shadow-lg hover:border-slate-300/80"
+        :class="{ 'opacity-50 scale-95': draggingSectionId === section.id }"
         draggable="true"
         @dragstart="onSectionDragStart($event, section)"
         @dragend="onSectionDragEnd"
@@ -15,20 +15,20 @@
       >
         <!-- Column header -->
         <div
-          class="flex items-center justify-between mb-3 cursor-grab active:cursor-grabbing"
-          :class="{ 'border-t-2 border-indigo-400 pt-1': sectionDropTarget === section.id }"
+          class="flex items-center justify-between mb-4 cursor-grab active:cursor-grabbing px-1 transition-all duration-150"
+          :class="{ 'border-t-3 border-indigo-500 pt-2': sectionDropTarget === section.id }"
         >
-          <div class="flex items-center gap-2">
-            <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" :style="{ backgroundColor: section.color || '#6366f1' }" />
-            <h3 class="font-semibold text-sm truncate">{{ section.name }}</h3>
-            <span class="text-xs text-gray-400">{{ getTasksForSection(section.id).length }}</span>
+          <div class="flex items-center gap-2.5 flex-1 min-w-0">
+            <div class="w-3 h-3 rounded-full flex-shrink-0 shadow-sm" :style="{ backgroundColor: section.color || '#3b82f6' }" />
+            <h3 class="font-semibold text-sm text-slate-900 truncate">{{ section.name }}</h3>
+            <span class="text-xs font-medium text-slate-500 bg-white/70 px-2 py-0.5 rounded-full flex-shrink-0">{{ getTasksForSection(section.id).length }}</span>
           </div>
           <button
             @click.stop="startCreating(section.id)"
-            class="p-1 hover:bg-gray-200 rounded text-gray-500 flex-shrink-0"
-            title="Add task"
+            class="ml-2 p-2 hover:bg-indigo-100 hover:text-indigo-600 rounded-lg text-slate-400 flex-shrink-0 transition-all duration-150"
+            title="Add task to this section"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
           </button>
@@ -36,27 +36,27 @@
 
         <!-- Task cards container with drop zone -->
         <div 
-          class="space-y-2 flex-1 min-h-[200px]"
+          class="space-y-3 flex-1 min-h-[240px] px-1"
           @dragover.prevent="onCardDragOver($event, section.id, null)"
           @drop.prevent.stop="onCardDrop($event, section.id, null)"
         >
           <!-- Empty state drop indicator -->
           <div
             v-if="getTasksForSection(section.id).length === 0 && cardDropTarget?.sectionId === section.id"
-            class="h-0.5 bg-indigo-400 rounded mb-2"
+            class="h-1 bg-gradient-to-r from-indigo-400 to-indigo-500 rounded-full shadow-md"
           />
 
           <div
             v-for="task in getTasksForSection(section.id)"
             :key="task.id"
-            class="relative"
+            class="relative group"
             @dragover.prevent="onCardDragOver($event, section.id, task.id)"
             @drop.prevent.stop="onCardDrop($event, section.id, task.id)"
           >
             <!-- Insert-before indicator -->
             <div
               v-if="cardDropTarget?.sectionId === section.id && cardDropTarget?.beforeTaskId === task.id"
-              class="h-0.5 bg-indigo-400 rounded mb-1"
+              class="h-1 bg-gradient-to-r from-indigo-400 to-indigo-500 rounded-full shadow-md mb-2"
             />
 
             <TaskCard
@@ -73,20 +73,20 @@
           <!-- End-of-list drop indicator -->
           <div
             v-if="getTasksForSection(section.id).length > 0 && cardDropTarget?.sectionId === section.id && cardDropTarget?.beforeTaskId === '__end__'"
-            class="h-0.5 bg-indigo-400 rounded"
+            class="h-1 bg-gradient-to-r from-indigo-400 to-indigo-500 rounded-full shadow-md"
           />
 
           <!-- Inline creation -->
           <div
             v-if="creatingInSection === section.id"
-            class="bg-white rounded border border-indigo-300 p-2 shadow-sm"
+            class="bg-white rounded-xl border-2 border-indigo-400 shadow-md p-3 transition-all duration-200"
           >
             <input
               :ref="el => { if (el) inputRefs[section.id] = el }"
               v-model="newTaskName"
               type="text"
-              placeholder="Task name"
-              class="w-full text-sm outline-none"
+              placeholder="Enter task name..."
+              class="w-full text-sm font-medium text-slate-900 placeholder-slate-400 outline-none bg-transparent"
               @keydown.enter="commit(section.id)"
               @keydown.escape="cancel"
               @blur="onBlur(section.id)"
@@ -98,24 +98,24 @@
         <button
           v-if="creatingInSection !== section.id"
           @click="startCreating(section.id)"
-          class="mt-3 w-full py-1.5 text-sm text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded flex items-center gap-1.5 px-2 transition-colors"
+          class="mt-4 w-full py-2.5 text-sm font-medium text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg flex items-center gap-2 px-2 transition-all duration-150 border border-transparent hover:border-indigo-200"
         >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
-          Add task
+          <span>Add task</span>
         </button>
       </div>
 
       <!-- Add section column -->
-      <div class="flex-shrink-0 w-72">
-        <div v-if="isAddingSection" class="bg-gray-50 rounded-lg p-3">
+      <div class="flex-shrink-0 w-80">
+        <div v-if="isAddingSection" class="bg-gradient-to-b from-indigo-50 to-indigo-50/50 rounded-2xl border-2 border-indigo-400 p-4 shadow-lg">
           <input
             ref="sectionInputRef"
             v-model="newSectionName"
             type="text"
-            placeholder="Section name"
-            class="w-full text-sm font-semibold bg-transparent border-b border-indigo-400 outline-none py-0.5 mb-2"
+            placeholder="Section name..."
+            class="w-full text-sm font-semibold bg-transparent border-b-2 border-indigo-400 outline-none py-2 text-slate-900 placeholder-slate-400"
             @keydown.enter="commitAddSection"
             @keydown.escape="cancelAddSection"
             @blur="commitAddSection"
@@ -124,12 +124,12 @@
         <button
           v-else
           @click="startAddSection"
-          class="w-full py-2 px-3 text-sm text-gray-400 hover:text-indigo-600 hover:bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 hover:border-indigo-300 flex items-center gap-1.5 transition-colors"
+          class="w-full py-3 px-4 text-sm font-medium text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-2xl border-2 border-dashed border-slate-300 hover:border-indigo-400 flex items-center gap-2 transition-all duration-150 group"
         >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
-          Add section
+          <span>Add section</span>
         </button>
       </div>
 

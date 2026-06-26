@@ -2,27 +2,32 @@
   <div class="flex flex-col h-full bg-white overflow-hidden">
 
     <!--  Top Controls  -->
-    <div class="flex items-center justify-between gap-4 px-4 py-2 bg-white border-b flex-shrink-0">
-      <div class="flex items-center gap-2">
-        <button @click="shiftTimeline(-1)" class="p-1.5 rounded hover:bg-gray-100 transition-colors" :title="`Previous ${zoomLevel.toLowerCase()}`">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-          </svg>
-        </button>
-        <button @click="goToToday" class="px-3 py-1.5 text-sm font-medium border rounded hover:bg-gray-100 transition-colors">Today</button>
-        <button @click="shiftTimeline(1)" class="p-1.5 rounded hover:bg-gray-100 transition-colors" :title="`Next ${zoomLevel.toLowerCase()}`">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </button>
-        <div class="flex items-center gap-1 border rounded ml-2">
-          <button @click="zoomOut" class="px-2 py-1.5 hover:bg-gray-100 transition-colors" title="Zoom out" :disabled="zoomLevel === 'Month'">
+    <div class="flex items-center justify-between gap-4 px-6 py-4 bg-white border-b flex-shrink-0 shadow-sm">
+      <div class="flex items-center gap-3">
+        <!-- Navigation buttons -->
+        <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+          <button @click="shiftTimeline(-1)" class="p-2 rounded hover:bg-gray-200 transition-colors text-gray-700" :title="`Previous ${zoomLevel.toLowerCase()}`">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <button @click="goToToday" class="px-4 py-2 text-sm font-medium bg-white border border-gray-200 rounded-md hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer">Today</button>
+          <button @click="shiftTimeline(1)" class="p-2 rounded hover:bg-gray-200 transition-colors text-gray-700" :title="`Next ${zoomLevel.toLowerCase()}`">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Zoom controls -->
+        <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+          <button @click="zoomOut" class="p-2 rounded hover:bg-gray-200 transition-colors text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed" title="Zoom out" :disabled="zoomLevel === 'Month'">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
             </svg>
           </button>
-          <span class="px-2 text-sm font-medium border-x min-w-[70px] text-center">{{ zoomLevel }}</span>
-          <button @click="zoomIn" class="px-2 py-1.5 hover:bg-gray-100 transition-colors" title="Zoom in" :disabled="zoomLevel === 'Day'">
+          <span class="px-3 py-2 text-sm font-medium text-gray-700 bg-white rounded-md border border-gray-200 min-w-[70px] text-center">{{ zoomLevel }}</span>
+          <button @click="zoomIn" class="p-2 rounded hover:bg-gray-200 transition-colors text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed" title="Zoom in" :disabled="zoomLevel === 'Day'">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -30,22 +35,27 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-4">
+        <!-- No date tasks button -->
         <button
           v-if="noDateTasks.length"
           @click="showNoDatePanel = !showNoDatePanel"
-          class="px-3 py-1.5 text-sm border rounded hover:bg-gray-100 transition-colors flex items-center gap-1.5"
-          :class="showNoDatePanel ? 'bg-gray-100' : ''"
+          class="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+          :class="showNoDatePanel ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'text-gray-700'"
         >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
           <span>No date</span>
-          <span class="bg-gray-200 text-gray-700 text-xs font-semibold rounded-full px-1.5 py-0.5">{{ noDateTasks.length }}</span>
+          <span class="ml-1 bg-gray-300 text-gray-700 text-xs font-bold rounded-full px-2 py-0.5">{{ noDateTasks.length }}</span>
         </button>
+
+        <!-- Group by dropdown -->
         <div class="flex items-center gap-2">
-          <label class="text-sm text-gray-600">Group by:</label>
-          <select v-model="groupBy" class="px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <label class="text-sm font-medium text-gray-700">Group by:</label>
+          <select v-model="groupBy" class="px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all cursor-pointer font-medium">
             <option value="section">Section</option>
             <option value="assignee">Assignee</option>
-            <!-- <option value="priority">Priority</option> -->
             <option value="none">None</option>
           </select>
         </div>
@@ -181,31 +191,38 @@
         <!-- Timeline content (when tasks exist) -->
         <template v-else>
         <!-- Two-row sticky date header -->
-        <div class="flex-shrink-0 bg-white z-20 border-b overflow-hidden">
-          <div class="h-8 border-b bg-gray-50 overflow-hidden">
+        <div class="flex-shrink-0 bg-white z-20 border-b overflow-hidden shadow-sm">
+          <!-- Month row -->
+          <div class="h-9 border-b bg-gradient-to-r from-gray-50 to-gray-50 overflow-hidden">
             <div class="flex h-full" :style="{ width: totalWidth + 'px', transform: `translateX(-${headerScrollLeft}px)` }">
               <div
                 v-for="month in visibleMonths"
                 :key="month.key"
-                class="border-r text-center text-xs font-semibold flex items-center justify-center text-gray-700 flex-shrink-0 px-1"
+                class="border-r border-gray-200 text-center text-xs font-semibold flex items-center justify-center text-gray-700 flex-shrink-0 px-2"
                 :style="{ width: month.width + 'px' }"
               ><span class="truncate">{{ month.label }}</span></div>
             </div>
           </div>
-          <div class="h-8 bg-white overflow-hidden">
+          <!-- Date numbers row -->
+          <div class="h-10 bg-white overflow-hidden">
             <div class="flex h-full" :style="{ width: totalWidth + 'px', transform: `translateX(-${headerScrollLeft}px)` }">
               <div
                 v-for="(col, idx) in visibleDates"
                 :key="col.key"
-                class="border-r text-center text-xs flex items-center justify-center flex-shrink-0 transition-colors"
+                class="border-r border-gray-200 text-center flex items-center justify-center flex-shrink-0 font-semibold transition-all"
                 :class="[
                   creatingRange && idx >= creatingRange.start && idx <= creatingRange.end
-                    ? 'bg-blue-100 text-blue-600 font-semibold'
-                    : col.isToday ? 'bg-blue-500 text-white font-bold'
-                    : col.isWeekend ? 'bg-gray-50 text-gray-400' : 'text-gray-600'
+                    ? 'bg-blue-50 text-blue-600 border-blue-300'
+                    : col.isToday 
+                    ? 'bg-indigo-600 text-white shadow-md' 
+                    : col.isWeekend 
+                    ? 'bg-gray-50 text-gray-500' 
+                    : 'text-gray-700'
                 ]"
                 :style="{ width: CELL_WIDTH + 'px' }"
-              >{{ col.label }}</div>
+              >
+                <span class="text-sm">{{ col.label }}</span>
+              </div>
             </div>
           </div>
         </div>

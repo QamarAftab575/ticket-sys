@@ -14,3 +14,12 @@
 .list-view-table::-webkit-scrollbar {
     display: none;
 }
+
+/* Utility: hide scrollbar while keeping scroll behavior */
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}

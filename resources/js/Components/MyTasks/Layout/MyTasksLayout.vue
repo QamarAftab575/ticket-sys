@@ -2,47 +2,28 @@
   <div class="flex h-screen bg-white">
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden bg-white">
-      <!-- Compact Header - Asana Style (Static, normal layout) -->
+      <!-- Page Header -->
       <div class="bg-white border-b border-gray-200">
-        <!-- Top Row: Title, Task Count, and Actions -->
-        <div class="px-6 py-3 flex items-center justify-between">
-          <!-- Left: Avatar + Title -->
-          <div class="flex items-center gap-3">
+
+        <!-- Row 1: Avatar + Title + Task count  |  Filter + Sort (right) -->
+        <div class="px-4 sm:px-6 pt-4 pb-2 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
             <Avatar
               :name="currentUser?.name || 'User'"
               :src="currentUser?.avatar"
               size="sm"
               class="flex-shrink-0"
             />
-            <div>
-              <h1 class="text-lg font-semibold text-gray-900">My tasks</h1>
+            <div class="min-w-0">
+              <h1 class="text-lg font-semibold text-gray-900 leading-tight truncate">{{ $t('my_tasks') }}</h1>
               <p class="text-xs text-gray-500">
                 {{ taskCount }} task{{ taskCount !== 1 ? 's' : '' }}
               </p>
             </div>
           </div>
 
-          <!-- Right: View Switcher + Filter/Sort (Sticky on desktop) -->
-          <div class="flex items-center gap-3 md:sticky md:top-0 md:z-20 md:bg-white">
-            <!-- View Type Selector -->
-            <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
-              <button
-                v-for="view in viewOptions"
-                :key="view.id"
-                @click="currentView = view.id"
-                :title="view.label"
-                :class="[
-                  'px-2.5 py-1.5 text-gray-600 hover:bg-gray-50 transition-colors border-r border-gray-300 last:border-r-0',
-                  currentView === view.id
-                    ? 'bg-gray-100 text-gray-900'
-                    : ''
-                ]"
-              >
-                <component :is="view.icon" class="w-4 h-4" />
-              </button>
-            </div>
-
-            <!-- Toolbar Inline -->
+          <!-- Filter + Sort aligned to the right -->
+          <div class="flex-shrink-0">
             <MyTasksToolbar
               :initial-sort="myTasksStore.sort"
               :initial-group="myTasksStore.groupBy"
@@ -54,6 +35,29 @@
             />
           </div>
         </div>
+
+        <!-- Row 2: Text-based view navigation tabs -->
+        <div class="px-4 sm:px-6 overflow-x-auto scrollbar-none">
+          <nav class="flex gap-0 -mb-px" role="tablist" aria-label="View switcher">
+            <button
+              v-for="view in viewOptions"
+              :key="view.id"
+              role="tab"
+              :aria-selected="currentView === view.id"
+              @click="currentView = view.id"
+              :class="[
+                'flex items-center gap-1.5 px-3 sm:px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+                currentView === view.id
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300'
+              ]"
+            >
+              <component :is="view.icon" class="w-4 h-4 flex-shrink-0" />
+              {{ view.label }}
+            </button>
+          </nav>
+        </div>
+
       </div>
 
       <!-- Content Area (Scrollable) -->
@@ -187,13 +191,13 @@ const setQueryParams = (params: Record<string, any>) => {
   window.history.pushState({}, '', url.toString());
 };
 
-// View options with icons
-const viewOptions = [
-  { id: 'list', label: 'List', icon: ListBulletIcon },
-  { id: 'board', label: 'Board', icon: Squares2X2Icon },
-  { id: 'calendar', label: 'Calendar', icon: CalendarIcon },
-  { id: 'files', label: 'Files', icon: PaperClipIcon },
-];
+// View options with icons and translated labels
+const viewOptions = computed(() => [
+  { id: 'list',     label: currentPage.props.translations?.list     || 'List',     icon: ListBulletIcon },
+  { id: 'board',    label: currentPage.props.translations?.board    || 'Board',    icon: Squares2X2Icon },
+  { id: 'calendar', label: currentPage.props.translations?.calendar || 'Calendar', icon: CalendarIcon },
+  { id: 'files',    label: currentPage.props.translations?.files    || 'Files',    icon: PaperClipIcon },
+]);
 
 // State
 const selectedTask = ref(null);

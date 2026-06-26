@@ -17,23 +17,7 @@
           {{ $t('saved') }} {{ lastSaved }}
         </div>
 
-        <button
-          @click="showMenu = !showMenu"
-          class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-md transition-colors cursor-pointer"
-          :title="$t('menu')"
-        >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-          </svg>
-        </button>
-        <div v-if="showMenu" class="absolute right-8 top-32 bg-white border border-gray-200 rounded-xl shadow-lg z-10 min-w-[140px] overflow-hidden">
-          <button
-            @click="clearNotes; showMenu = false"
-            class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer transition-colors"
-          >
-            {{ $t('clear_all') }}
-          </button>
-        </div>
+      
       </div>
     </div>
 
