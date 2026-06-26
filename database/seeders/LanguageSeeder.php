@@ -16,6 +16,7 @@ class LanguageSeeder extends Seeder
     {
         // Initialize default English language
         LanguageHelper::initializeDefaultLanguage();
+        LanguageHelper::initializeSecondLanguage();
         
         // Set default selected language in business_settings
         BusinessSetting::set('default_selected_language', 'en');

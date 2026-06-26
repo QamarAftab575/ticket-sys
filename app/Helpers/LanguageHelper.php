@@ -165,4 +165,28 @@ class LanguageHelper
             self::createLanguageFiles($english);
         }
     }
+
+
+     /**
+     * Initialize default English language
+     */
+    public static function initializeSecondLanguage(): void
+    {
+        // Check if English language exists
+        $english = Language::where('code', 'ru')->first();
+
+        if (!$english) {
+            $english = Language::create([
+                'name' => 'Russian',
+                'code' => 'ru',
+                'direction' => 'ltr',
+                'is_active' => true,
+                'is_default' => false,
+            ]);
+
+            // Create language files
+            self::createLanguageFiles($english);
+        }
+    }
+
 }
