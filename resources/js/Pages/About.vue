@@ -8,7 +8,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
     <!-- Hero Section -->
     <section class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 via-white to-orange-50">
       <div class="max-w-4xl mx-auto text-center">
-        <h1 class="text-5xl font-bold text-slate-900 mb-6">{{ $t('about_asira') }}</h1>
+        <h1 class="text-5xl font-bold text-slate-900 mb-6">{{ $t('about_appname') }}</h1>
         <p class="text-xl text-slate-600">{{ $t('complete_ticketing_solution') }}</p>
       </div>
     </section>
@@ -30,9 +30,9 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 
           <!-- What is Asira -->
           <div>
-            <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('what_is_asira') }}</h2>
+            <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('what_is_appname') }}</h2>
             <p class="text-lg text-slate-600 leading-relaxed mb-8">
-              {{ $t('asira_description') }}
+              {{ $t('appname_description') }}
             </p>
             
             <div class="grid md:grid-cols-2 gap-8">
@@ -199,7 +199,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 
           <!-- Why Choose Asira -->
           <div>
-            <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('why_choose_asira') }}</h2>
+            <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('why_choose_appname') }}</h2>
             <div class="grid md:grid-cols-2 gap-6">
               <div class="flex items-start gap-4">
                 <svg class="w-6 h-6 text-orange-600 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

@@ -12,7 +12,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
         
         <div class="space-y-8">
           <div>
-            <h2 class="text-2xl font-bold text-slate-900 mb-3">{{ $t('security_at_asira') }}</h2>
+            <h2 class="text-2xl font-bold text-slate-900 mb-3">{{ $t('security_at_appname') }}</h2>
             <p class="text-slate-600 leading-relaxed">
               {{ $t('security_intro_text') }}
             </p>

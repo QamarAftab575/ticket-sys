@@ -1,7 +1,6 @@
 <?php
 
 return array (
-  // Common Actions
   'dashboard' => 'Dashboard',
   'users' => 'Users',
   'settings' => 'Settings',
@@ -52,8 +51,6 @@ return array (
   'super_admin' => 'Super Admin',
   'paid' => 'Paid',
   'trial' => 'Trial',
-  
-  // ===== ADMIN USER SHOW PAGE =====
   'workspaces' => 'Workspaces',
   'projects' => 'Projects',
   'tasks' => 'Tasks',
@@ -104,11 +101,9 @@ return array (
   'trial_expired' => 'Trial Expired',
   'trial_ends' => 'Trial ends',
   'days_remaining' => 'days remaining',
-  'upgrade_to_plan' => 'Upgrade to Plan',
+  'upgrade_to_plan' => 'Upgrade to {plan}',
   'no_plan_or_trial' => 'No Plan or Trial',
   'no_plan_or_trial_message' => 'This user has no active plan or trial.',
-
-  // ===== LANGUAGE MANAGEMENT PAGES =====
   'language_management' => 'Language Management',
   'manage_languages_desc' => 'Manage languages and translations for your system',
   'add_language' => 'Add Language',
@@ -142,8 +137,6 @@ return array (
   'sure_delete_language' => 'Are you sure you want to delete the "{name}" language? This action cannot be undone.',
   'language_deleted' => 'Language "{name}" deleted successfully!',
   'failed_delete_language' => 'Failed to delete language',
-  
-  // ===== CREATE LANGUAGE PAGE =====
   'add_new_language' => 'Add New Language',
   'create_new_language_desc' => 'Create a new language for your system',
   'back_to_languages' => 'Back to Languages',
@@ -158,8 +151,6 @@ return array (
   'add_translation_values' => 'You can then add translation values for each key',
   'create_language' => 'Create Language',
   'creating' => 'Creating...',
-  
-  // ===== EDIT LANGUAGE PAGE =====
   'edit_language' => 'Edit Language',
   'update_language_details' => 'Update language details',
   'cannot_be_changed' => '(Cannot be changed)',
@@ -167,8 +158,6 @@ return array (
   'saving' => 'Saving...',
   'language_name_required' => 'Language name is required',
   'language_code_required' => 'Language code is required',
-  
-  // ===== MANAGE TRANSLATIONS PAGE =====
   'manage_translations_title' => 'Manage Translations',
   'search_translation_keys' => 'Search translation keys...',
   'key_table_header' => 'Key',
@@ -181,8 +170,6 @@ return array (
   'failed_save_translations' => 'Failed to save translations',
   'translation_progress' => 'Translation Progress',
   'translations_completed' => '{completed} of {total} translations completed',
-
-  // ===== ADMIN CONTACTS PAGES =====
   'contact_messages' => 'Contact Messages',
   'view_manage_contacts' => 'View and manage customer contact submissions',
   'total_contacts' => 'Total Contacts',
@@ -190,13 +177,8 @@ return array (
   'read_status' => 'Read',
   'replied_status' => 'Replied',
   'closed_status' => 'Closed',
-  'filters' => 'Filters',
-  'search' => 'Search',
   'search_placeholder' => 'Name, email, subject...',
-  'status' => 'Status',
   'all_status' => 'All Status',
-  'from_date' => 'From Date',
-  'to_date' => 'To Date',
   'table_name' => 'Name',
   'table_email' => 'Email',
   'table_subject' => 'Subject',
@@ -205,9 +187,6 @@ return array (
   'table_action' => 'Action',
   'view_action' => 'View',
   'no_contacts_found' => 'No contacts found',
-  'showing_results' => 'Showing {from} to {to} of {total} results',
-  'previous' => 'Previous',
-  'next' => 'Next',
   'back_to_contacts' => 'Back to Contacts',
   'actions' => 'Actions',
   'contact_info' => 'Contact Info',
@@ -224,8 +203,6 @@ return array (
   'delete_contact' => 'Delete Contact',
   'delete_contact_confirm' => 'Delete Contact',
   'delete_contact_message' => 'Are you sure you want to delete this contact message? This action cannot be undone.',
-  'cancel' => 'Cancel',
-  'delete' => 'Delete',
   'deleting' => 'Deleting...',
   'contact_marked_read' => 'Contact marked as read successfully',
   'failed_mark_read' => 'Failed to mark contact as read',
@@ -237,8 +214,6 @@ return array (
   'message_copied' => 'Message copied to clipboard',
   'failed_copy_message' => 'Failed to copy message to clipboard',
   'browser_clipboard_not_supported' => 'Your browser does not support clipboard access',
-
-  // ===== ADMIN WORKSPACES PAGE =====
   'manage_workspaces' => 'Manage Workspaces',
   'view_manage_all_workspaces' => 'View and manage all platform workspaces',
   'workspace_search' => 'Search',
@@ -249,7 +224,7 @@ return array (
   'workspace_inactive' => 'Inactive',
   'workspace_table_header' => 'Workspace',
   'workspace_owner' => 'Owner',
-  'workspace_members' => 'Members',
+  'workspace_members' => 'Workspace Members',
   'workspace_projects' => 'Projects',
   'workspace_created' => 'Created',
   'workspace_actions' => 'Actions',
@@ -268,8 +243,6 @@ return array (
   'workspace_delete_title' => 'Delete Workspace',
   'workspace_delete_message' => 'Are you sure you want to permanently delete "{name}"? This action cannot be undone and all data will be lost.',
   'workspace_cancel' => 'Cancel',
-
-  // ===== ADMIN DASHBOARD =====
   'welcome_to_your_admin_panel' => 'Welcome to your admin panel',
   'total_users' => 'Total Users',
   'new_today' => 'new today',
@@ -296,14 +269,9 @@ return array (
   'last_12_months' => 'Last 12 months',
   'recent_signups' => 'Recent Signups',
   'latest_10_registered_users' => 'Latest 10 registered users',
-  'joined' => 'Joined',
   'manage_users' => 'Manage Users',
   'view_edit_or_suspend_users' => 'View, edit, or suspend users',
   'view_and_manage_all_workspaces' => 'View and manage all workspaces',
-
-  // ===== LANDING PAGE =====
-
-  // Hero Section
   'trusted_by_teams' => 'Trusted by 50,000+ teams',
   'build_projects' => 'Build projects',
   'like_linear' => 'like Linear',
@@ -313,13 +281,9 @@ return array (
   'no_credit_card' => 'No credit card',
   'free_trial' => '14-day free trial',
   'cancel_anytime' => 'Cancel anytime',
-
-  // Features Section
   'features' => 'Features',
   'everything_you_need' => 'Everything you need',
   'powerful_features_subtitle' => 'Powerful features that adapt to your workflow. Built for speed and simplicity.',
-
-  // Views Section
   'views' => 'Views',
   'see_work_your_way' => 'See work your way',
   'multiple_views_subtitle' => 'Multiple views for the same data. Switch instantly between perspectives.',
@@ -354,7 +318,6 @@ return array (
   'create_tutorial' => 'Create welcome tutorial',
   'task' => 'Task',
   'assignee' => 'Assignee',
-  'status' => 'Status',
   'priority' => 'Priority',
   'due' => 'Due',
   'implement_auth' => 'Implement authentication',
@@ -367,22 +330,14 @@ return array (
   'high' => 'High',
   'medium' => 'Medium',
   'low' => 'Low',
-
-  // Use Cases Section
   'built_for_every_team' => 'Built for every team',
   'adapt_unique_workflow' => 'From engineering to operations, adapt to your unique workflow.',
-
-  // Testimonials Section
   'testimonials' => 'Testimonials',
   'loved_by_teams' => 'Loved by teams',
   'workflow_transformation' => 'See what teams are saying about their workflow transformation.',
-
-  // Pricing Section
   'pricing' => 'Pricing',
   'simple_pricing' => 'Simple pricing',
   'start_free_scale' => 'Start free, scale as you grow. All plans include 14-day trial.',
-
-  // CTA Section
   'ready_to_build' => 'Ready to build better?',
   'ready_to_transform' => 'Ready to transform your workflow?',
   'join_thousands' => 'Join thousands of teams shipping faster with clarity and purpose.',
@@ -393,8 +348,6 @@ return array (
   'request_demo' => 'Request a demo',
   'trust_indicators' => 'No credit card • 14-day trial • Cancel anytime',
   'trusted_by_developers' => 'Trusted by developers worldwide',
-
-  // ===== WEEKDAYS =====
   'sun' => 'Sun',
   'mon' => 'Mon',
   'tue' => 'Tue',
@@ -402,14 +355,10 @@ return array (
   'thu' => 'Thu',
   'fri' => 'Fri',
   'sat' => 'Sat',
-
-  // ===== TIMELINE & DATES =====
   'days' => '{count} days',
   'june_2026' => 'June 2026',
   'due_in_days' => 'Due in {days}d',
   'task_id' => 'TASK-{id}',
-
-  // ===== FOOTER =====
   'product' => 'Product',
   'api_docs' => 'API Docs',
   'company' => 'Company',
@@ -422,22 +371,19 @@ return array (
   'follow_facebook' => 'Follow us on Facebook',
   'follow_twitter' => 'Follow us on Twitter',
   'follow_linkedin' => 'Follow us on LinkedIn',
-
-
-  // ===== ABOUT PAGE =====
-  'about_appname' => 'About ' . config('app.name'),
+  'about_appname' => 'About aTasqo',
   'complete_ticketing_solution' => 'The Complete Ticketing & Project Management Solution',
   'our_mission' => 'Our Mission',
-  'mission_description_1' => config('app.name') . ' is a comprehensive ticketing and project management platform designed to empower teams, streamline workflows, and maximize productivity. We believe that organizations deserve a powerful, intuitive system that brings all their work together in one place—without unnecessary complexity.',
-  'mission_description_2' => 'Our mission is to transform how teams collaborate, communicate, and deliver results. Whether you\'re managing support tickets, organizing projects, or coordinating complex workflows, ' . config('app.name') . ' provides the tools you need to succeed.',
-  'what_is_appname' => 'What is ' . config('app.name') . '?',
-  'appname_description' => config('app.name') . ' is an all-in-one ticketing and project management system built for modern teams. It combines powerful ticketing capabilities with flexible project management views, making it the perfect solution for support teams, IT departments, marketing groups, and organizations of any size.',
+  'mission_description_1' => 'Tasqo is a comprehensive ticketing and project management platform designed to empower teams, streamline workflows, and maximize productivity. We believe that organizations deserve a powerful, intuitive system that brings all their work together in one place—without unnecessary complexity.',
+  'mission_description_2' => 'Our mission is to transform how teams collaborate, communicate, and deliver results. Whether you\'re managing support tickets, organizing projects, or coordinating complex workflows, Tasqo provides the tools you need to succeed.',
+  'what_is_appname' => 'What is Tasqo?',
+  'appname_description' => 'Tasqo is an all-in-one ticketing and project management system built for modern teams. It combines powerful ticketing capabilities with flexible project management views, making it the perfect solution for support teams, IT departments, marketing groups, and organizations of any size.',
   'advanced_ticketing' => 'Advanced Ticketing',
   'ticketing_description' => 'Handle customer inquiries, support requests, and issues with ease. Track ticket status, assign priorities, and manage workflows efficiently.',
   'project_management' => 'Project Management',
   'project_mgmt_description' => 'Organize projects with multiple flexible views including Kanban boards, timeline views, and calendar layouts for complete visibility.',
   'powerful_features' => 'Powerful Features',
-  'features_intro' => config('app.name') . ' comes packed with nearly all the functionality organizations need to succeed:',
+  'features_intro' => 'Tasqo comes packed with nearly all the functionality organizations need to succeed:',
   'comprehensive_ticketing_system' => 'Comprehensive Ticketing System',
   'ticketing_system_desc' => 'Create, track, and manage tickets with custom fields, priority levels, due dates, and automated workflows. Support multiple ticket types and categories to match your organization\'s needs.',
   'multiple_flexible_views' => 'Multiple Flexible Views',
@@ -445,7 +391,7 @@ return array (
   'payment_gateway_integration' => 'Payment Gateway Integration',
   'payment_gateway_desc' => 'Easily integrate with popular payment gateways for seamless billing, subscriptions, and transaction management. Support multiple payment methods and currencies.',
   'extensive_api_integrations' => 'Extensive API Integrations',
-  'api_integrations_desc' => 'Connect with your favorite tools and services. ' . config('app.name') . ' integrates with leading platforms for CRM, communication, documentation, and more. Build custom integrations with our comprehensive REST API.',
+  'api_integrations_desc' => 'Connect with your favorite tools and services. Tasqo integrates with leading platforms for CRM, communication, documentation, and more. Build custom integrations with our comprehensive REST API.',
   'team_collaboration' => 'Team Collaboration & Communication',
   'collaboration_desc' => 'Comment on tickets, mention team members, share files, and track all activities. Keep conversations organized and maintain full context of decisions.',
   'advanced_analytics' => 'Advanced Analytics & Reporting',
@@ -454,7 +400,7 @@ return array (
   'workflows_desc' => 'Design custom workflows that match your process. Automate repetitive tasks with rules, triggers, and actions to save time and reduce errors.',
   'enterprise_security' => 'Enterprise Security',
   'security_desc' => 'Bank-grade encryption, multi-factor authentication, role-based access control, and compliance with GDPR, CCPA, and other regulations to protect your data.',
-  'why_choose_appname' => 'Why Choose ' . config('app.name') . '?',
+  'why_choose_appname' => 'Why Choose Tasqo?',
   'all_in_one_solution' => 'All-in-One Solution',
   'all_in_one_desc' => 'No need for multiple tools—everything you need is in one integrated platform.',
   'easy_to_use' => 'Easy to Use',
@@ -464,13 +410,11 @@ return array (
   'powerful_integrations' => 'Powerful Integrations',
   'integrations_desc' => 'Connect with your favorite tools and services through our extensive API.',
   'ready_to_transform_workflow' => 'Ready to Transform Your Workflow?',
-  'join_thousands_teams' => 'Join thousands of teams already using ' . config('app.name') . ' to manage their tickets and projects more effectively.',
+  'join_thousands_teams' => 'Join thousands of teams already using Tasqo to manage their tickets and projects more effectively.',
   'start_free_trial_button' => 'Start Your Free Trial',
-
-  // ===== PRIVACY PAGE =====
   'privacy_policy' => 'Privacy Policy',
   'privacy_introduction' => 'Introduction',
-  'privacy_intro_text' => config('app.name') . ' ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information.',
+  'privacy_intro_text' => 'Tasqo ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information.',
   'privacy_information_we_collect' => 'Information We Collect',
   'privacy_collect_text' => 'We collect information you provide directly to us, such as when you create an account, use our services, or contact us for support. This may include your name, email address, and project data.',
   'privacy_how_we_use' => 'How We Use Your Information',
@@ -480,25 +424,21 @@ return array (
   'privacy_contact_us' => 'Contact Us',
   'privacy_contact_text' => 'If you have questions about this Privacy Policy, please contact us at support@asira.in',
   'privacy_last_updated' => 'Last updated:',
-
-  // ===== TERMS OF SERVICE PAGE =====
   'terms_of_service' => 'Terms of Service',
   'terms_acceptance' => 'Acceptance of Terms',
-  'terms_acceptance_text' => 'By accessing and using ' . config('app.name') . ', you accept and agree to be bound by the terms and provision of this agreement.',
+  'terms_acceptance_text' => 'By accessing and using Tasqo, you accept and agree to be bound by the terms and provision of this agreement.',
   'terms_use_license' => 'Use License',
-  'terms_use_license_text' => 'Permission is granted to temporarily download one copy of the materials (information or software) on ' . config('app.name') . ' for personal, non-commercial transitory viewing only.',
+  'terms_use_license_text' => 'Permission is granted to temporarily download one copy of the materials (information or software) on Tasqo for personal, non-commercial transitory viewing only.',
   'terms_disclaimer' => 'Disclaimer',
-  'terms_disclaimer_text' => 'The materials on ' . config('app.name') . ' are provided on an \'as is\' basis. ' . config('app.name') . ' makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property.',
+  'terms_disclaimer_text' => 'The materials on Tasqo are provided on an \'as is\' basis. Tasqo makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property.',
   'terms_limitations' => 'Limitations',
-  'terms_limitations_text' => 'In no event shall ' . config('app.name') . ' or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on ' . config('app.name') . '.',
+  'terms_limitations_text' => 'In no event shall Tasqo or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Tasqo.',
   'terms_accuracy' => 'Accuracy of Materials',
-  'terms_accuracy_text' => 'The materials appearing on ' . config('app.name') . ' could include technical, typographical, or photographic errors. ' . config('app.name') . ' does not warrant that any of the materials on ' . config('app.name') . ' are accurate, complete, or current.',
+  'terms_accuracy_text' => 'The materials appearing on Tasqo could include technical, typographical, or photographic errors. Tasqo does not warrant that any of the materials on Tasqo are accurate, complete, or current.',
   'terms_modifications' => 'Modifications',
-  'terms_modifications_text' => config('app.name') . ' may revise these terms of service for its website at any time without notice. By using this website, you are agreeing to be bound by the then current version of these terms of service.',
+  'terms_modifications_text' => 'Tasqo may revise these terms of service for its website at any time without notice. By using this website, you are agreeing to be bound by the then current version of these terms of service.',
   'terms_last_updated' => 'Last updated:',
-
-  // ===== SECURITY PAGE =====
-  'security_at_appname' => 'Security at ' . config('app.name'),
+  'security_at_appname' => 'Security at Tasqo',
   'security_intro_text' => 'We take security seriously and implement industry-leading practices to protect your data and ensure the safety of your account.',
   'security_encryption' => 'Encryption',
   'security_encryption_text' => 'All data in transit is encrypted using TLS 1.2 or higher. Data at rest is encrypted with AES-256 encryption to ensure maximum security.',
@@ -507,36 +447,28 @@ return array (
   'security_regular_audits' => 'Regular Audits',
   'security_audits_text' => 'Our infrastructure undergoes regular security audits and penetration testing by third-party security experts to identify and address potential vulnerabilities.',
   'security_compliance' => 'Compliance',
-  'security_compliance_text' => config('app.name') . ' complies with GDPR, CCPA, and other relevant data protection regulations to ensure your data is handled in accordance with applicable laws.',
+  'security_compliance_text' => 'Tasqo complies with GDPR, CCPA, and other relevant data protection regulations to ensure your data is handled in accordance with applicable laws.',
   'security_incident_response' => 'Incident Response',
   'security_incident_text' => 'In the unlikely event of a security incident, we have a comprehensive incident response plan in place to minimize impact and notify affected users promptly.',
   'security_reporting' => 'Security Reporting',
   'security_reporting_text' => 'If you discover a security vulnerability, please contact us immediately at security@asira.in instead of disclosing it publicly.',
   'security_last_updated' => 'Last updated:',
-
-
-  // ===== Cookie PAGE =====
-
-
-  "cookie_policy" => "Cookie Policy",
-  "cookie_introduction" => "Introduction",
-  "cookie_intro_text" => "This Cookie Policy explains how " . config('app.name') . " uses cookies and similar technologies when you visit our website and use our services.",
-  "cookie_what_are_cookies" => "What Are Cookies?",
-  "cookie_what_are_cookies_text" => "Cookies are small text files stored on your device that help websites function properly and provide a secure user experience.",
-  "cookie_types_we_use" => "Cookies We Use",
-  "cookie_types_we_use_text" => config('app.name') . " currently uses only strictly necessary cookies required for authentication, security, and essential website functionality.",
-  "cookie_essential_cookies" => "Strictly Necessary Cookies",
-  "cookie_essential_cookies_text" => "These cookies are required to maintain user sessions, protect against malicious activity, and ensure the proper operation of our services. They cannot be disabled while using the platform.",
-  "cookie_third_party" => "Third-Party Cookies",
-  "cookie_third_party_text" => config('app.name') . " does not currently use third-party analytics, advertising, marketing, or tracking cookies. We do not share cookie data with external advertising or analytics providers.",
-  "cookie_manage_preferences" => "Managing Cookies",
-  "cookie_manage_preferences_text" => "Most browsers allow you to manage or delete cookies through browser settings. Disabling essential cookies may impact the functionality and security of the website.",
-  "cookie_contact_us" => "Contact Us",
-  "cookie_contact_us_text" => "If you have any questions regarding this Cookie Policy, please contact us at support@asira.in.",
-  "cookie_last_updated" => "Last updated:",
-
-
-  // ===== CONTACT PAGE =====
+  'cookie_policy' => 'Cookie Policy',
+  'cookie_introduction' => 'Introduction',
+  'cookie_intro_text' => 'This Cookie Policy explains how Tasqo uses cookies and similar technologies when you visit our website and use our services.',
+  'cookie_what_are_cookies' => 'What Are Cookies?',
+  'cookie_what_are_cookies_text' => 'Cookies are small text files stored on your device that help websites function properly and provide a secure user experience.',
+  'cookie_types_we_use' => 'Cookies We Use',
+  'cookie_types_we_use_text' => 'Tasqo currently uses only strictly necessary cookies required for authentication, security, and essential website functionality.',
+  'cookie_essential_cookies' => 'Strictly Necessary Cookies',
+  'cookie_essential_cookies_text' => 'These cookies are required to maintain user sessions, protect against malicious activity, and ensure the proper operation of our services. They cannot be disabled while using the platform.',
+  'cookie_third_party' => 'Third-Party Cookies',
+  'cookie_third_party_text' => 'Tasqo does not currently use third-party analytics, advertising, marketing, or tracking cookies. We do not share cookie data with external advertising or analytics providers.',
+  'cookie_manage_preferences' => 'Managing Cookies',
+  'cookie_manage_preferences_text' => 'Most browsers allow you to manage or delete cookies through browser settings. Disabling essential cookies may impact the functionality and security of the website.',
+  'cookie_contact_us' => 'Contact Us',
+  'cookie_contact_us_text' => 'If you have any questions regarding this Cookie Policy, please contact us at support@asira.in.',
+  'cookie_last_updated' => 'Last updated:',
   'get_in_touch' => 'Get in Touch',
   'contact_description' => 'Have a question or feedback? We\'d love to hear from you. Send us a message and we\'ll get back to you as soon as possible.',
   'email_label' => 'Email',
@@ -572,8 +504,6 @@ return array (
   'faq_partnership_answer' => 'We\'re always interested in partnerships! Please select "Partnership Inquiry" in the subject line and tell us about your idea.',
   'faq_report_bug' => 'How do I report a bug?',
   'faq_bug_answer' => 'Please send us details about the bug you found, including steps to reproduce it. You can also reach out to security@asira.in for security-related issues.',
-
-  // ===== SIDEBAR TRANSLATIONS =====
   'expand_sidebar' => 'Expand sidebar',
   'collapse_sidebar' => 'Collapse sidebar',
   'toggle_projects' => 'Toggle projects',
@@ -589,11 +519,7 @@ return array (
   'renew' => 'Renew',
   'renew_now' => 'Renew now',
   'suspended' => 'Suspended',
-  'workspace' => 'Workspace',
-
-  // ===== DASHBOARD TRANSLATIONS =====
   'private_notepad' => 'Private notepad',
-  'saving' => 'Saving...',
   'saved' => 'Saved',
   'menu' => 'Menu',
   'clear_all' => 'Clear all',
@@ -607,7 +533,6 @@ return array (
   'jot_down_note' => 'Jot down a quick note or add a link to an important resource.',
   'clear_notes_confirmation' => 'Are you sure you want to clear all notes? This cannot be undone.',
   'enter_url' => 'Enter URL:',
-  'projects' => 'Projects',
   'sort' => 'Sort',
   'recents' => 'Recents',
   'a_z' => 'A-Z',
@@ -650,8 +575,6 @@ return array (
   'october' => 'October',
   'november' => 'November',
   'december' => 'December',
-
-  // ===== MY TASKS TOOLBAR TRANSLATIONS =====
   'filter' => 'Filter',
   'due_date' => 'Due date',
   'any_date' => 'Any date',
@@ -666,8 +589,6 @@ return array (
   'ascending' => 'Ascending',
   'descending' => 'Descending',
   'active' => 'Active',
-
-  // ===== INBOX PAGE TRANSLATIONS =====
   'mark_all_as_read' => 'Mark all as read',
   'unread_notification' => 'unread notification',
   'unread_notifications' => 'unread notifications',
@@ -676,8 +597,6 @@ return array (
   'load_more' => 'Load more',
   'no_notifications' => 'No notifications',
   'delete_notification_confirm' => 'Delete this notification?',
-
-  // ===== REPORTS PAGE TRANSLATIONS =====
   'reporting_dashboard' => 'Reporting Dashboard',
   'full_view_of_team_work' => '360° view of your team\'s work',
   'live_data' => 'Live data',
@@ -718,8 +637,6 @@ return array (
   'complete' => 'Complete',
   'reset' => 'Reset',
   'apply_filters' => 'Apply Filters',
-
-  // ===== FILES VIEW TRANSLATIONS =====
   'files' => 'Files',
   'used' => 'used',
   'grid' => 'Grid',
@@ -741,8 +658,6 @@ return array (
   'size' => 'Size',
   'uploaded_by' => 'Uploaded by',
   'date' => 'Date',
-  'source' => 'Source',
-  'actions' => 'Actions',
   'unknown' => 'Unknown',
   'from_task' => 'From task:',
   'from_project' => 'From project',
@@ -758,8 +673,6 @@ return array (
   'delete_file_confirm' => 'Are you sure you want to delete "{filename}"?',
   'file_deleted_successfully' => 'File deleted successfully',
   'failed_to_delete_file' => 'Failed to delete file',
-
-  // ===== PROFILE PAGE TRANSLATIONS =====
   'profile_picture' => 'Profile Picture',
   'change_picture' => 'Change Picture',
   'upload_picture' => 'Upload Picture',
@@ -776,7 +689,6 @@ return array (
   'search_timezone' => 'Search timezone...',
   'no_timezone' => 'No timezone',
   'timezone_description' => 'Dates and times will be displayed in your selected timezone.',
-  'save_changes' => 'Save Changes',
   'change_password' => 'Change Password',
   'password_update_desc' => 'Update your password. A confirmation email will be sent to',
   'new_password' => 'New Password',
@@ -789,14 +701,11 @@ return array (
   'type_email_confirm' => 'Type your email to confirm',
   'enter_password' => 'Enter your password',
   'delete_confirm_text' => 'Are you sure you want to delete your account? This action cannot be undone.',
-  'deleting' => 'Deleting...',
   'changing_password' => 'Changing Password...',
   'profile_picture_updated' => 'Profile picture updated successfully!',
   'profile_picture_removed' => 'Profile picture removed successfully!',
   'profile_updated' => 'Profile updated successfully!',
   'password_changed' => 'Password changed successfully! A confirmation email has been sent.',
-  
-  // ===== PROFILE PAGE ERROR/VALIDATION MESSAGES =====
   'confirm_remove_picture' => 'Are you sure you want to remove your profile picture?',
   'invalid_image_format' => 'Please select a valid image file (JPG, PNG, or GIF)',
   'image_too_large' => 'Image size must be less than 2MB',
@@ -805,20 +714,14 @@ return array (
   'password_confirm_required' => 'Please confirm your password',
   'passwords_not_match' => 'Passwords do not match',
   'email_not_match' => 'Email does not match',
-
-  // ===== SETTINGS PAGE =====
   'my_workspaces' => 'My Workspaces',
   'no_workspaces_yet' => 'You are not part of any workspaces yet.',
-  
-  // ===== SETTINGS SIDEBAR =====
   'billing' => 'Billing',
   'plans_subscriptions' => 'Plans & Subscriptions',
   'integrations' => 'Integrations',
   'access_tokens' => 'Access Tokens',
   'workspace_settings' => 'Workspace Settings',
   'google_social_login' => 'Google Social Login',
-
-  // ===== SUBSCRIPTIONS PAGE =====
   'manage_subscription_billing' => 'Manage your subscription and billing',
   'super_admin_access' => 'Super Admin Access',
   'unlimited' => 'Unlimited',
@@ -830,24 +733,20 @@ return array (
   'days_left' => '{days} Days Left',
   'your_trial_ends_on' => 'Your trial ends on',
   'upgrade_to_paid_plan' => 'Upgrade to a paid plan to continue enjoying all features without interruption.',
-  'workspaces' => 'Workspaces',
   'members' => 'Members',
   'upgrade_now' => 'Upgrade Now',
   'no_credit_card_req' => 'No Credit Card Required',
   'cancel_anytime_sub' => 'Cancel Anytime',
   'current_plan' => 'Current Plan',
   'your_active_subscription' => 'Your active subscription',
-  'trial' => 'Trial',
   'trial_period_ends' => 'Your trial period ends on',
   'after_trial_continue' => 'After this, your subscription will continue with the plan unless you cancel.',
   'price' => 'Price',
   'per' => 'per',
-  'started' => 'Started',
-  'expires' => 'Expires',
   'change_plan_btn' => 'Change Plan',
   'renew_subscription' => 'Renew Subscription',
   'no_active_subscription' => 'No Active Subscription',
-  'no_subscription_desc' => "You don't have an active subscription. Choose a plan below to get started.",
+  'no_subscription_desc' => 'You don\'t have an active subscription. Choose a plan below to get started.',
   'all_plans' => 'All Plans',
   'choose_perfect_plan' => 'Choose the perfect plan for your team',
   'your_current_plan' => '✓ Your Current Plan',
@@ -856,19 +755,13 @@ return array (
   'currency' => 'Currency',
   'more_features' => '+ {count} more features',
   'renew_plan' => 'Renew Plan',
-  'upgrade_to_plan' => 'Upgrade to {plan}',
-  'subscription_history' => 'Subscription History',
   'subscription_history_table' => 'Subscription History',
-  'plan' => 'Plan',
   'purchased' => 'Purchased',
-  'admin_assigned' => ' Admin',
+  'admin_assigned' => 'Admin',
   'expired' => 'Expired',
-  'change_plan' => 'Change Plan',
   'are_you_sure_change_plan' => 'Are you sure you want to change to the {plan} plan?',
   'renew_subscription_modal' => 'Renew Subscription',
   'renew_extend_subscription' => 'Renew your subscription to {plan}? This will extend your subscription for another {billing_cycle}.',
-
-  // ===== API TOKENS PAGE =====
   'api_documentation' => 'API Documentation',
   'learn_authenticate_api' => 'Learn how to authenticate and use the API with your tokens. View endpoints, request examples, and response formats.',
   'view_api_documentation' => 'View API Documentation',
@@ -878,10 +771,9 @@ return array (
   'expiration_optional' => 'Expiration (Optional)',
   'leave_empty_no_expiration' => 'Leave empty for no expiration',
   'create_token' => 'Create Token',
-  'creating' => 'Creating...',
   'token_created_successfully' => 'Token Created Successfully',
   'save_your_token' => 'Save your token',
-  'wont_see_again' => "You won't be able to see it again. Store it somewhere secure.",
+  'wont_see_again' => 'You won\'t be able to see it again. Store it somewhere secure.',
   'your_api_token' => 'Your API Token',
   'close' => 'Close',
   'all_tokens' => 'All Tokens',
@@ -895,8 +787,6 @@ return array (
   'never' => 'Never',
   'deactivate' => 'Deactivate',
   'are_you_sure_deactivate' => 'Are you sure you want to deactivate this token? It will no longer work for API requests.',
-
-  // ===== GOOGLE SETTINGS PAGE =====
   'configuration_status' => 'Configuration Status',
   'enabled' => 'Enabled',
   'disabled' => 'Disabled',
@@ -906,8 +796,6 @@ return array (
   'enable_google_login' => 'Enable Google Login',
   'allow_google_auth' => 'Allow users to authenticate with Google',
   'unless_you_cancel' => 'unless you cancel',
-
-  // ===== WORKSPACE DASHBOARD =====
   'pending_invites' => 'Pending Invites',
   'workspace_projects_subtitle' => 'Active projects in this workspace',
   'active_collaborators' => 'Active collaborators',
@@ -916,10 +804,8 @@ return array (
   'finish_setting_up' => 'Finish setting up',
   'setup_steps_description' => 'Complete the remaining steps to get your workspace ready.',
   'of' => 'of',
-  'workspace_members' => 'Workspace Members',
   'invite' => 'Invite',
   'members_section_description' => 'Quick view of workspace collaborators.',
-  'role' => 'Role',
   'activate' => 'Activate',
   'inactive' => 'Inactive',
   'invited_status' => 'Invited',
@@ -961,14 +847,10 @@ return array (
   'invitation_sent_success' => 'Invitation sent successfully!',
   'workspace_name_mismatch' => 'Workspace name does not match. Please try again.',
   'danger_zone' => 'Danger Zone',
-
-  // ===== ADMIN SETTINGS PAGES =====
   'admin_settings' => 'Admin Settings',
   'billing_trial_tab' => 'Billing & Trial',
   'plans_tab' => 'Plans',
   'social_login_tab' => 'Social Login',
-  
-  // Billing Settings Page
   'stripe_api_keys' => 'Stripe API Keys',
   'stripe_publishable_key' => 'Stripe Publishable Key',
   'stripe_publishable_key_placeholder' => 'pk_live_...',
@@ -985,8 +867,6 @@ return array (
   'members_per_project_trial' => 'Members per Project (Trial Users)',
   'members_trial_limit_unit' => 'member(s)',
   'save_settings' => 'Save Settings',
-  
-  // Plans Settings Page
   'existing_plans_grid' => 'Existing Plans',
   'add_new_plan' => 'Add New Plan',
   'edit_plan_title' => 'Edit Plan',
@@ -1025,11 +905,8 @@ return array (
   'members_workspace_label' => 'Members/workspace',
   'projects_workspace_label' => 'Projects/workspace',
   'plan_features_label' => 'Features',
-  
-  // Social Login Settings Page (Google OAuth)
   'google_oauth_settings' => 'Google OAuth',
   'google_oauth_description' => 'Configure Google OAuth to allow users to sign in with their Google accounts',
-  'configuration_status' => 'Configuration Status',
   'google_status_enabled' => 'Enabled',
   'google_status_disabled' => 'Disabled',
   'credentials_configured_status' => 'Credentials Configured',
@@ -1053,21 +930,10 @@ return array (
   'google_error_message' => 'Google OAuth configuration error',
   'invalid_credentials' => 'Invalid credentials provided',
   'important' => 'Important',
-
-  // ===== ADMIN LAYOUT =====
   'languages' => 'Languages',
   'contacts' => 'Contacts',
-  'asira_admin' => config('app.name') . ' Admin',
+  'asira_admin' => 'Tasqo Admin',
   'return_to_dashboard' => 'Return to Dashboard',
-  'profile' => 'Profile',
-  'logout' => 'Logout',
-
-  // ===== AUTHENTICATED LAYOUT =====
-  'asira' => config('app.name'),
-  'projects' => 'Projects',
-  'dashboard' => 'Dashboard',
+  'asira' => 'Tasqo',
   'manage_account' => 'Manage Account',
-  'settings' => 'Settings',
 );
-
-?>
