@@ -6,16 +6,16 @@
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center space-x-8">
             <Link href="/dashboard" class="text-xl font-bold text-blue-600">
-              Asira
+              {{ $t('asira') }}
             </Link>
             
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-6">
               <Link href="/dashboard" class="text-gray-700 hover:text-gray-900 font-medium">
-                Dashboard
+                {{ $t('dashboard') }}
               </Link>
               <Link href="/projects" class="text-gray-700 hover:text-gray-900 font-medium">
-                Projects
+                {{ $t('projects') }}
               </Link>
             </div>
           </div>
@@ -54,19 +54,19 @@
                   href="/profile"
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-100 first:rounded-t-lg"
                 >
-                  Manage Account
+                  {{ $t('manage_account') }}
                 </Link>
                 <Link
                   href="/settings"
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
-                  Settings
+                  {{ $t('settings') }}
                 </Link>
                 <button
                   @click="logout"
                   class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 last:rounded-b-lg"
                 >
-                  Logout
+                  {{ $t('logout') }}
                 </button>
               </div>
             </div>
@@ -76,10 +76,10 @@
         <!-- Mobile Menu -->
         <div v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200 py-2">
           <Link href="/dashboard" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            Dashboard
+            {{ $t('dashboard') }}
           </Link>
           <Link href="/projects" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            Projects
+            {{ $t('projects') }}
           </Link>
         </div>
       </div>

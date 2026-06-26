@@ -19,11 +19,13 @@
       <!-- Workspace Name + Chevron -->
       <span v-if="!collapsed" class="flex-1 flex items-center gap-2 min-w-0">
         <span class="truncate text-sm font-semibold">{{ activeWorkspace?.name || 'Select Workspace' }}</span>
-        <svg class="w-4 h-4 shrink-0 transition-transform duration-200" :class="isOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-        </svg>
+        <img
+          src="/assets/images/up-and-down-arrows-svgrepo-com.svg"
+          alt="Toggle workspace menu"
+          class="w-4 h-4 shrink-0 transition-transform duration-200"
+          :class="isOpen ? 'rotate-180' : ''"
+        />
       </span>
-
       <!-- Tooltip for collapsed mode -->
       <span v-if="collapsed"
         class="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-lg bg-gray-900 text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-50 shadow-lg"

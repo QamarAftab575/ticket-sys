@@ -7,8 +7,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
         </svg>
         <div>
-          <h2 class="text-xl font-semibold text-gray-900">Google OAuth</h2>
-          <p class="text-sm text-gray-600 mt-1">Configure Google OAuth to allow users to sign in with their Google accounts</p>
+          <h2 class="text-xl font-semibold text-gray-900">{{ $t('google_oauth_settings') }}</h2>
+          <p class="text-sm text-gray-600 mt-1">{{ $t('google_oauth_description') }}</p>
         </div>
       </div>
 
@@ -16,7 +16,7 @@
       <div v-if="googleStatus" class="bg-blue-50 border border-blue-200 rounded-lg p-6">
         <div class="flex items-center justify-between">
           <div class="flex-1">
-            <p class="text-sm font-medium text-gray-900 mb-3">Configuration Status</p>
+            <p class="text-sm font-medium text-gray-900 mb-3">{{ $t('configuration_status') }}</p>
             <div class="flex flex-col gap-2">
               <div class="flex items-center gap-2">
                 <svg v-if="googleStatus.enabled" class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -26,7 +26,7 @@
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                 </svg>
                 <span :class="googleStatus.enabled ? 'text-green-700 font-medium' : 'text-red-700 font-medium'">
-                  {{ googleStatus.enabled ? 'Enabled' : 'Disabled' }}
+                  {{ googleStatus.enabled ? $t('google_status_enabled') : $t('google_status_disabled') }}
                 </span>
               </div>
               <div class="flex items-center gap-2">
@@ -37,12 +37,12 @@
                   <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                 </svg>
                 <span :class="googleStatus.configured ? 'text-green-700 font-medium' : 'text-amber-700 font-medium'">
-                  {{ googleStatus.configured ? 'Credentials Configured' : 'Credentials Missing' }}
+                  {{ googleStatus.configured ? $t('credentials_configured_status') : $t('credentials_missing_status') }}
                 </span>
               </div>
             </div>
             <p v-if="googleStatus.last_updated" class="text-xs text-gray-600 mt-4">
-              Last updated: {{ formatDate(googleStatus.last_updated) }}
+              {{ $t('last_updated_label') }} {{ formatDate(googleStatus.last_updated) }}
             </p>
           </div>
         </div>
@@ -69,8 +69,8 @@
         <!-- Enable Toggle -->
         <div class="flex items-center justify-between">
           <div>
-            <label class="text-sm font-medium text-gray-900">Enable Google Login</label>
-            <p class="text-sm text-gray-600 mt-1">Allow users to authenticate with Google</p>
+            <label class="text-sm font-medium text-gray-900">{{ $t('enable_google_login_label') }}</label>
+            <p class="text-sm text-gray-600 mt-1">{{ $t('allow_users_google_auth') }}</p>
           </div>
           <button
             type="button"
@@ -91,7 +91,7 @@
 
         <!-- Client ID Field -->
         <div>
-          <label for="google_client_id" class="block text-sm font-medium text-gray-900 mb-2">Google Client ID</label>
+          <label for="google_client_id" class="block text-sm font-medium text-gray-900 mb-2">{{ $t('google_client_id_label') }}</label>
           <input
             id="google_client_id"
             v-model="form.google_oauth.client_id"
@@ -99,15 +99,15 @@
             :required="form.google_oauth.enabled"
             :disabled="!form.google_oauth.enabled"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500 text-sm"
-            placeholder="Your Google Client ID"
+            :placeholder="$t('google_client_id_placeholder')"
           />
           <p v-if="errors.client_id" class="text-red-600 text-sm mt-2">{{ errors.client_id }}</p>
-          <p class="text-xs text-gray-500 mt-2">Found in Google Cloud Console</p>
+          <p class="text-xs text-gray-500 mt-2">{{ $t('found_in_google_console') }}</p>
         </div>
 
         <!-- Client Secret Field -->
         <div>
-          <label for="google_client_secret" class="block text-sm font-medium text-gray-900 mb-2">Google Client Secret</label>
+          <label for="google_client_secret" class="block text-sm font-medium text-gray-900 mb-2">{{ $t('google_client_secret_label') }}</label>
           <input
             id="google_client_secret"
             v-model="form.google_oauth.client_secret"
@@ -115,21 +115,21 @@
             :required="form.google_oauth.enabled"
             :disabled="!form.google_oauth.enabled"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500 text-sm"
-            placeholder="Your Google Client Secret"
+            :placeholder="$t('google_client_secret_placeholder')"
           />
           <p v-if="errors.client_secret" class="text-red-600 text-sm mt-2">{{ errors.client_secret }}</p>
-          <p class="text-xs text-gray-500 mt-2">Keep this secret - never share publicly</p>
+          <p class="text-xs text-gray-500 mt-2">{{ $t('keep_secret_never_share') }}</p>
         </div>
 
         <!-- Redirect URI Field (Read-only) -->
         <div>
-          <label for="google_redirect_uri" class="block text-sm font-medium text-gray-900 mb-2">Redirect URI (Required in Google Console)</label>
+          <label for="google_redirect_uri" class="block text-sm font-medium text-gray-900 mb-2">{{ $t('redirect_uri_label') }}</label>
           <div class="mt-2 p-4 bg-gray-50 border border-gray-200 rounded-lg">
             <p class="text-sm font-mono text-gray-900 break-all select-all">{{ callbackUrl }}</p>
           </div>
           <p v-if="errors.redirect_uri" class="text-red-600 text-sm mt-2">{{ errors.redirect_uri }}</p>
           <p class="text-sm text-gray-600 mt-3">
-            <strong>Important:</strong> You must enter this exact callback URL in your Google Cloud Console under <strong>Authorized redirect URIs</strong>, or authentication will fail.
+            <strong>{{ $t('important') }}:</strong> {{ $t('redirect_uri_info') }}
           </p>
         </div>
 
@@ -148,7 +148,7 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span>{{ isTestingConnection ? 'Testing...' : 'Test Connection' }}</span>
+            <span>{{ isTestingConnection ? $t('testing_connection') : $t('test_connection_button') }}</span>
           </button>
 
           <button
@@ -163,7 +163,7 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span>{{ isSubmitting ? 'Saving...' : 'Save Settings' }}</span>
+            <span>{{ isSubmitting ? $t('saving') : $t('save_settings') }}</span>
           </button>
         </div>
       </form>

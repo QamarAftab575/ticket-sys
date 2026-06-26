@@ -1,7 +1,7 @@
 ﻿<template>
   <AdminLayout>
     <template #header>
-      <h1 class="text-3xl font-bold text-gray-900">Admin Settings</h1>
+      <h1 class="text-3xl font-bold text-gray-900">{{ $t('admin_settings') }}</h1>
     </template>
 
     <div class="w-full">
@@ -20,7 +20,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h10m4 0a1 1 0 11-2 0m2 0a1 1 0 10-2 0m-4 0a1 1 0 11-2 0m2 0a1 1 0 10-2 0M3 5a2 2 0 012-2h14a2 2 0 012 2v2H3V5z" />
             </svg>
-            Billing & Trial
+            {{ $t('billing_trial_tab') }}
           </button>
           <button
             @click="activeTab = 'plans'"
@@ -48,7 +48,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
-            Social Login
+            {{ $t('social_login_tab') }}
           </button>
         </div>
       </div>

@@ -52,21 +52,21 @@
             <div v-if="status" class="bg-white rounded-lg shadow p-6">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Configuration Status</h3>
+                  <h3 class="text-lg font-semibold text-gray-900">{{ $t('configuration_status') }}</h3>
                   <p class="text-gray-600 mt-1">
-                    <span v-if="status.enabled" class="text-green-600 font-medium"> Enabled</span>
-                    <span v-else class="text-red-600 font-medium"> Disabled</span>
+                    <span v-if="status.enabled" class="text-green-600 font-medium"> {{ $t('enabled') }}</span>
+                    <span v-else class="text-red-600 font-medium"> {{ $t('disabled') }}</span>
                   </p>
                   <p v-if="status.last_updated" class="text-sm text-gray-500 mt-2">
-                    Last updated: {{ formatDate(status.last_updated) }}
+                    {{ $t('last_updated') }}: {{ formatDate(status.last_updated) }}
                   </p>
                 </div>
                 <div class="text-right">
                   <div v-if="status.configured" class="text-green-600 text-sm font-medium">
-                     Credentials Configured
+                     {{ $t('credentials_configured') }}
                   </div>
                   <div v-else class="text-amber-600 text-sm font-medium">
-                     Credentials Missing
+                     {{ $t('credentials_missing') }}
                   </div>
                 </div>
               </div>
@@ -87,8 +87,8 @@
               <!-- Enable Toggle -->
               <div class="flex items-center justify-between">
                 <div>
-                  <label class="text-sm font-medium text-gray-900">Enable Google Login</label>
-                  <p class="text-sm text-gray-600 mt-1">Allow users to authenticate with Google</p>
+                  <label class="text-sm font-medium text-gray-900">{{ $t('enable_google_login') }}</label>
+                  <p class="text-sm text-gray-600 mt-1">{{ $t('allow_google_auth') }}</p>
                 </div>
                 <button
                   type="button"

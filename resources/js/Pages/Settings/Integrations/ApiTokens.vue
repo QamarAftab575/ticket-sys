@@ -27,8 +27,8 @@
                   </svg>
                 </div>
                 <div class="flex-1">
-                  <h4 class="text-base font-semibold text-gray-900 mb-1">API Documentation</h4>
-                  <p class="text-sm text-gray-700 mb-3">Learn how to authenticate and use the API with your tokens. View endpoints, request examples, and response formats.</p>
+                  <h4 class="text-base font-semibold text-gray-900 mb-1">{{ $t('api_documentation') }}</h4>
+                  <p class="text-sm text-gray-700 mb-3">{{ $t('learn_authenticate_api') }}</p>
                   <a 
                     href="/docs/api" 
                     target="_blank" 
@@ -37,7 +37,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
-                    View API Documentation
+                    {{ $t('view_api_documentation') }}
                   </a>
                 </div>
               </div>
@@ -45,30 +45,30 @@
 
             <!-- Create Token Section -->
             <div class="bg-white rounded-lg shadow p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Create New Token</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('create_new_token') }}</h3>
               
               <form @submit.prevent="handleCreateToken" class="space-y-4">
                 <div>
-                  <label for="token_name" class="block text-sm font-medium text-gray-900">Token Name</label>
+                  <label for="token_name" class="block text-sm font-medium text-gray-900">{{ $t('token_name') }}</label>
                   <input
                     id="token_name"
                     v-model="createForm.name"
                     type="text"
                     required
-                    placeholder="e.g., My Integration, External App"
+                    :placeholder="$t('eg_my_integration')"
                     class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <p v-if="errors.name" class="text-red-600 text-sm mt-1">{{ errors.name[0] }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-900 mb-2">Expiration (Optional)</label>
+                  <label class="block text-sm font-medium text-gray-900 mb-2">{{ $t('expiration_optional') }}</label>
                   <input
                     v-model="createForm.expires_at"
                     type="date"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                  <p class="text-gray-600 text-xs mt-1">Leave empty for no expiration</p>
+                  <p class="text-gray-600 text-xs mt-1">{{ $t('leave_empty_no_expiration') }}</p>
                 </div>
 
                 <button
@@ -76,13 +76,13 @@
                   :disabled="isCreating"
                   class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  <span v-if="!isCreating">Create Token</span>
+                  <span v-if="!isCreating">{{ $t('create_token') }}</span>
                   <span v-else class="flex items-center justify-center gap-2">
                     <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Creating...
+                    {{ $t('creating') }}
                   </span>
                 </button>
               </form>
@@ -109,7 +109,7 @@
                   <div v-if="showTokenModal" class="bg-white rounded-lg shadow-lg max-w-md w-full overflow-hidden">
                     <!-- Header -->
                     <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                      <h3 class="text-base font-semibold text-gray-900">Token Created Successfully</h3>
+                      <h3 class="text-base font-semibold text-gray-900">{{ $t('token_created_successfully') }}</h3>
                       <button @click="closeTokenModal" class="text-gray-400 hover:text-gray-600 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -126,15 +126,15 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0-10a4 4 0 100 8 4 4 0 000-8z" />
                           </svg>
                           <div>
-                            <p class="text-sm font-medium text-amber-900">Save your token</p>
-                            <p class="text-xs text-amber-800 mt-0.5">You won't be able to see it again. Store it somewhere secure.</p>
+                            <p class="text-sm font-medium text-amber-900">{{ $t('save_your_token') }}</p>
+                            <p class="text-xs text-amber-800 mt-0.5">{{ $t('wont_see_again') }}</p>
                           </div>
                         </div>
                       </div>
 
                       <!-- Token Display -->
                       <div>
-                        <label class="text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 block">Your API Token</label>
+                        <label class="text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 block">{{ $t('your_api_token') }}</label>
                         <div class="bg-gray-50 border border-gray-300 rounded-lg p-3 flex items-center justify-between gap-3">
                           <code class="font-mono text-sm text-gray-900 break-all flex-1">{{ newToken.plain_token }}</code>
                           <button
@@ -149,7 +149,7 @@
                       <!-- Documentation Link -->
                       <div class="text-center">
                         <a href="/docs/api" target="_blank" class="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                          View API Documentation
+                          {{ $t('view_api_documentation') }}
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
@@ -163,7 +163,7 @@
                         @click="closeTokenModal"
                         class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-100 transition-colors"
                       >
-                        Close
+                        {{ $t('close') }}
                       </button>
                     </div>
                   </div>
@@ -174,23 +174,23 @@
             <!-- Tokens List -->
             <div class="bg-white rounded-lg shadow">
               <div class="p-6 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">All Tokens</h3>
+                <h3 class="text-lg font-semibold text-gray-900">{{ $t('all_tokens') }}</h3>
               </div>
 
               <div v-if="tokens.length === 0" class="p-6 text-center text-gray-500">
-                <p>No API tokens yet. Create one to get started.</p>
+                <p>{{ $t('no_api_tokens_yet') }}</p>
               </div>
 
               <div v-else class="overflow-x-auto">
                 <table class="w-full">
                   <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Token Name</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Token</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Created</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Last Used</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Status</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Actions</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">{{ $t('token_name_col') }}</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">{{ $t('token_col') }}</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">{{ $t('created_col') }}</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">{{ $t('last_used_col') }}</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">{{ $t('status_col') }}</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">{{ $t('actions_col') }}</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200">
@@ -199,15 +199,15 @@
                       <td class="px-6 py-4 text-sm text-gray-600 font-mono">{{ token.masked_token }}</td>
                       <td class="px-6 py-4 text-sm text-gray-600">{{ formatDate(token.created_at) }}</td>
                       <td class="px-6 py-4 text-sm text-gray-600">
-                        {{ token.last_used_at ? formatDate(token.last_used_at) : 'Never' }}
+                        {{ token.last_used_at ? formatDate(token.last_used_at) : $t('never') }}
                       </td>
                       <td class="px-6 py-4 text-sm">
-                        <span v-if="!token.is_active" class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">Revoked</span>
-                        <span v-else-if="token.is_expired" class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded">Expired</span>
+                        <span v-if="!token.is_active" class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">{{ $t('revoked') }}</span>
+                        <span v-else-if="token.is_expired" class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded">{{ $t('expired') }}</span>
                         <span v-else-if="token.expires_at" class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded">
-                          Expires {{ formatDate(token.expires_at) }}
+                          {{ $t('expires') }} {{ formatDate(token.expires_at) }}
                         </span>
-                        <span v-else class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">Active</span>
+                        <span v-else class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">{{ $t('active') }}</span>
                       </td>
                       <td class="px-6 py-4 text-sm space-x-2 flex">
                         <button
@@ -216,7 +216,7 @@
                           :disabled="isRevoking === token.id"
                           class="text-orange-600 hover:text-orange-800 font-medium text-sm disabled:opacity-50"
                         >
-                          {{ isRevoking === token.id ? 'Revoking...' : 'Revoke' }}
+                          {{ isRevoking === token.id ? $t('revoking') : $t('deactivate') }}
                         </button>
                         <button
                           @click="deleteToken(token.id)"

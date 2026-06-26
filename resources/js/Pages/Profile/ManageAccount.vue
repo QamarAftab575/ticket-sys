@@ -4,7 +4,7 @@
       <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <!-- Profile Picture Card -->
         <div class="bg-white rounded-lg shadow p-6 mb-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Profile Picture</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('profile_picture') }}</h3>
           
           <div class="flex items-center space-x-6">
             <!-- Avatar Preview -->
@@ -12,7 +12,7 @@
               <div v-if="avatarPreview || props.user?.avatar" class="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
                 <img 
                   :src="avatarPreview || props.user?.avatar" 
-                  alt="Profile picture"
+                  :alt="$t('profile_picture')"
                   class="w-full h-full object-cover"
                 />
               </div>
@@ -35,7 +35,7 @@
                   @click="$refs.fileInput.click()"
                   class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  {{ props.user?.avatar || avatarPreview ? 'Change Picture' : 'Upload Picture' }}
+                  {{ props.user?.avatar || avatarPreview ? $t('change_picture') : $t('upload_picture') }}
                 </button>
                 <button
                   v-if="props.user?.avatar || avatarPreview"
@@ -43,10 +43,10 @@
                   :disabled="isRemovingAvatar"
                   class="ml-2 px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-300 transition-colors"
                 >
-                  {{ isRemovingAvatar ? 'Removing...' : 'Remove' }}
+                  {{ isRemovingAvatar ? $t('removing') : $t('delete') }}
                 </button>
               </div>
-              <p class="text-xs text-gray-500">JPG, PNG or GIF. Max size 2MB.</p>
+              <p class="text-xs text-gray-500">{{ $t('image_format_help') }}</p>
               <p v-if="errors.avatar" class="text-sm text-red-600">{{ errors.avatar }}</p>
               
               <!-- Upload button (shown when file is selected) -->
@@ -56,14 +56,14 @@
                   :disabled="isUploadingAvatar"
                   class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 transition-colors"
                 >
-                  {{ isUploadingAvatar ? 'Uploading...' : 'Save Picture' }}
+                  {{ isUploadingAvatar ? $t('uploading') : $t('save_picture') }}
                 </button>
                 <button
                   @click="cancelUpload"
                   :disabled="isUploadingAvatar"
                   class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 transition-colors"
                 >
-                  Cancel
+                  {{ $t('cancel') }}
                 </button>
               </div>
             </div>
@@ -72,11 +72,11 @@
 
         <!-- Profile Information Card -->
         <div class="bg-white rounded-lg shadow p-6 mb-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Profile Information</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('profile_information') }}</h3>
           
           <div class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700">Name</label>
+              <label class="block text-sm font-medium text-gray-700">{{ $t('name') }}</label>
               <input
                 v-model="form.name"
                 type="text"
@@ -86,33 +86,33 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700">Email</label>
+              <label class="block text-sm font-medium text-gray-700">{{ $t('email') }}</label>
               <input
                 :value="props.user?.email"
                 type="email"
                 disabled
                 class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
               />
-              <p class="mt-1 text-xs text-gray-500">Email cannot be changed</p>
+              <p class="mt-1 text-xs text-gray-500">{{ $t('email_cannot_change') }}</p>
             </div>
 
             <!-- Timezone -->
             <div>
-              <label class="block text-sm font-medium text-gray-700">Timezone</label>
+              <label class="block text-sm font-medium text-gray-700">{{ $t('timezone') }}</label>
               <SearchableSelect
                 v-model="form.timezone"
                 :options="timezoneOptions"
                 value-key="timezone"
                 label-key="label"
-                placeholder="  Select Timezone  "
-                search-placeholder="Search timezone..."
+                :placeholder="$t('select_timezone')"
+                :search-placeholder="$t('search_timezone')"
                 clearable
-                clear-label="  No timezone  "
+                :clear-label="$t('no_timezone')"
                 class="mt-1"
               />
               <p v-if="errors.timezone" class="mt-1 text-sm text-red-600">{{ errors.timezone }}</p>
               <p class="mt-1 text-xs text-gray-500">
-                Dates and times will be displayed in your selected timezone.
+                {{ $t('timezone_description') }}
               </p>
             </div>
 
@@ -121,27 +121,27 @@
               :disabled="isUpdating"
               class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
             >
-              {{ isUpdating ? 'Saving...' : 'Save Changes' }}
+              {{ isUpdating ? $t('saving') : $t('save_changes') }}
             </button>
           </div>
         </div>
 
         <!-- Change Password Card -->
         <div class="bg-white rounded-lg shadow p-6 mb-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Change Password</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('change_password') }}</h3>
           
           <div class="space-y-4">
             <p class="text-sm text-gray-600">
-              Update your password. A confirmation email will be sent to {{ props.user?.email }}.
+              {{ $t('password_update_desc') }} {{ props.user?.email }}.
             </p>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700">New Password</label>
+              <label class="block text-sm font-medium text-gray-700">{{ $t('new_password') }}</label>
               <div class="relative">
                 <input
                   v-model="passwordForm.password"
                   :type="showPassword ? 'text' : 'password'"
-                  placeholder="Enter new password"
+                  :placeholder="$t('enter_new_password')"
                   class="mt-1 w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <button
@@ -158,17 +158,17 @@
                   </svg>
                 </button>
               </div>
-              <p class="mt-1 text-xs text-gray-500">Must contain at least 8 characters, one uppercase, one lowercase, and one number</p>
+              <p class="mt-1 text-xs text-gray-500">{{ $t('password_requirements') }}</p>
               <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700">Retype New Password</label>
+              <label class="block text-sm font-medium text-gray-700">{{ $t('confirm_password') }}</label>
               <div class="relative">
                 <input
                   v-model="passwordForm.password_confirmation"
                   :type="showPasswordConfirmation ? 'text' : 'password'"
-                  placeholder="Confirm new password"
+                  :placeholder="$t('confirm_password_placeholder')"
                   class="mt-1 w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <button
@@ -193,25 +193,25 @@
               :disabled="isChangingPassword"
               class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
             >
-              {{ isChangingPassword ? 'Changing Password...' : 'Change Password' }}
+              {{ isChangingPassword ? $t('changing_password') : $t('change_password') }}
             </button>
           </div>
         </div>
 
         <!-- Delete Account Card -->
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Delete Account</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('delete_account') }}</h3>
           
           <div class="space-y-4">
             <p class="text-sm text-gray-600">
-              Permanently delete your account and all associated data. This action cannot be undone.
+              {{ $t('delete_account_desc') }}
             </p>
 
             <button
               @click="showDeleteConfirm = true"
               class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
-              Delete Account
+              {{ $t('delete_account') }}
             </button>
           </div>
         </div>
@@ -226,15 +226,15 @@
     <!-- Delete Account Confirmation Modal -->
     <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Delete Account</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('delete_account') }}</h3>
 
         <div class="space-y-4">
           <p class="text-sm text-gray-600">
-            Are you sure you want to delete your account? This action cannot be undone.
+            {{ $t('delete_confirm_text') }}
           </p>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Type your email to confirm</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('type_email_confirm') }}</label>
             <input
               v-model="deleteForm.email"
               type="email"
@@ -245,11 +245,11 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Enter your password</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('enter_password') }}</label>
             <input
               v-model="deleteForm.password"
               type="password"
-              placeholder="Enter password"
+              :placeholder="$t('enter_password')"
               class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
             <p v-if="errors.deletePassword" class="mt-1 text-sm text-red-600">{{ errors.deletePassword }}</p>
@@ -261,13 +261,13 @@
               :disabled="isDeletingAccount"
               class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400"
             >
-              {{ isDeletingAccount ? 'Deleting...' : 'Delete Account' }}
+              {{ isDeletingAccount ? $t('deleting') : $t('delete_account') }}
             </button>
             <button
               @click="showDeleteConfirm = false"
               class="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
             >
-              Cancel
+              {{ $t('cancel') }}
             </button>
           </div>
         </div>
@@ -355,13 +355,13 @@ const handleFileSelect = (event) => {
   // Validate file type
   const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
   if (!validTypes.includes(file.type)) {
-    errors.avatar = 'Please select a valid image file (JPG, PNG, or GIF)'
+    errors.avatar = page.props.translations?.invalid_image_format || 'Please select a valid image file (JPG, PNG, or GIF)'
     return
   }
 
   // Validate file size (2MB)
   if (file.size > 2 * 1024 * 1024) {
-    errors.avatar = 'Image size must be less than 2MB'
+    errors.avatar = page.props.translations?.image_too_large || 'Image size must be less than 2MB'
     return
   }
 
@@ -385,7 +385,7 @@ const uploadAvatar = () => {
   isUploadingAvatar.value = true
   router.post('/profile/upload-avatar', formData, {
     onSuccess: () => {
-      successMessage.value = 'Profile picture updated successfully!'
+      successMessage.value = page.props.translations?.profile_picture_updated || 'Profile picture updated successfully!'
       selectedFile.value = null
       avatarPreview.value = null
       if (fileInput.value) {
@@ -414,14 +414,15 @@ const cancelUpload = () => {
 }
 
 const removeAvatar = () => {
-  if (!confirm('Are you sure you want to remove your profile picture?')) {
+  const confirmMessage = page.props.translations?.confirm_remove_picture || 'Are you sure you want to remove your profile picture?'
+  if (!confirm(confirmMessage)) {
     return
   }
 
   isRemovingAvatar.value = true
   router.delete('/profile/remove-avatar', {
     onSuccess: () => {
-      successMessage.value = 'Profile picture removed successfully!'
+      successMessage.value = page.props.translations?.profile_picture_removed || 'Profile picture removed successfully!'
       avatarPreview.value = null
       selectedFile.value = null
       if (fileInput.value) {
@@ -450,14 +451,14 @@ const updateProfile = () => {
   errors.timezone = ''
   
   if (!form.name.trim()) {
-    errors.name = 'Name is required'
+    errors.name = page.props.translations?.name_required || 'Name is required'
     return
   }
 
   isUpdating.value = true
   router.put('/profile/update', form, {
     onSuccess: () => {
-      successMessage.value = 'Profile updated successfully!'
+      successMessage.value = page.props.translations?.profile_updated || 'Profile updated successfully!'
       setTimeout(() => {
         successMessage.value = ''
       }, 3000)
@@ -477,24 +478,24 @@ const changePassword = () => {
   errors.password_confirmation = ''
 
   if (!passwordForm.password.trim()) {
-    errors.password = 'Password is required'
+    errors.password = page.props.translations?.password_required || 'Password is required'
     return
   }
 
   if (!passwordForm.password_confirmation.trim()) {
-    errors.password_confirmation = 'Please confirm your password'
+    errors.password_confirmation = page.props.translations?.password_confirm_required || 'Please confirm your password'
     return
   }
 
   if (passwordForm.password !== passwordForm.password_confirmation) {
-    errors.password_confirmation = 'Passwords do not match'
+    errors.password_confirmation = page.props.translations?.passwords_not_match || 'Passwords do not match'
     return
   }
 
   isChangingPassword.value = true
   router.post('/profile/change-password', passwordForm, {
     onSuccess: () => {
-      successMessage.value = 'Password changed successfully! A confirmation email has been sent.'
+      successMessage.value = page.props.translations?.password_changed || 'Password changed successfully! A confirmation email has been sent.'
       passwordForm.password = ''
       passwordForm.password_confirmation = ''
       setTimeout(() => {
@@ -516,12 +517,12 @@ const deleteAccount = () => {
   errors.deletePassword = ''
 
   if (deleteForm.email !== props.user?.email) {
-    errors.deleteEmail = 'Email does not match'
+    errors.deleteEmail = page.props.translations?.email_not_match || 'Email does not match'
     return
   }
 
   if (!deleteForm.password.trim()) {
-    errors.deletePassword = 'Password is required'
+    errors.deletePassword = page.props.translations?.password_required || 'Password is required'
     return
   }
 

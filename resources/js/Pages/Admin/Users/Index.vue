@@ -3,8 +3,8 @@
     <template #header>
       <div class="flex justify-between items-center gap-4">
         <div class="min-w-0">
-          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">User Management</h1>
-          <p class="text-slate-600 text-sm sm:text-base mt-1">View and manage all platform users</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">{{ $t('user_management_title') }}</h1>
+          <p class="text-slate-600 text-sm sm:text-base mt-1">{{ $t('user_management_subtitle') }}</p>
         </div>
       </div>
     </template>
@@ -20,7 +20,7 @@
             <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
-            <span class="text-sm font-medium text-slate-700">Filters</span>
+            <span class="text-sm font-medium text-slate-700">{{ $t('filters') }}</span>
           </div>
           <svg 
             :class="['w-5 h-5 text-slate-600 transition-transform', showFilters ? 'rotate-180' : '']" 
@@ -42,11 +42,11 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
           <!-- Search -->
           <div>
-            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">Search</label>
+            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('search') }}</label>
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Name or email..."
+              :placeholder="$t('name_or_email_placeholder')"
               @input="updateSearch"
               class="w-full px-3 sm:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
             />
@@ -54,36 +54,36 @@
 
           <!-- Status Filter -->
           <div>
-            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">Status</label>
+            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('status') }}</label>
             <select
               v-model="statusFilter"
               @change="updateFilters"
               class="w-full px-3 sm:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
             >
-              <option value="">All Status</option>
-              <option value="active">Active</option>
-              <option value="suspended">Suspended</option>
+              <option value="">{{ $t('all_statuses') }}</option>
+              <option value="active">{{ $t('active') }}</option>
+              <option value="suspended">{{ $t('suspended') }}</option>
             </select>
           </div>
 
           <!-- Type Filter -->
           <div>
-            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">Type</label>
+            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('type') }}</label>
             <select
               v-model="typeFilter"
               @change="updateFilters"
               class="w-full px-3 sm:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
             >
-              <option value="">All Types</option>
-              <option value="trial">Trial Users</option>
-              <option value="paid">Paid Users</option>
-              <option value="expired">Expired Trial</option>
+              <option value="">{{ $t('all_types') }}</option>
+              <option value="trial">{{ $t('trial_users') }}</option>
+              <option value="paid">{{ $t('paid_users') }}</option>
+              <option value="expired">{{ $t('expired_trial') }}</option>
             </select>
           </div>
 
           <!-- Join Date From -->
           <div>
-            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">From Date</label>
+            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('from_date') }}</label>
             <input
               v-model="joinedFrom"
               type="date"
@@ -94,7 +94,7 @@
 
           <!-- Join Date To -->
           <div>
-            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">To Date</label>
+            <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('to_date') }}</label>
             <input
               v-model="joinedTo"
               type="date"
@@ -112,13 +112,13 @@
           <table class="w-full">
             <thead class="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">User</th>
-                <th class="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Email</th>
-                <th class="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Joined</th>
-                <th class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Type</th>
-                <th class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Workspaces</th>
-                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Status</th>
-                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Actions</th>
+                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('user') }}</th>
+                <th class="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('email') }}</th>
+                <th class="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('joined') }}</th>
+                <th class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('type') }}</th>
+                <th class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('workspaces') }}</th>
+                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('status') }}</th>
+                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('actions') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -133,7 +133,7 @@
                     </div>
                     <div class="min-w-0">
                       <p class="font-medium text-slate-900 truncate text-xs sm:text-sm">{{ user.name }}</p>
-                      <p v-if="user.is_super_admin" class="text-xs text-purple-600 font-semibold">Super Admin</p>
+                      <p v-if="user.is_super_admin" class="text-xs text-purple-600 font-semibold">{{ $t('super_admin') }}</p>
                     </div>
                   </div>
                 </td>
@@ -141,22 +141,22 @@
                 <td class="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">{{ formatDate(user.created_at) }}</td>
                 <td class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">
                   <span v-if="getUserType(user) === 'paid'" class="inline-flex px-2 py-1 rounded text-xs font-medium bg-emerald-50 text-emerald-700">
-                    Paid
+                    {{ $t('paid') }}
                   </span>
                   <span v-else-if="getUserType(user) === 'trial'" class="inline-flex px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700">
-                    Trial
+                    {{ $t('trial') }}
                   </span>
                   <span v-else class="inline-flex px-2 py-1 rounded text-xs font-medium bg-red-50 text-red-700">
-                    Expired
+                    {{ $t('expired') }}
                   </span>
                 </td>
                 <td class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">{{ user.organizations_count }}</td>
                 <td class="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">
                   <span v-if="user.is_suspended" class="inline-flex px-2 py-1 rounded text-xs font-medium bg-red-50 text-red-700">
-                    Suspended
+                    {{ $t('suspended') }}
                   </span>
                   <span v-else class="inline-flex px-2 py-1 rounded text-xs font-medium bg-emerald-50 text-emerald-700">
-                    Active
+                    {{ $t('active') }}
                   </span>
                 </td>
                 <td class="px-3 sm:px-6 py-3 sm:py-4 text-xs" @click.stop>
@@ -164,16 +164,16 @@
                     <button
                       @click="viewUserDetails(user.id)"
                       class="px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition text-xs font-medium"
-                      title="View details"
+                      title="{{ $t('view_details') }}"
                     >
-                      View
+                      {{ $t('view') }}
                     </button>
                     <button
                       @click="confirmImpersonate(user)"
                       class="hidden sm:inline-block px-2 py-1 bg-purple-50 text-purple-700 rounded hover:bg-purple-100 transition text-xs font-medium"
-                      title="Login as this user"
+                      title="{{ $t('login_as_this_user') }}"
                     >
-                      Login
+                      {{ $t('login') }}
                     </button>
                     <div class="relative group">
                       <button
@@ -187,20 +187,20 @@
                           @click.prevent="confirmSuspend(user)"
                           class="block w-full text-left px-3 py-2 text-red-700 hover:bg-red-50 text-xs"
                         >
-                          Suspend
+                          {{ $t('suspend') }}
                         </button>
                         <button
                           v-else
                           @click.prevent="confirmActivate(user)"
                           class="block w-full text-left px-3 py-2 text-emerald-700 hover:bg-emerald-50 text-xs"
                         >
-                          Activate
+                          {{ $t('activate') }}
                         </button>
                         <button
                           @click.prevent="confirmDelete(user)"
                           class="block w-full text-left px-3 py-2 text-slate-700 hover:bg-slate-50 text-xs border-t border-slate-200"
                         >
-                          Delete
+                          {{ $t('delete') }}
                         </button>
                       </div>
                     </div>
@@ -214,7 +214,7 @@
         <!-- Pagination -->
         <div class="bg-white px-3 sm:px-6 py-3 sm:py-4 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div class="text-xs sm:text-sm text-slate-600">
-            Showing {{ users.from }} to {{ users.to }} of {{ users.total }} results
+            {{ $t('showing_results', { from: users.from, to: users.to, total: users.total }) }}
           </div>
           <div class="flex items-center space-x-2 flex-wrap">
             <Link
@@ -222,14 +222,14 @@
               :href="users.prev_page_url"
               class="px-3 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 text-xs sm:text-sm font-medium transition"
             >
-              ← Previous
+              ← {{ $t('previous') }}
             </Link>
             <Link
               v-if="users.next_page_url"
               :href="users.next_page_url"
               class="px-3 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 text-xs sm:text-sm font-medium transition"
             >
-              Next →
+              {{ $t('next') }} →
             </Link>
           </div>
         </div>
@@ -247,7 +247,7 @@
               @click="showConfirmModal = false"
               class="px-4 py-2 border border-slate-300 rounded hover:bg-slate-50 font-medium text-sm"
             >
-              Cancel
+              {{ $t('cancel') }}
             </button>
             <button
               @click="confirmAction"
@@ -264,7 +264,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, getCurrentInstance } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 
@@ -272,6 +272,9 @@ defineProps({
   users: Object,
   filters: Object
 })
+
+const instance = getCurrentInstance()
+const t = instance?.proxy?.$t?.bind(instance.proxy) ?? ((key, params = {}) => key)
 
 const showFilters = ref(false)
 const searchQuery = ref('')
@@ -345,9 +348,9 @@ const viewUserDetails = (userId) => {
 }
 
 const confirmImpersonate = (user) => {
-  confirmTitle.value = 'Impersonate User'
-  confirmMessage.value = `Login as ${user.email}? You'll be able to see exactly what they see. Use /admin/stop-impersonating to stop.`
-  confirmButtonText.value = 'Login as this user'
+  confirmTitle.value = t('impersonate_user_title')
+  confirmMessage.value = t('impersonate_user_message', { email: user.email })
+  confirmButtonText.value = t('impersonate_user_button')
   confirmActionClass.value = 'bg-purple-600'
   pendingAction.value = {
     type: 'impersonate',
@@ -357,9 +360,9 @@ const confirmImpersonate = (user) => {
 }
 
 const confirmSuspend = (user) => {
-  confirmTitle.value = 'Suspend User'
-  confirmMessage.value = `Suspend ${user.email}? They will no longer be able to access the platform.`
-  confirmButtonText.value = 'Suspend'
+  confirmTitle.value = t('suspend_user_title')
+  confirmMessage.value = t('suspend_user_message', { email: user.email })
+  confirmButtonText.value = t('suspend_user_button')
   confirmActionClass.value = 'bg-red-600'
   pendingAction.value = {
     type: 'suspend',
@@ -369,9 +372,9 @@ const confirmSuspend = (user) => {
 }
 
 const confirmActivate = (user) => {
-  confirmTitle.value = 'Activate User'
-  confirmMessage.value = `Activate ${user.email}? They will regain access to the platform.`
-  confirmButtonText.value = 'Activate'
+  confirmTitle.value = t('activate_user_title')
+  confirmMessage.value = t('activate_user_message', { email: user.email })
+  confirmButtonText.value = t('activate_user_button')
   confirmActionClass.value = 'bg-emerald-600'
   pendingAction.value = {
     type: 'activate',
@@ -381,9 +384,9 @@ const confirmActivate = (user) => {
 }
 
 const confirmDelete = (user) => {
-  confirmTitle.value = 'Delete User'
-  confirmMessage.value = `Permanently delete ${user.email}? This action cannot be undone and all their data will be removed.`
-  confirmButtonText.value = 'Delete'
+  confirmTitle.value = t('delete_user_title')
+  confirmMessage.value = t('delete_user_message', { email: user.email })
+  confirmButtonText.value = t('delete_user_button')
   confirmActionClass.value = 'bg-slate-600'
   pendingAction.value = {
     type: 'delete',

@@ -10,10 +10,10 @@
           <div class="md:col-span-3">
             <!-- Workspaces List -->
             <div class="bg-white rounded-lg shadow p-6 mb-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">My Workspaces</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('my_workspaces') }}</h3>
               
               <div v-if="userWorkspaces.length === 0" class="text-center py-8">
-                <p class="text-gray-500">You are not part of any workspaces yet.</p>
+                <p class="text-gray-500">{{ $t('no_workspaces_yet') }}</p>
               </div>
 
               <div v-else class="space-y-4">

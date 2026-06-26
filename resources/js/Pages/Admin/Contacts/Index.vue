@@ -3,8 +3,8 @@
     <template #header>
       <div class="flex justify-between items-center gap-4">
         <div class="min-w-0">
-          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Contact Messages</h1>
-          <p class="text-slate-600 text-sm sm:text-base mt-1">View and manage customer contact submissions</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">{{ $t('contact_messages') }}</h1>
+          <p class="text-slate-600 text-sm sm:text-base mt-1">{{ $t('view_manage_contacts') }}</p>
         </div>
       </div>
     </template>
@@ -14,23 +14,23 @@
       <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
           <div class="text-2xl font-bold text-slate-900">{{ stats.total }}</div>
-          <div class="text-xs text-slate-600 mt-1">Total Contacts</div>
+          <div class="text-xs text-slate-600 mt-1">{{ $t('total_contacts') }}</div>
         </div>
         <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
           <div class="text-2xl font-bold text-blue-600">{{ stats.new }}</div>
-          <div class="text-xs text-slate-600 mt-1">New</div>
+          <div class="text-xs text-slate-600 mt-1">{{ $t('new_status') }}</div>
         </div>
         <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
           <div class="text-2xl font-bold text-yellow-600">{{ stats.read }}</div>
-          <div class="text-xs text-slate-600 mt-1">Read</div>
+          <div class="text-xs text-slate-600 mt-1">{{ $t('read_status') }}</div>
         </div>
         <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
           <div class="text-2xl font-bold text-green-600">{{ stats.replied }}</div>
-          <div class="text-xs text-slate-600 mt-1">Replied</div>
+          <div class="text-xs text-slate-600 mt-1">{{ $t('replied_status') }}</div>
         </div>
         <div class="bg-white rounded-lg shadow-sm p-4 border border-slate-200">
           <div class="text-2xl font-bold text-slate-400">{{ stats.closed }}</div>
-          <div class="text-xs text-slate-600 mt-1">Closed</div>
+          <div class="text-xs text-slate-600 mt-1">{{ $t('closed_status') }}</div>
         </div>
       </div>
 
@@ -66,11 +66,11 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <!-- Search -->
             <div>
-              <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">Search</label>
+              <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('search') }}</label>
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Name, email, subject..."
+                :placeholder="$t('search_placeholder')"
                 @input="updateSearch"
                 class="w-full px-3 sm:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
               />
@@ -78,23 +78,23 @@
 
             <!-- Status Filter -->
             <div>
-              <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">Status</label>
+              <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('status') }}</label>
               <select
                 v-model="statusFilter"
                 @change="updateFilters"
                 class="w-full px-3 sm:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
               >
-                <option value="">All Status</option>
-                <option value="new">New</option>
-                <option value="read">Read</option>
-                <option value="replied">Replied</option>
-                <option value="closed">Closed</option>
+                <option value="">{{ $t('all_status') }}</option>
+                <option value="new">{{ $t('new_status') }}</option>
+                <option value="read">{{ $t('read_status') }}</option>
+                <option value="replied">{{ $t('replied_status') }}</option>
+                <option value="closed">{{ $t('closed_status') }}</option>
               </select>
             </div>
 
             <!-- From Date -->
             <div>
-              <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">From Date</label>
+              <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('from_date') }}</label>
               <input
                 v-model="fromDate"
                 type="date"
@@ -105,7 +105,7 @@
 
             <!-- To Date -->
             <div>
-              <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">To Date</label>
+              <label class="block text-xs sm:text-sm font-medium text-slate-700 mb-1 sm:mb-2">{{ $t('to_date') }}</label>
               <input
                 v-model="toDate"
                 type="date"
@@ -123,12 +123,12 @@
           <table class="w-full">
             <thead class="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Name</th>
-                <th class="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Email</th>
-                <th class="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Subject</th>
-                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Status</th>
-                <th class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">Date</th>
-                <th class="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-900">Action</th>
+                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('table_name') }}</th>
+                <th class="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('table_email') }}</th>
+                <th class="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('table_subject') }}</th>
+                <th class="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('table_status') }}</th>
+                <th class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold text-slate-900">{{ $t('table_date') }}</th>
+                <th class="px-3 sm:px-6 py-3 sm:py-4 text-right text-xs sm:text-sm font-semibold text-slate-900">{{ $t('table_action') }}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-200">
@@ -149,7 +149,7 @@
                     :href="`/admin/contacts/${contact.id}`"
                     class="inline-flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                   >
-                    View
+                    {{ $t('view_action') }}
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
@@ -158,7 +158,7 @@
               </tr>
               <tr v-if="contacts.data.length === 0">
                 <td colspan="6" class="px-3 sm:px-6 py-8 text-center text-slate-600">
-                  No contacts found
+                  {{ $t('no_contacts_found') }}
                 </td>
               </tr>
             </tbody>
@@ -168,7 +168,7 @@
         <!-- Pagination -->
         <div v-if="contacts.last_page > 1" class="bg-slate-50 border-t border-slate-200 px-3 sm:px-6 py-4 flex items-center justify-between">
           <div class="text-xs sm:text-sm text-slate-600">
-            Showing <span class="font-medium">{{ contacts.from }}</span> to <span class="font-medium">{{ contacts.to }}</span> of <span class="font-medium">{{ contacts.total }}</span> results
+            {{ $t('showing_results').replace('{from}', contacts.from).replace('{to}', contacts.to).replace('{total}', contacts.total) }}
           </div>
           <div class="flex gap-2">
             <Link
@@ -176,14 +176,14 @@
               :href="contacts.prev_page_url"
               class="px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
             >
-              Previous
+              {{ $t('previous') }}
             </Link>
             <Link
               v-if="contacts.next_page_url"
               :href="contacts.next_page_url"
               class="px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
             >
-              Next
+              {{ $t('next') }}
             </Link>
           </div>
         </div>

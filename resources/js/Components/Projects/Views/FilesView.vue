@@ -3,8 +3,8 @@
     <!-- Files header with storage info -->
     <div class="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
       <div>
-        <h3 class="font-semibold text-gray-900">Files</h3>
-        <p class="text-sm text-gray-600">{{ totalSize }} used</p>
+        <h3 class="font-semibold text-gray-900">{{ $t('files') }}</h3>
+        <p class="text-sm text-gray-600">{{ totalSize }} {{ $t('used') }}</p>
       </div>
       <div class="flex gap-2">
         <button
@@ -13,9 +13,9 @@
             'px-3 py-1 rounded text-sm font-medium transition-colors',
             viewMode === 'grid' ? 'bg-blue-600 text-white' : 'border border-gray-300 text-gray-700 hover:bg-gray-100',
           ]"
-          aria-label="Grid view"
+          :aria-label="$t('grid')"
         >
-          Grid
+          {{ $t('grid') }}
         </button>
         <button
           @click="viewMode = 'list'"
@@ -23,16 +23,16 @@
             'px-3 py-1 rounded text-sm font-medium transition-colors',
             viewMode === 'list' ? 'bg-blue-600 text-white' : 'border border-gray-300 text-gray-700 hover:bg-gray-100',
           ]"
-          aria-label="List view"
+          :aria-label="$t('list')"
         >
-          List
+          {{ $t('list') }}
         </button>
         <button
           @click="triggerFileInput"
           class="px-3 py-1 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700 transition-colors"
-          aria-label="Upload files"
+          :aria-label="$t('upload')"
         >
-          + Upload
+          {{ $t('upload') }}
         </button>
       </div>
     </div>
@@ -42,27 +42,27 @@
       <input
         v-model="searchQuery"
         type="text"
-        placeholder="Search files..."
+        :placeholder="$t('search_files')"
         class="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Search files"
+        :aria-label="$t('search_files')"
       />
       <select
         v-model="fileTypeFilter"
         class="px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Filter by file type"
+        :aria-label="$t('type')"
       >
-        <option value="">All types</option>
-        <option value="images">Images</option>
-        <option value="documents">Documents</option>
-        <option value="videos">Videos</option>
-        <option value="other">Other</option>
+        <option value="">{{ $t('all_types') }}</option>
+        <option value="images">{{ $t('images') }}</option>
+        <option value="documents">{{ $t('documents') }}</option>
+        <option value="videos">{{ $t('videos') }}</option>
+        <option value="other">{{ $t('other') }}</option>
       </select>
       <select
         v-model="uploadedByFilter"
         class="px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Filter by uploader"
+        :aria-label="$t('uploaded_by')"
       >
-        <option value="">All users</option>
+        <option value="">{{ $t('all_users') }}</option>
         <option v-for="user in uniqueUploaders" :key="user.id" :value="user.id">
           {{ user.name }}
         </option>
@@ -72,18 +72,18 @@
         @click="clearFilters"
         class="px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
       >
-        Clear filters
+        {{ $t('clear_filters') }}
       </button>
     </div>
 
     <!-- Empty state -->
     <div v-if="filteredFiles.length === 0" class="text-center py-12 bg-white rounded-lg border border-gray-200">
-      <p class="text-gray-500 mb-4">{{ searchQuery || fileTypeFilter || uploadedByFilter ? 'No files match your filters' : 'No files yet' }}</p>
+      <p class="text-gray-500 mb-4">{{ searchQuery || fileTypeFilter || uploadedByFilter ? $t('no_files_match') : $t('no_files_yet') }}</p>
       <button
         @click="triggerFileInput"
         class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
       >
-        + Upload file
+        {{ $t('upload_file') }}
       </button>
     </div>
 

@@ -3,14 +3,14 @@
     <template #header>
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-4xl font-bold text-gray-900">Language Management</h1>
-          <p class="text-gray-600 mt-1">Manage languages and translations for your system</p>
+          <h1 class="text-4xl font-bold text-gray-900">{{ $t('language_management') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('manage_languages_desc') }}</p>
         </div>
         <Link
           href="/admin/languages/create"
           class="px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 font-medium cursor-pointer"
         >
-          + Add Language
+          + {{ $t('add_language') }}
         </Link>
       </div>
     </template>
@@ -19,8 +19,8 @@
     <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-6 mb-6 border border-blue-200">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-lg font-semibold text-gray-900 mb-1">🌍 Site-Wide Language</h2>
-          <p class="text-sm text-gray-600">Choose the default language for your entire application</p>
+          <h2 class="text-lg font-semibold text-gray-900 mb-1">🌍 {{ $t('site_wide_language') }}</h2>
+          <p class="text-sm text-gray-600">{{ $t('choose_default_language') }}</p>
         </div>
         <div class="flex items-center gap-4">
           <select
@@ -36,7 +36,7 @@
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
-            <span>Current: {{ currentSiteLanguageName }}</span>
+            <span>{{ $t('current') }}: {{ currentSiteLanguageName }}</span>
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
 
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
       <div v-if="languages.length === 0" class="p-8 text-center">
-        <p class="text-gray-600 text-lg">No languages found. Create your first language to get started.</p>
+        <p class="text-gray-600 text-lg">{{ $t('no_languages_found') }}</p>
       </div>
 
       <div v-else class="overflow-x-auto">
@@ -52,19 +52,19 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Language
+                {{ $t('language_table_header') }}
               </th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Code
+                {{ $t('code_table_header') }}
               </th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Default
+                {{ $t('default_table_header') }}
               </th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Status
+                {{ $t('status_table_header') }}
               </th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Actions
+                {{ $t('actions_table_header') }}
               </th>
             </tr>
           </thead>
@@ -80,7 +80,7 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                 <span v-if="language.is_default" class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                  ✓ Default
+                  ✓ {{ $t('default_badge') }}
                 </span>
                 <span v-else class="text-gray-400">—</span>
               </td>
@@ -96,34 +96,34 @@
                     language.is_default && language.is_active ? 'opacity-50 cursor-not-allowed' : ''
                   ]"
                 >
-                  {{ language.is_active ? '✓ Active' : '○ Inactive' }}
+                  {{ language.is_active ? '✓ ' + $t('active_status') : '○ ' + $t('inactive_status') }}
                 </button>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                 <Link
                   :href="`/admin/languages/${language.id}/translations`"
                   class="text-indigo-600 hover:text-indigo-900 transition-colors"
-                  title="Manage translations"
+                  :title="$t('manage_translations')"
                 >
-                  Translate
+                  {{ $t('translate_link') }}
                 </Link>
 
                 <Link
                   v-if="!language.is_default"
                   :href="`/admin/languages/${language.id}/edit`"
                   class="text-blue-600 hover:text-blue-900 transition-colors"
-                  title="Edit language"
+                  :title="$t('edit_language_link')"
                 >
-                  Edit
+                  {{ $t('edit_link') }}
                 </Link>
 
                 <button
                   v-if="!language.is_default"
                   @click="deleteLanguage(language)"
                   class="text-red-600 hover:text-red-900 transition-colors cursor-pointer"
-                  title="Delete language"
+                  :title="$t('delete_language_link')"
                 >
-                  Delete
+                  {{ $t('delete_link') }}
                 </button>
               </td>
             </tr>
@@ -164,12 +164,13 @@ const setSiteLanguage = () => {
     language_code: selectedSiteLanguage.value
   }, {
     onSuccess: () => {
-      toast.success(`Site language changed to ${currentSiteLanguageName.value}! 🌍`, {
+      const message = (page.props.translations?.site_language_changed || 'Site language changed to {name}! 🌍').replace('{name}', currentSiteLanguageName.value)
+      toast.success(message, {
         autoClose: 3000
       })
     },
     onError: (errors) => {
-      toast.error(errors.error || 'Failed to set site language', {
+      toast.error(errors.error || page.props.translations?.failed_set_site_language || 'Failed to set site language', {
         autoClose: 3000
       })
     }
@@ -178,7 +179,7 @@ const setSiteLanguage = () => {
 
 const toggleLanguage = (language) => {
   if (language.is_default && language.is_active) {
-    toast.error('Default English language must remain active', {
+    toast.error(page.props.translations?.default_english_must_active || 'Default English language must remain active', {
       autoClose: 3000
     })
     return
@@ -213,18 +214,19 @@ const toggleLanguage = (language) => {
 }
 
 const deleteLanguage = (language) => {
-  if (!confirm(`Are you sure you want to delete the "${language.name}" language? This action cannot be undone.`)) {
+  if (!confirm(page.props.translations?.sure_delete_language?.replace('{name}', language.name) || `Are you sure you want to delete the "${language.name}" language? This action cannot be undone.`)) {
     return
   }
 
   router.delete(`/admin/languages/${language.id}`, {
     onSuccess: () => {
-      toast.success(`Language "${language.name}" deleted successfully!`, {
+      const message = (page.props.translations?.language_deleted || 'Language "{name}" deleted successfully!').replace('{name}', language.name)
+      toast.success(message, {
         autoClose: 3000
       })
     },
     onError: (errors) => {
-      toast.error(errors.error || 'Failed to delete language', {
+      toast.error(errors.error || page.props.translations?.failed_delete_language || 'Failed to delete language', {
         autoClose: 3000
       })
     }

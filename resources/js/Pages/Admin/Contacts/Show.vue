@@ -9,7 +9,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          Back to Contacts
+          {{ $t('back_to_contacts') }}
         </Link>
         <button
           @click="showActions = !showActions"
@@ -18,7 +18,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
           </svg>
-          Actions
+          {{ $t('actions') }}
         </button>
       </div>
     </template>
@@ -42,18 +42,18 @@
         <div class="px-6 py-4 space-y-4 border-b border-slate-200">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Subject</label>
+              <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ $t('table_subject') }}</label>
               <p class="text-slate-900 font-medium mt-1">{{ contact.subject }}</p>
             </div>
             <div>
-              <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Submitted On</label>
+              <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ $t('submitted_on') }}</label>
               <p class="text-slate-900 font-medium mt-1">{{ formatDateTime(contact.created_at) }}</p>
             </div>
           </div>
 
           <!-- Message -->
           <div>
-            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Message</label>
+            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ $t('message') }}</label>
             <div class="mt-2 bg-slate-50 rounded-lg p-4 border border-slate-200">
               <p class="text-slate-900 whitespace-pre-wrap text-sm leading-relaxed">{{ contact.message }}</p>
             </div>
@@ -77,9 +77,9 @@
           <div class="flex items-start gap-3">
             <div class="w-2 h-2 rounded-full bg-green-600 mt-2 flex-shrink-0"></div>
             <div class="flex-1">
-              <label class="text-xs font-semibold text-green-900 uppercase tracking-wide">Admin Reply</label>
+              <label class="text-xs font-semibold text-green-900 uppercase tracking-wide">{{ $t('admin_reply') }}</label>
               <p class="text-green-900 mt-2 whitespace-pre-wrap text-sm leading-relaxed">{{ contact.admin_reply }}</p>
-              <p class="text-xs text-green-700 mt-2">Replied on {{ formatDateTime(contact.replied_at) }}</p>
+              <p class="text-xs text-green-700 mt-2">{{ $t('replied_on') }} {{ formatDateTime(contact.replied_at) }}</p>
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@
       <!-- Actions -->
       <div :class="['space-y-3', showActions ? '' : 'hidden md:block']">
         <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-          <h3 class="font-semibold text-slate-900 mb-4">Actions</h3>
+          <h3 class="font-semibold text-slate-900 mb-4">{{ $t('actions') }}</h3>
           <div class="space-y-2 flex flex-col">
             <!-- Gmail Link -->
             <a
@@ -96,12 +96,12 @@
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 font-medium rounded-lg hover:bg-red-100 transition-colors text-sm"
-              @click="toast.info('Opening email client...')"
+              @click="toast.info(page.props.translations?.opening_email || 'Opening email client...')"
             >
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
               </svg>
-              Open Gmail
+              {{ $t('open_gmail') }}
             </a>
 
             <!-- Mark as Read -->
@@ -114,7 +114,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
-              Mark as Read
+              {{ $t('mark_as_read') }}
             </button>
 
             <!-- Mark as Closed -->
@@ -127,7 +127,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
-              Mark as Closed
+              {{ $t('mark_as_closed') }}
             </button>
 
             <!-- Delete -->
@@ -139,7 +139,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
-              Delete Contact
+              {{ $t('delete_contact') }}
             </button>
           </div>
         </div>
@@ -194,12 +194,13 @@ const props = defineProps({
   contact: Object,
 })
 
+const page = usePage()
+
 // State
 const showActions = ref(false)
 const showDeleteModal = ref(false)
 const isSubmitting = ref(false)
-const copyMessageText = ref('Copy Message')
-const page = usePage()
+const copyMessageText = ref(page.props.translations?.copy_message || 'Copy Message')
 
 // Show success message if it exists
 if (page.props.flash?.success) {
@@ -214,10 +215,10 @@ const markAsRead = () => {
     {},
     {
       onSuccess: () => {
-        toast.success('Contact marked as read successfully')
+        toast.success(page.props.translations?.contact_marked_read || 'Contact marked as read successfully')
       },
       onError: (errors) => {
-        toast.error('Failed to mark contact as read')
+        toast.error(page.props.translations?.failed_mark_read || 'Failed to mark contact as read')
         console.error('Error:', errors)
       },
       onFinish: () => {
@@ -234,10 +235,10 @@ const markAsClosed = () => {
     {},
     {
       onSuccess: () => {
-        toast.success('Contact marked as closed successfully')
+        toast.success(page.props.translations?.contact_marked_closed || 'Contact marked as closed successfully')
       },
       onError: (errors) => {
-        toast.error('Failed to mark contact as closed')
+        toast.error(page.props.translations?.failed_mark_closed || 'Failed to mark contact as closed')
         console.error('Error:', errors)
       },
       onFinish: () => {
@@ -258,10 +259,10 @@ const deleteContact = () => {
     `/admin/contacts/${props.contact.id}`,
     {
       onSuccess: () => {
-        toast.success('Contact deleted successfully')
+        toast.success(page.props.translations?.contact_deleted || 'Contact deleted successfully')
       },
       onError: (errors) => {
-        toast.error('Failed to delete contact')
+        toast.error(page.props.translations?.failed_delete_contact || 'Failed to delete contact')
         console.error('Error:', errors)
       },
       onFinish: () => {

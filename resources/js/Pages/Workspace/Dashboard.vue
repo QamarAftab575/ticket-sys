@@ -43,7 +43,7 @@
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               ]"
             >
-              {{ tab.label }}
+              {{ $t(tab.labelKey) }}
             </button>
           </nav>
         </div>
@@ -51,42 +51,69 @@
         <!-- Tab Content -->
         <div>
           <!-- Overview Tab -->
-          <div v-if="activeTab === 'overview'">
-            <!-- Two Column Layout: Projects + Private Notes -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-              <!-- Left Column: Projects Section -->
-              <div class="space-y-6 flex flex-col">
-                <ProjectsSection :projects="projects" />
-                
-                <!-- Getting Started Card (if not complete) -->
-                <div v-if="setupProgress.percentage < 100" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                  <h2 class="text-base font-semibold text-gray-900 mb-4">Finish setting up</h2>
-                  <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                      <span class="text-xs text-gray-600">{{ setupProgress.completed }} of {{ setupProgress.total }} completed</span>
-                      <span class="text-xs font-medium text-gray-900">{{ setupProgress.percentage }}%</span>
+          <div v-if="activeTab === 'overview'" class="space-y-6">
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+              <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <p class="text-sm text-gray-500">{{ $t('projects') }}</p>
+                <p class="mt-3 text-3xl font-semibold text-gray-900">{{ projects.length }}</p>
+                <p class="text-sm text-gray-500 mt-2">{{ $t('workspace_projects_subtitle') }}</p>
+              </div>
+              <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <p class="text-sm text-gray-500">{{ $t('members') }}</p>
+                <p class="mt-3 text-3xl font-semibold text-gray-900">{{ members.length }}</p>
+                <p class="text-sm text-gray-500 mt-2">{{ $t('active_collaborators') }}</p>
+              </div>
+              <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <p class="text-sm text-gray-500">{{ $t('pending_invites') }}</p>
+                <p class="mt-3 text-3xl font-semibold text-gray-900">{{ pendingInvitations.length }}</p>
+                <p class="text-sm text-gray-500 mt-2">{{ $t('awaiting_acceptance') }}</p>
+              </div>
+              <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                <p class="text-sm text-gray-500">{{ $t('setup_progress') }}</p>
+                <p class="mt-3 text-3xl font-semibold text-gray-900">{{ setupProgress.percentage }}%</p>
+                <div class="mt-4 w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                  <div class="h-2.5 bg-blue-600 transition-all duration-300" :style="{ width: setupProgress.percentage + '%' }"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-[1.9fr_1fr] gap-6 items-start">
+              <div class="space-y-6">
+                <div v-if="setupProgress.percentage < 100" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                  <div class="flex items-center justify-between gap-4 mb-5">
+                    <div>
+                      <h2 class="text-base font-semibold text-gray-900">{{ $t('finish_setting_up') }}</h2>
+                      <p class="text-sm text-gray-500 mt-1">{{ $t('setup_steps_description') }}</p>
                     </div>
-                    <div class="w-full bg-gray-100 rounded-full h-1.5">
+                    <span class="text-sm font-semibold text-blue-600">{{ setupProgress.percentage }}%</span>
+                  </div>
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between text-xs text-gray-600">
+                      <span>{{ setupProgress.completed }} {{ $t('of') }} {{ setupProgress.total }} {{ $t('completed') }}</span>
+                      <span class="font-medium text-gray-900">{{ setupProgress.percentage }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                       <div
-                        class="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                        class="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
                         :style="{ width: setupProgress.percentage + '%' }"
                       />
                     </div>
-                    <div class="space-y-2 mt-4">
+                    <div class="grid gap-3">
                       <button
                         v-for="step in setupProgress.steps"
                         :key="step.id"
                         @click="handleSetupStep(step.id)"
                         :class="[
-                          'w-full flex items-center gap-3 p-3 rounded-lg border transition-all duration-150 cursor-pointer',
+                          'w-full flex items-center gap-3 p-3 rounded-xl border transition-all duration-150 cursor-pointer',
                           step.completed
-                            ? 'bg-green-50/50 border-green-200 opacity-60'
+                            ? 'bg-green-50 border-green-200 opacity-70'
                             : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-sm'
                         ]"
                       >
                         <div
                           :class="[
-                            'w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0',
+                            'w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0',
                             step.completed ? 'bg-green-500' : 'bg-gray-300'
                           ]"
                         >
@@ -102,25 +129,28 @@
                   </div>
                 </div>
 
-                <!-- Workspace Members Section -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <ProjectsSection :projects="projects" />
+              </div>
+
+              <div class="space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                   <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-base font-semibold text-gray-900">
-                      Members <span class="text-gray-500 font-normal">({{ members.length }}<template v-if="pendingInvitations.length > 0"> + {{ pendingInvitations.length }} pending</template>)</span>
-                    </h2>
+                    <div>
+                      <h2 class="text-base font-semibold text-gray-900">{{ $t('members') }}</h2>
+                      <p class="text-sm text-gray-500 mt-1">{{ $t('members_section_description') }}</p>
+                    </div>
                     <button
                       v-if="canManageMembers()"
                       @click="showInviteModal = true"
                       class="text-blue-600 hover:text-blue-700 text-xs font-medium cursor-pointer transition-colors"
                     >
-                      + Invite
+                      + {{ $t('invite') }}
                     </button>
                   </div>
-                  <div class="space-y-2.5">
-                    <!-- Active members -->
-                    <div v-for="member in members.slice(0, 5)" :key="member.id" class="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:border-gray-200 hover:shadow-sm transition-all duration-150">
+                  <div class="space-y-3">
+                    <div v-for="member in members.slice(0, 5)" :key="member.id" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:border-gray-200 hover:shadow-sm transition-all duration-150">
                       <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
                           {{ member.name.charAt(0).toUpperCase() }}
                         </div>
                         <div>
@@ -128,35 +158,31 @@
                           <p class="text-xs text-gray-500">{{ member.email }}</p>
                         </div>
                       </div>
-                      <span class="text-xs font-medium px-2.5 py-1 bg-blue-50 text-blue-700 rounded-md">
+                      <span class="text-xs font-medium px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full">
                         {{ member.organization_memberships?.[0]?.role || 'member' }}
                       </span>
                     </div>
-                    <!-- Pending invitations -->
-                    <div v-for="inv in pendingInvitations.slice(0, 2)" :key="inv.id" class="flex items-center justify-between p-3 border border-dashed border-gray-200 rounded-lg opacity-70">
+                    <div v-for="inv in pendingInvitations.slice(0, 2)" :key="inv.id" class="flex items-center justify-between p-3 border border-dashed border-gray-200 rounded-xl bg-gray-50">
                       <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-semibold text-xs">
+                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-semibold text-sm">
                           ?
                         </div>
                         <p class="text-sm text-gray-600">{{ inv.email }}</p>
                       </div>
-                      <span :class="['text-xs font-medium px-2.5 py-1 rounded-md', isExpired(inv) ? 'bg-red-50 text-red-600' : 'bg-yellow-50 text-yellow-700']">
+                      <span :class="['text-xs font-medium px-2.5 py-1 rounded-full', isExpired(inv) ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-700']">
                         {{ isExpired(inv) ? 'Expired' : 'Pending' }}
                       </span>
                     </div>
                     <button
                       v-if="members.length > 5 || pendingInvitations.length > 2"
                       @click="activeTab = 'members'"
-                      class="w-full text-center py-2.5 text-xs text-blue-600 hover:text-blue-700 font-medium cursor-pointer transition-colors"
+                      class="w-full text-center py-2.5 text-xs text-blue-600 hover:text-blue-700 font-medium rounded-xl border border-gray-200 transition-colors"
                     >
-                      View all members
+                      {{ $t('view_all_members') }}
                     </button>
                   </div>
                 </div>
-              </div>
 
-              <!-- Right Column: Private Notes -->
-              <div class="lg:sticky lg:top-6">
                 <PrivateNotesSection />
               </div>
             </div>
@@ -165,25 +191,25 @@
           <!-- Members Tab -->
           <div v-if="activeTab === 'members'" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <div class="flex items-center justify-between mb-6">
-              <h2 class="text-lg font-semibold text-gray-900">Workspace Members</h2>
+              <h2 class="text-lg font-semibold text-gray-900">{{ $t('workspace_members') }}</h2>
               <button
                 v-if="canManageMembers()"
                 @click="showInviteModal = true"
                 class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium cursor-pointer transition-colors"
               >
-                + Invite Member
+                {{ $t('invite_member') }}
               </button>
             </div>
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Name</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Email</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Role</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Status</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Date</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Actions</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">{{ $t('name') }}</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">{{ $t('email') }}</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">{{ $t('role') }}</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">{{ $t('status') }}</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">{{ $t('date') }}</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">{{ $t('actions') }}</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
@@ -203,7 +229,7 @@
                         ? 'bg-green-100 text-green-700'
                         : 'bg-gray-100 text-gray-700'
                     ]">
-                      {{ member.organization_memberships?.[0]?.is_active !== false ? 'Active' : 'Inactive' }}
+                      {{ member.organization_memberships?.[0]?.is_active !== false ? $t('active') : $t('inactive') }}
                     </span>
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-600">
@@ -216,14 +242,14 @@
                         @click="deactivateMember(member.id, member.organization_memberships?.[0]?.id)"
                         class="text-red-600 hover:text-red-700 text-xs font-medium cursor-pointer"
                       >
-                        Deactivate
+                        {{ $t('deactivate') }}
                       </button>
                       <button
                         v-if="canManageMembers() && member.organization_memberships?.[0]?.role !== 'owner' && member.organization_memberships?.[0]?.is_active === false"
                         @click="activateMember(member.id, member.organization_memberships?.[0]?.id)"
                         class="text-green-600 hover:text-green-700 text-xs font-medium cursor-pointer"
                       >
-                        Activate
+                        {{ $t('activate') }}
                       </button>
                     </div>
                   </td>
@@ -231,7 +257,7 @@
                 
                 <!-- Pending Invitations -->
                 <tr v-for="invitation in pendingInvitations" :key="`invitation-${invitation.id}`" class="hover:bg-gray-50">
-                  <td class="px-6 py-4 text-sm font-medium text-gray-400 italic">Invited</td>
+                  <td class="px-6 py-4 text-sm font-medium text-gray-400 italic">{{ $t('invited_status') }}</td>
                   <td class="px-6 py-4 text-sm text-gray-600">{{ invitation.email }}</td>
                   <td class="px-6 py-4 text-sm">
                     <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
@@ -240,7 +266,7 @@
                   </td>
                   <td class="px-6 py-4 text-sm">
                     <span :class="['px-2 py-1 rounded text-xs font-medium', isExpired(invitation) ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-700']">
-                      {{ isExpired(invitation) ? 'Expired' : 'Pending' }}
+                      {{ isExpired(invitation) ? $t('expired') : $t('pending_status') }}
                     </span>
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-600">
@@ -253,14 +279,14 @@
                         @click="expireInvitation(invitation.id)"
                         class="text-red-600 hover:text-red-700 text-xs font-medium cursor-pointer"
                       >
-                        Expire
+                        {{ $t('expire') }}
                       </button>
                       <button
                         v-if="canManageMembers()"
                         @click="deleteInvitation(invitation.id)"
                         class="text-gray-500 hover:text-gray-700 text-xs font-medium cursor-pointer"
                       >
-                        Delete
+                        {{ $t('delete') }}
                       </button>
                     </div>
                   </td>
@@ -269,7 +295,7 @@
             </table>
           </div>
           <div v-if="members.length === 0 && pendingInvitations.length === 0" class="text-center py-8">
-            <p class="text-gray-600">No workspace members yet. Invite someone to collaborate!</p>
+            <p class="text-gray-600">{{ $t('no_members_yet') }}</p>
           </div>
         </div>
 
@@ -277,19 +303,19 @@
           <div v-if="activeTab === 'settings'" class="space-y-6">
             <!-- Danger Zone -->
             <div class="bg-white rounded-xl shadow-sm border border-red-200 p-6">
-              <h2 class="text-lg font-semibold text-gray-900 mb-1">Danger Zone</h2>
-              <p class="text-sm text-gray-500 mb-6">Actions here are permanent and cannot be undone.</p>
+              <h2 class="text-lg font-semibold text-gray-900 mb-1">{{ $t('danger_zone') }}</h2>
+              <p class="text-sm text-gray-500 mb-6">{{ $t('permanent_actions_warning') }}</p>
 
               <div class="flex items-center justify-between p-4 border border-red-200 rounded-xl bg-red-50">
                 <div>
-                  <p class="font-medium text-gray-900">Delete this workspace</p>
-                  <p class="text-sm text-gray-500 mt-0.5">Permanently deletes the workspace, all projects, tasks, and members. This cannot be undone.</p>
+                  <p class="font-medium text-gray-900">{{ $t('delete_workspace_label') }}</p>
+                  <p class="text-sm text-gray-500 mt-0.5">{{ $t('delete_workspace_description') }}</p>
                 </div>
                 <button
                   @click="deleteStep = 1"
                   class="ml-6 flex-shrink-0 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
                 >
-                  Delete Workspace
+                  {{ $t('delete_workspace_btn') }}
                 </button>
               </div>
             </div>
@@ -308,27 +334,29 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">Delete workspace?</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ $t('delete_workspace_confirm') }}</h3>
           </div>
-          <p class="text-sm text-gray-600 mb-2">You are about to permanently delete <strong>{{ workspace.name }}</strong>. This will delete:</p>
+          <p class="text-sm text-gray-600 mb-2">
+            {{ $t('delete_workspace_confirm_desc_start') }} <strong>{{ workspace.name }}</strong>{{ $t('delete_workspace_confirm_desc_end') }}
+          </p>
           <ul class="text-sm text-gray-600 list-disc list-inside space-y-1 mb-6 ml-1">
-            <li>All projects and tasks inside this workspace</li>
-            <li>All members and their access</li>
-            <li>All comments, attachments, and activity</li>
+            <li>{{ $t('workspace_items_deleted') }}</li>
+            <li>{{ $t('members_access_deleted') }}</li>
+            <li>{{ $t('comments_attachments_deleted') }}</li>
           </ul>
-          <p class="text-sm font-medium text-red-600 mb-6">This action is permanent and cannot be undone.</p>
+          <p class="text-sm font-medium text-red-600 mb-6">{{ $t('permanent_actions_warning') }}</p>
           <div class="flex gap-3">
             <button
               @click="deleteStep = 0"
               class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium cursor-pointer"
             >
-              Cancel
+              {{ $t('cancel') }}
             </button>
             <button
               @click="deleteStep = 2"
               class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium cursor-pointer"
             >
-              Yes, continue
+              {{ $t('yes_continue') }}
             </button>
           </div>
         </div>
@@ -339,14 +367,14 @@
     <div v-if="deleteStep === 2" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
         <div class="p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirm deletion</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('confirm_deletion') }}</h3>
           <p class="text-sm text-gray-600 mb-4">
-            To confirm, type <strong class="text-gray-900 select-all">{{ workspace.name }}</strong> in the box below.
+            {{ $t('confirm_type_workspace_name_start') }} <strong class="text-gray-900 select-all">{{ workspace.name }}</strong> {{ $t('confirm_type_workspace_name_end') }}
           </p>
           <input
             v-model="deleteConfirmName"
             type="text"
-            placeholder="Type workspace name"
+            :placeholder="$t('type_workspace_name')"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm mb-2"
             @keyup.enter="confirmDelete"
           />
@@ -356,14 +384,14 @@
               @click="deleteStep = 0; deleteConfirmName = ''; deleteError = ''"
               class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium cursor-pointer"
             >
-              Cancel
+              {{ $t('cancel') }}
             </button>
             <button
               @click="confirmDelete"
               :disabled="isDeletingWorkspace || deleteConfirmName.trim().toLowerCase() !== workspace.name.trim().toLowerCase()"
               class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-colors cursor-pointer"
             >
-              {{ isDeletingWorkspace ? 'Deleting...' : 'Delete forever' }}
+              {{ isDeletingWorkspace ? $t('deleting') : $t('delete_forever') }}
             </button>
           </div>
         </div>
@@ -414,7 +442,7 @@ const isDeletingWorkspace = ref(false)
 
 const confirmDelete = () => {
   if (deleteConfirmName.value.trim().toLowerCase() !== props.workspace.name.trim().toLowerCase()) {
-    deleteError.value = 'Workspace name does not match. Please try again.'
+    deleteError.value = page.props.translations?.workspace_name_mismatch || 'Workspace name does not match. Please try again.'
     return
   }
   isDeletingWorkspace.value = true
@@ -432,9 +460,9 @@ const confirmDelete = () => {
 }
 
 const tabs = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'members', label: 'Members' },
-  ...(props.userRole === 'owner' ? [{ id: 'settings', label: 'Settings' }] : []),
+  { id: 'overview', labelKey: 'overview' },
+  { id: 'members', labelKey: 'members' },
+  ...(props.userRole === 'owner' ? [{ id: 'settings', labelKey: 'workspace_settings' }] : []),
 ]
 
 const showNotification = (message, type = 'success') => {
@@ -458,7 +486,7 @@ const handleSetupStep = (stepId) => {
 
 const handleInviteSent = () => {
   showInviteModal.value = false
-  showNotification('Invitation sent successfully!')
+  showNotification(page.props.translations?.invitation_sent_success || 'Invitation sent successfully!')
   router.reload({ only: ['invitations', 'members'] })
 }
 
@@ -487,13 +515,13 @@ const deactivateMember = async (userId, membershipId) => {
       headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content },
     })
     if (response.ok) {
-      showNotification('Member deactivated successfully')
+      showNotification(page.props.translations?.member_deactivated_success || 'Member deactivated successfully')
       router.reload({ only: ['members'] })
     } else {
-      showNotification('Failed to deactivate member', 'error')
+      showNotification(page.props.translations?.member_deactivate_failed || 'Failed to deactivate member', 'error')
     }
   } catch {
-    showNotification('Error deactivating member', 'error')
+    showNotification(page.props.translations?.error_deactivating_member || 'Error deactivating member', 'error')
   }
 }
 
@@ -504,13 +532,13 @@ const activateMember = async (userId, membershipId) => {
       headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content },
     })
     if (response.ok) {
-      showNotification('Member activated successfully')
+      showNotification(page.props.translations?.member_activated_success || 'Member activated successfully')
       router.reload({ only: ['members'] })
     } else {
-      showNotification('Failed to activate member', 'error')
+      showNotification(page.props.translations?.member_activate_failed || 'Failed to activate member', 'error')
     }
   } catch {
-    showNotification('Error activating member', 'error')
+    showNotification(page.props.translations?.error_activating_member || 'Error activating member', 'error')
   }
 }
 
@@ -521,31 +549,31 @@ const expireInvitation = async (invitationId) => {
       headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content },
     })
     if (response.ok) {
-      showNotification('Invitation expired')
+      showNotification(page.props.translations?.invitation_expired_success || 'Invitation expired')
       router.reload({ only: ['invitations'] })
     } else {
-      showNotification('Failed to expire invitation', 'error')
+      showNotification(page.props.translations?.invitation_expire_failed || 'Failed to expire invitation', 'error')
     }
   } catch {
-    showNotification('Error expiring invitation', 'error')
+    showNotification(page.props.translations?.error_expiring_invitation || 'Error expiring invitation', 'error')
   }
 }
 
 const deleteInvitation = async (invitationId) => {
-  if (!confirm('Delete this invitation?')) return
+  if (!confirm(page.props.translations?.delete_invitation_confirm || 'Delete this invitation?')) return
   try {
     const response = await fetch(`/api/invitations/${invitationId}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content },
     })
     if (response.ok) {
-      showNotification('Invitation deleted')
+      showNotification(page.props.translations?.invitation_deleted_success || 'Invitation deleted')
       router.reload({ only: ['invitations'] })
     } else {
-      showNotification('Failed to delete invitation', 'error')
+      showNotification(page.props.translations?.invitation_delete_failed || 'Failed to delete invitation', 'error')
     }
   } catch {
-    showNotification('Error deleting invitation', 'error')
+    showNotification(page.props.translations?.error_deleting_invitation || 'Error deleting invitation', 'error')
   }
 }
 

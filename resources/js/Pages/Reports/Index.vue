@@ -70,35 +70,35 @@
         </div>
 
         <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <ChartCard title="Task Status Breakdown" subtitle="Distribution across all statuses">
+          <ChartCard :title="$t('task_status_breakdown')" :subtitle="$t('distribution_across_all_statuses')">
             <canvas ref="chartStatus"></canvas>
           </ChartCard>
 
-          <ChartCard title="Tasks Completed Over Time" subtitle="Weekly completion trend">
+          <ChartCard :title="$t('tasks_completed_over_time')" :subtitle="$t('weekly_completion_trend')">
             <canvas ref="chartCompletedOverTime"></canvas>
           </ChartCard>
 
-          <ChartCard title="Tasks by Project" subtitle="Total task count per project">
+          <ChartCard :title="$t('tasks_by_project')" :subtitle="$t('total_task_count_per_project')">
             <canvas ref="chartTasksByProject"></canvas>
           </ChartCard>
 
-          <ChartCard title="Workload by Assignee" subtitle="Completed vs incomplete per member">
+          <ChartCard :title="$t('workload_by_assignee')" :subtitle="$t('completed_vs_incomplete_per_member')">
             <canvas ref="chartWorkload"></canvas>
           </ChartCard>
 
-          <ChartCard title="Tasks by Status per Project" subtitle="Status breakdown across each project">
+          <ChartCard :title="$t('tasks_by_status_per_project')" :subtitle="$t('status_breakdown_across_each_project')">
             <canvas ref="chartStatusByProject"></canvas>
           </ChartCard>
 
-          <ChartCard title="Tasks Created vs Completed" subtitle="Velocity trend over time">
+          <ChartCard :title="$t('tasks_created_vs_completed')" :subtitle="$t('velocity_trend_over_time')">
             <canvas ref="chartVelocity"></canvas>
           </ChartCard>
 
-          <ChartCard title="Completion Rate by Project" subtitle="% of tasks done per project">
+          <ChartCard :title="$t('completion_rate_by_project')" :subtitle="$t('percent_of_tasks_done_per_project')">
             <canvas ref="chartCompletionRate"></canvas>
           </ChartCard>
 
-          <ChartCard title="Overdue Tasks by Member" subtitle="Sorted by count  highest first">
+          <ChartCard :title="$t('overdue_tasks_by_member')" :subtitle="$t('sorted_by_count_highest_first')">
             <canvas ref="chartOverdueByMember"></canvas>
           </ChartCard>
         </div>
@@ -110,6 +110,7 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 import {
   Chart,
   ArcElement, BarElement, LineElement, PointElement,
@@ -121,6 +122,8 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import ReportFilters from '@/Components/Reports/ReportFilters.vue'
 import StatCard from '@/Components/Reports/StatCard.vue'
 import ChartCard from '@/Components/Reports/ChartCard.vue'
+
+const page = usePage()
 
 Chart.register(
   ArcElement, BarElement, LineElement, PointElement,
@@ -155,12 +158,12 @@ const filters = ref({
 const statCards = computed(() => {
   const s = stats.value
   return [
-    { key: 'total_tasks',      label: 'Total Tasks',      value: s.total_tasks?.value      ?? 0, trend: s.total_tasks?.trend      ?? 0, icon: 'clipboard-list' },
-    { key: 'completed_tasks',  label: 'Completed Tasks',  value: s.completed_tasks?.value  ?? 0, trend: s.completed_tasks?.trend  ?? 0, icon: 'circle-check',  subtitle: s.completed_tasks?.percent != null ? `${s.completed_tasks.percent}% of total` : null },
-    { key: 'incomplete_tasks', label: 'Incomplete Tasks', value: s.incomplete_tasks?.value ?? 0, trend: s.incomplete_tasks?.trend ?? 0, icon: 'clock' },
-    { key: 'overdue_tasks',    label: 'Overdue Tasks',    value: s.overdue_tasks?.value    ?? 0, trend: s.overdue_tasks?.trend    ?? 0, icon: 'alert-triangle', accent: 'red' },
-    { key: 'active_projects',  label: 'Active Projects',  value: s.active_projects?.value  ?? 0, trend: s.active_projects?.trend  ?? 0, icon: 'folder-open' },
-    { key: 'team_members',     label: 'Team Members',     value: s.team_members?.value     ?? 0, trend: s.team_members?.trend     ?? 0, icon: 'users' },
+    { key: 'total_tasks',      label: page.props.translations?.total_tasks      ?? 'Total Tasks',      value: s.total_tasks?.value      ?? 0, trend: s.total_tasks?.trend      ?? 0, icon: 'clipboard-list' },
+    { key: 'completed_tasks',  label: page.props.translations?.completed_tasks  ?? 'Completed Tasks',  value: s.completed_tasks?.value  ?? 0, trend: s.completed_tasks?.trend  ?? 0, icon: 'circle-check',  subtitle: s.completed_tasks?.percent != null ? `${s.completed_tasks.percent}% ${page.props.translations?.of_total || '% of total'}` : null },
+    { key: 'incomplete_tasks', label: page.props.translations?.incomplete_tasks ?? 'Incomplete Tasks', value: s.incomplete_tasks?.value ?? 0, trend: s.incomplete_tasks?.trend ?? 0, icon: 'clock' },
+    { key: 'overdue_tasks',    label: page.props.translations?.overdue_tasks    ?? 'Overdue Tasks',    value: s.overdue_tasks?.value    ?? 0, trend: s.overdue_tasks?.trend    ?? 0, icon: 'alert-triangle', accent: 'red' },
+    { key: 'active_projects',  label: page.props.translations?.active_projects  ?? 'Active Projects',  value: s.active_projects?.value  ?? 0, trend: s.active_projects?.trend  ?? 0, icon: 'folder-open' },
+    { key: 'team_members',     label: page.props.translations?.team_members     ?? 'Team Members',     value: s.team_members?.value     ?? 0, trend: s.team_members?.trend     ?? 0, icon: 'users' },
   ]
 })
 
@@ -318,7 +321,7 @@ async function applyFilters() {
     await nextTick()
     buildCharts()
   } catch (e) {
-    error.value = e.message || 'Failed to load report data. Please try again.'
+    error.value = e.message || page.props.translations?.failed_to_load_report_data || 'Failed to load report data. Please try again.'
   } finally {
     loading.value = false
   }

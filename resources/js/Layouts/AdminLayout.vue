@@ -10,7 +10,7 @@
             <Link href="/admin" class="flex-shrink-0">
               <img 
                 src="/assets/images/logo/asira-logo-main.png" 
-                alt="Asira Admin" 
+                :alt="$t('asira_admin')" 
                 class="h-8 w-auto"
               />
             </Link>
@@ -22,42 +22,42 @@
                 class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
                 :class="{ 'text-slate-900 bg-slate-100': isActive('/admin') }"
               >
-                Dashboard
+                {{ $t('dashboard') }}
               </Link>
               <Link 
                 href="/admin/users" 
                 class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
                 :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/users') }"
               >
-                Users
+                {{ $t('users') }}
               </Link>
               <Link 
                 href="/admin/languages" 
                 class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
                 :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/languages') }"
               >
-                Languages
+                {{ $t('languages') }}
               </Link>
               <Link 
                 href="/admin/contacts" 
                 class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
                 :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/contacts') }"
               >
-                Contacts
+                {{ $t('contacts') }}
               </Link>
               <Link 
                 href="/admin/workspaces" 
                 class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
                 :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/workspaces') }"
               >
-                Workspaces
+                {{ $t('workspaces') }}
               </Link>
               <Link 
                 href="/admin/settings" 
                 class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
                 :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/settings') }"
               >
-                Settings
+                {{ $t('settings') }}
               </Link>
             </div>
           </div>
@@ -88,19 +88,19 @@
                   href="/dashboard"
                   class="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm transition-colors border-b border-slate-100"
                 >
-                  Return to Dashboard
+                  {{ $t('return_to_dashboard') }}
                 </Link>
                 <Link
                   href="/profile"
                   class="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm transition-colors border-b border-slate-100"
                 >
-                  Profile
+                  {{ $t('profile') }}
                 </Link>
                 <button
                   @click="logout"
                   class="w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm transition-colors"
                 >
-                  Logout
+                  {{ $t('logout') }}
                 </button>
               </div>
             </div>
@@ -126,7 +126,7 @@
             :class="{ 'text-slate-900 bg-slate-100': isActive('/admin') }"
             @click="mobileMenuOpen = false"
           >
-            Dashboard
+            {{ $t('dashboard') }}
           </Link>
           <Link 
             href="/admin/users" 
@@ -134,7 +134,7 @@
             :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/users') }"
             @click="mobileMenuOpen = false"
           >
-            Users
+            {{ $t('users') }}
           </Link>
           <Link 
             href="/admin/languages" 
@@ -142,7 +142,7 @@
             :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/languages') }"
             @click="mobileMenuOpen = false"
           >
-            Languages
+            {{ $t('languages') }}
           </Link>
           <Link 
             href="/admin/contacts" 
@@ -150,7 +150,7 @@
             :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/contacts') }"
             @click="mobileMenuOpen = false"
           >
-            Contacts
+            {{ $t('contacts') }}
           </Link>
           <Link 
             href="/admin/workspaces" 
@@ -158,7 +158,7 @@
             :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/workspaces') }"
             @click="mobileMenuOpen = false"
           >
-            Workspaces
+            {{ $t('workspaces') }}
           </Link>
           <Link 
             href="/admin/settings" 
@@ -166,7 +166,7 @@
             :class="{ 'text-slate-900 bg-slate-100': isActive('/admin/settings') }"
             @click="mobileMenuOpen = false"
           >
-            Settings
+            {{ $t('settings') }}
           </Link>
         </div>
       </div>

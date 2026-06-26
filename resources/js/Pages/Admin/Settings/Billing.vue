@@ -7,19 +7,19 @@
           <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h10m4 0a1 1 0 11-2 0m2 0a1 1 0 10-2 0m-4 0a1 1 0 11-2 0m2 0a1 1 0 10-2 0M3 5a2 2 0 012-2h14a2 2 0 012 2v2H3V5z" />
           </svg>
-          <h2 class="text-xl font-semibold text-gray-900">Stripe API Keys</h2>
+          <h2 class="text-xl font-semibold text-gray-900">{{ $t('stripe_api_keys') }}</h2>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Stripe Publishable Key
+              {{ $t('stripe_publishable_key') }}
             </label>
             <input
               v-model="form.stripe_key"
               type="text"
               name="stripe_publishable_key"
-              placeholder="pk_live_..."
+              :placeholder="$t('stripe_publishable_key_placeholder')"
               autocomplete="off"
               spellcheck="false"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -28,13 +28,13 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Stripe Secret Key
+              {{ $t('stripe_secret_key') }}
             </label>
             <input
               v-model="form.stripe_secret"
               type="password"
               name="stripe_secret_key"
-              placeholder="sk_live_..."
+              :placeholder="$t('stripe_secret_key_placeholder')"
               autocomplete="new-password"
               spellcheck="false"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -49,12 +49,12 @@
           <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <h2 class="text-xl font-semibold text-gray-900">Trial Period Settings</h2>
+          <h2 class="text-xl font-semibold text-gray-900">{{ $t('trial_period_settings') }}</h2>
         </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Free Trial Days
+            {{ $t('free_trial_days') }}
           </label>
           <div class="flex items-center gap-3 max-w-xs">
             <input
@@ -66,7 +66,7 @@
               autocomplete="off"
               class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
             />
-            <span class="text-sm text-gray-600">days (0 = no trial)</span>
+            <span class="text-sm text-gray-600">{{ $t('days_no_trial') }}</span>
           </div>
         </div>
       </div>
@@ -77,13 +77,13 @@
           <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3.654a1 1 0 01-.894-1.447l5.394-7.72A6 6 0 1113.16 21z" />
           </svg>
-          <h2 class="text-xl font-semibold text-gray-900">Trial Users Limits</h2>
+          <h2 class="text-xl font-semibold text-gray-900">{{ $t('trial_users_limits') }}</h2>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Workspaces per Trial User
+              {{ $t('workspaces_per_trial_user') }}
             </label>
             <div class="flex items-center gap-3">
               <input
@@ -95,13 +95,13 @@
                 autocomplete="off"
                 class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
-              <span class="text-sm text-gray-600">workspace(s)</span>
+              <span class="text-sm text-gray-600">{{ $t('workspace_trial_limit_unit') }}</span>
             </div>
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Projects per Workspace (Trial Users)
+              {{ $t('projects_per_workspace_trial') }}
             </label>
             <div class="flex items-center gap-3">
               <input
@@ -113,13 +113,13 @@
                 autocomplete="off"
                 class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
-              <span class="text-sm text-gray-600">project(s)</span>
+              <span class="text-sm text-gray-600">{{ $t('projects_trial_limit_unit') }}</span>
             </div>
           </div>
 
           <div class="lg:col-span-2">
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Members per Project (Trial Users)
+              {{ $t('members_per_project_trial') }}
             </label>
             <div class="flex items-center gap-3">
               <input
@@ -131,7 +131,7 @@
                 autocomplete="off"
                 class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
-              <span class="text-sm text-gray-600">member(s)</span>
+              <span class="text-sm text-gray-600">{{ $t('members_trial_limit_unit') }}</span>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
-          Save Settings
+          {{ $t('save_settings') }}
         </button>
       </div>
     </form>

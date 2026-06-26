@@ -10,12 +10,12 @@
             : 'text-gray-700 hover:bg-gray-50'
         ]"
       >
-        My Workspaces
+        {{ $t('my_workspaces') }}
       </Link>
 
       <!-- Billing Section - Only show if owner of active workspace -->
       <div v-if="isOwnerOfActiveWorkspace" class="mt-4 pt-4 border-t">
-        <h3 class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Billing</h3>
+        <h3 class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">{{ $t('billing') }}</h3>
         <Link
           href="/settings/subscriptions"
           :class="[
@@ -25,13 +25,13 @@
               : 'text-gray-700 hover:bg-gray-50'
           ]"
         >
-          Plans & Subscriptions
+          {{ $t('plans_subscriptions') }}
         </Link>
       </div>
 
       <!-- Integrations Section - Only show if owner of active workspace -->
       <div v-if="isOwnerOfActiveWorkspace" class="mt-4 pt-4 border-t">
-        <h3 class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">Integrations</h3>
+        <h3 class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase">{{ $t('integrations') }}</h3>
         <Link
           href="/settings/integrations/tokens"
           :class="[
@@ -41,7 +41,7 @@
               : 'text-gray-700 hover:bg-gray-50'
           ]"
         >
-          Access Tokens
+          {{ $t('access_tokens') }}
         </Link>
       </div>
     </div>

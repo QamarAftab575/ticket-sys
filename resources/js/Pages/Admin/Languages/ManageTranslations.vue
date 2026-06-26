@@ -6,10 +6,10 @@
           href="/admin/languages"
           class="text-indigo-600 hover:text-indigo-900 transition-colors"
         >
-          ← Back to Languages
+          ← {{ $t('back_to_languages') }}
         </Link>
         <div>
-          <h1 class="text-4xl font-bold text-gray-900">Manage Translations</h1>
+          <h1 class="text-4xl font-bold text-gray-900">{{ $t('manage_translations_title') }}</h1>
           <p class="text-gray-600 mt-1">{{ language.name }} ({{ language.code }})</p>
         </div>
       </div>
@@ -21,7 +21,7 @@
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="Search translation keys..."
+          :placeholder="$t('search_translation_keys')"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
         />
         <svg class="absolute right-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,13 +36,13 @@
             <thead class="bg-gray-50 sticky top-0">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider w-1/4">
-                  Key
+                  {{ $t('key_table_header') }}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider w-1/3">
-                  English Value
+                  {{ $t('english_value_header') }}
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider w-1/3">
-                  {{ language.name }} Value
+                  {{ $t('translation_value_header').replace('{language}', language.name) }}
                 </th>
               </tr>
             </thead>
@@ -61,7 +61,7 @@
                 <td class="px-6 py-4">
                   <textarea
                     v-model="translations[index].value"
-                    :placeholder="`Enter ${language.name} translation...`"
+                    :placeholder="$t('enter_translation').replace('{language}', language.name)"
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-sm"
                     rows="2"
                   ></textarea>
@@ -69,7 +69,7 @@
               </tr>
               <tr v-if="filteredTranslations.length === 0">
                 <td colspan="3" class="px-6 py-8 text-center text-gray-500">
-                  No translations found matching "{{ searchQuery }}"
+                  {{ $t('no_translations_found').replace('{query}', searchQuery) }}
                 </td>
               </tr>
             </tbody>
@@ -82,14 +82,14 @@
             href="/admin/languages"
             class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors font-medium cursor-pointer"
           >
-            Cancel
+            {{ $t('cancel') }}
           </Link>
           <button
             type="submit"
             :disabled="processing"
             class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ processing ? 'Saving...' : 'Save Translations' }}
+            {{ processing ? $t('saving') : $t('save_translations') }}
           </button>
         </div>
       </form>
@@ -101,9 +101,9 @@
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
           </svg>
           <div class="text-sm text-blue-800">
-            <p class="font-semibold mb-1">Translation Progress</p>
+            <p class="font-semibold mb-1">{{ $t('translation_progress') }}</p>
             <p class="text-blue-700">
-              {{ completedCount }} of {{ translations.length }} translations completed
+              {{ completedCount }} {{ $t('translations_completed').replace('{completed}', completedCount).replace('{total}', translations.length) }}
               <span class="font-semibold">({{ completedPercentage }}%)</span>
             </p>
           </div>
@@ -116,13 +116,15 @@
 <script setup>
 import { ref, computed } from 'vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
-import { Link, router } from '@inertiajs/vue3'
+import { Link, router, usePage } from '@inertiajs/vue3'
 import { toast } from 'vue3-toastify'
 
 const props = defineProps({
   language: Object,
   translations: Array
 })
+
+const page = usePage()
 
 const translations = ref(props.translations)
 const searchQuery = ref('')
@@ -162,13 +164,13 @@ const saveTranslations = () => {
     {
       onSuccess: () => {
         processing.value = false
-        toast.success('Translations saved successfully!', {
+        toast.success(page.props.translations?.translations_saved || 'Translations saved successfully!', {
           autoClose: 3000
         })
       },
       onError: (errors) => {
         processing.value = false
-        toast.error(errors.error || 'Failed to save translations', {
+        toast.error(errors.error || page.props.translations?.failed_save_translations || 'Failed to save translations', {
           autoClose: 3000
         })
       }

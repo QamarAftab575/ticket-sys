@@ -6,11 +6,11 @@
           href="/admin/languages"
           class="text-indigo-600 hover:text-indigo-900 transition-colors"
         >
-          ← Back to Languages
+          ← {{ $t('back_to_languages') }}
         </Link>
         <div>
-          <h1 class="text-4xl font-bold text-gray-900">Add New Language</h1>
-          <p class="text-gray-600 mt-1">Create a new language for your system</p>
+          <h1 class="text-4xl font-bold text-gray-900">{{ $t('add_new_language') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('create_new_language_desc') }}</p>
         </div>
       </div>
     </template>
@@ -21,12 +21,12 @@
           <!-- Language Name -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Language Name <span class="text-red-500">*</span>
+              {{ $t('language_name') }} <span class="text-red-500">*</span>
             </label>
             <input
               v-model="form.name"
               type="text"
-              placeholder="e.g., French, German, Russian"
+              :placeholder="$t('language_name_placeholder')"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
               :class="{ 'border-red-500': errors.name }"
             />
@@ -36,17 +36,17 @@
           <!-- Language Code -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Language Code <span class="text-red-500">*</span>
+              {{ $t('language_code') }} <span class="text-red-500">*</span>
             </label>
             <input
               v-model="form.code"
               type="text"
-              placeholder="e.g., fr, de, ru"
+              :placeholder="$t('language_code_placeholder')"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition uppercase"
               :class="{ 'border-red-500': errors.code }"
               maxlength="10"
             />
-            <p class="text-gray-500 text-xs mt-1">ISO 639-1 code (e.g., en, fr, de, ru)</p>
+            <p class="text-gray-500 text-xs mt-1">{{ $t('iso_639_code') }}</p>
             <p v-if="errors.code" class="text-red-600 text-sm mt-1">{{ errors.code }}</p>
           </div>
 
@@ -57,11 +57,11 @@
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
               </svg>
               <div class="text-sm text-blue-800">
-                <p class="font-semibold mb-1">What happens when you create a language?</p>
+                <p class="font-semibold mb-1">{{ $t('what_happens_when_create') }}</p>
                 <ul class="list-disc list-inside space-y-1 text-blue-700">
-                  <li>A folder will be created in resources/lang/{code}</li>
-                  <li>A messages.php file will be created with all translation keys</li>
-                  <li>You can then add translation values for each key</li>
+                  <li>{{ $t('folder_created') }}</li>
+                  <li>{{ $t('messages_file_created') }}</li>
+                  <li>{{ $t('add_translation_values') }}</li>
                 </ul>
               </div>
             </div>
@@ -73,14 +73,14 @@
               href="/admin/languages"
               class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium cursor-pointer"
             >
-              Cancel
+              {{ $t('cancel') }}
             </Link>
             <button
               type="submit"
               :disabled="processing"
               class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {{ processing ? 'Creating...' : 'Create Language' }}
+              {{ processing ? $t('creating') : $t('create_language') }}
             </button>
           </div>
         </form>
@@ -106,12 +106,12 @@ const errors = ref({})
 
 const submitForm = () => {
   if (!form.value.name.trim()) {
-    errors.value.name = 'Language name is required'
+    errors.value.name = page.props.translations?.language_name_required || 'Language name is required'
     return
   }
 
   if (!form.value.code.trim()) {
-    errors.value.code = 'Language code is required'
+    errors.value.code = page.props.translations?.language_code_required || 'Language code is required'
     return
   }
 

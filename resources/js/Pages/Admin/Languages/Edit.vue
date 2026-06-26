@@ -6,11 +6,11 @@
           href="/admin/languages"
           class="text-indigo-600 hover:text-indigo-900 transition-colors"
         >
-          ← Back to Languages
+          ← {{ $t('back_to_languages') }}
         </Link>
         <div>
-          <h1 class="text-4xl font-bold text-gray-900">Edit Language</h1>
-          <p class="text-gray-600 mt-1">Update language details</p>
+          <h1 class="text-4xl font-bold text-gray-900">{{ $t('edit_language') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('update_language_details') }}</p>
         </div>
       </div>
     </template>
@@ -21,7 +21,7 @@
           <!-- Language Name -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Language Name <span class="text-red-500">*</span>
+              {{ $t('language_name') }} <span class="text-red-500">*</span>
             </label>
             <input
               v-model="form.name"
@@ -35,7 +35,7 @@
           <!-- Language Code (Read-only) -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Language Code <span class="text-gray-500 text-xs">(Cannot be changed)</span>
+              {{ $t('language_code') }} <span class="text-gray-500 text-xs">{{ $t('cannot_be_changed') }}</span>
             </label>
             <input
               type="text"
@@ -51,14 +51,14 @@
               href="/admin/languages"
               class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium cursor-pointer"
             >
-              Cancel
+              {{ $t('cancel') }}
             </Link>
             <button
               type="submit"
               :disabled="processing"
               class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {{ processing ? 'Saving...' : 'Save Changes' }}
+              {{ processing ? $t('saving') : $t('save_changes') }}
             </button>
           </div>
         </form>
@@ -85,7 +85,7 @@ const errors = ref({})
 
 const submitForm = () => {
   if (!form.value.name.trim()) {
-    errors.value.name = 'Language name is required'
+    errors.value.name = page.props.translations?.language_name_required || 'Language name is required'
     return
   }
 
