@@ -9,8 +9,8 @@
             <!-- Logo -->
             <Link href="/admin" class="flex-shrink-0">
               <img 
-                src="/assets/images/logo/asira-logo-main.png" 
-                :alt="$t('asira_admin')" 
+                src="/assets/images/logo/default-logo-main.png" 
+                :alt="$t('tasqo')" 
                 class="h-8 w-auto"
               />
             </Link>

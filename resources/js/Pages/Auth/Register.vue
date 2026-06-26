@@ -17,14 +17,14 @@
         <!-- Logo -->
         <div class="mb-8">
           <Link href="/" class="inline-flex items-center gap-3 group cursor-pointer">
-            <img src="/assets/images/logo/asira-logo-main.png" alt="Asira" class="h-8 w-auto" />
+            <img src="/assets/images/logo/default-logo-main.png" alt="tasqo" class="h-8 w-auto" />
           </Link>
         </div>
 
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Create an account</h1>
-          <p class="text-slate-600 dark:text-slate-400">Start your 14-day free trial. No credit card required.</p>
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">{{ $t('create_account') }}</h1>
+          <p class="text-slate-600 dark:text-slate-400">{{ $t('start_free_trial_no_card') }}</p>
         </div>
 
         <!-- Error Message -->
@@ -37,7 +37,7 @@
           <!-- Name Field -->
           <div class="space-y-2">
             <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Full name
+              {{ $t('full_name') }}
             </label>
             <input
               id="name"
@@ -50,7 +50,7 @@
                 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
                 errors.name ? 'border-red-300 dark:border-red-700' : 'border-slate-300 dark:border-slate-700'
               ]"
-              placeholder="John Doe"
+              :placeholder="$t('john_doe')"
             />
             <p v-if="errors.name" class="text-red-600 dark:text-red-400 text-sm">{{ errors.name[0] }}</p>
           </div>
@@ -58,7 +58,7 @@
           <!-- Email Field -->
           <div class="space-y-2">
             <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Email address
+              {{ $t('email_address') }}
             </label>
             <input
               id="email"
@@ -71,7 +71,7 @@
                 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
                 errors.email ? 'border-red-300 dark:border-red-700' : 'border-slate-300 dark:border-slate-700'
               ]"
-              placeholder="name@company.com"
+              :placeholder="$t('email_placeholder')"
             />
             <p v-if="errors.email" class="text-red-600 dark:text-red-400 text-sm">{{ errors.email[0] }}</p>
           </div>
@@ -79,7 +79,7 @@
           <!-- Password Field -->
           <div class="space-y-2">
             <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Password
+              {{ $t('password') }}
             </label>
             <div class="relative">
               <input
@@ -125,14 +125,14 @@
                 </div>
                 <span class="text-xs font-medium text-slate-600 dark:text-slate-400">{{ passwordStrength.text }}</span>
               </div>
-              <p class="text-xs text-slate-500 dark:text-slate-400">Use 8+ characters with a mix of letters, numbers & symbols</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">{{ $t('password_strength_hint') }}</p>
             </div>
           </div>
 
           <!-- Confirm Password Field -->
           <div class="space-y-2">
             <label for="password_confirmation" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Confirm password
+              {{ $t('confirm_password') }}
             </label>
             <div class="relative">
               <input
@@ -159,7 +159,7 @@
               </button>
             </div>
             <p v-if="form.password_confirmation && form.password !== form.password_confirmation" class="text-red-600 dark:text-red-400 text-sm">
-              Passwords do not match
+              {{ $t('passwords_do_not_match') }}
             </p>
           </div>
 
@@ -175,10 +175,10 @@
               />
             </div>
             <label for="terms" class="text-sm text-slate-600 dark:text-slate-400 leading-5 cursor-pointer">
-              I agree to the 
-              <a href="/terms" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">Terms of Service</a>
-              and 
-              <a href="/privacy" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">Privacy Policy</a>
+              {{ $t('agree_to_terms') }}
+              <a href="/terms" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">{{ $t('terms_of_service') }}</a>
+              {{ $t('and') }}
+              <a href="/privacy" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">{{ $t('privacy_policy') }}</a>
             </label>
           </div>
 
@@ -188,13 +188,13 @@
             :disabled="isLoading || !form.terms || form.password !== form.password_confirmation"
             class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <span v-if="!isLoading">Create account</span>
+            <span v-if="!isLoading">{{ $t('create_account') }}</span>
             <span v-else class="flex items-center gap-2">
               <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Creating account...
+              {{ $t('creating_account') }}
             </span>
           </button>
         </form>
@@ -202,9 +202,9 @@
         <!-- Sign In Link -->
         <div class="mt-8 text-center">
           <p class="text-sm text-slate-600 dark:text-slate-400">
-            Already have an account?
+            {{ $t('already_have_account') }}
             <Link href="/login" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors cursor-pointer ml-1">
-              Sign in
+              {{ $t('sign_in') }}
             </Link>
           </p>
         </div>

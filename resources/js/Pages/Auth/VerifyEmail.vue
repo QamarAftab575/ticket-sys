@@ -4,7 +4,7 @@
       <!-- Logo -->
       <div class="mb-8">
         <Link href="/" class="inline-flex items-center gap-3 group cursor-pointer">
-          <img src="/assets/images/logo/asira-logo-main.png" alt="Asira" class="h-8 w-auto" />
+          <img src="/assets/images/logo/default-logo-main.png" alt="tasqo" class="h-8 w-auto" />
         </Link>
       </div>
 
@@ -21,8 +21,8 @@
 
         <!-- Header -->
         <div class="text-center mb-8">
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Verify your email</h1>
-          <p class="text-slate-600 dark:text-slate-400">We've sent a verification link to your email address. Please check your inbox and click the link to verify your email.</p>
+          <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">{{ $t('verify_email') }}</h1>
+          <p class="text-slate-600 dark:text-slate-400">{{ $t('verify_email_description') }}</p>
         </div>
 
         <!-- Success Message -->
@@ -32,8 +32,8 @@
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
             <div>
-              <p class="text-sm font-medium text-green-800 dark:text-green-300">Verification email sent!</p>
-              <p class="text-sm text-green-700 dark:text-green-400 mt-1">Please check your inbox.</p>
+              <p class="text-sm font-medium text-green-800 dark:text-green-300">{{ $t('verification_email_sent') }}</p>
+              <p class="text-sm text-green-700 dark:text-green-400 mt-1">{{ $t('check_inbox') }}</p>
             </div>
           </div>
         </div>
@@ -53,8 +53,8 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span v-if="!isLoading">Resend verification email</span>
-            <span v-else>Sending...</span>
+            <span v-if="!isLoading">{{ $t('resend_verification_email') }}</span>
+            <span v-else>{{ $t('sending') }}</span>
           </button>
 
           <!-- Logout Button -->
@@ -63,7 +63,7 @@
               type="submit"
               class="w-full py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-lg border border-slate-300 dark:border-slate-700 transition-colors duration-200"
             >
-              Logout
+              {{ $t('logout') }}
             </button>
           </form>
         </div>
@@ -71,7 +71,7 @@
         <!-- Help text -->
         <div class="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
           <p class="text-xs text-slate-600 dark:text-slate-400 text-center">
-            <span class="font-medium">Didn't receive the email?</span> Check your spam folder or click the resend button above.
+            <span class="font-medium">{{ $t('didnt_receive_email') }}</span> {{ $t('check_spam_or_resend') }}
           </p>
         </div>
       </div>

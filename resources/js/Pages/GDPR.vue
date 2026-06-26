@@ -14,7 +14,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
           <div>
             <h2 class="text-2xl font-bold text-slate-900 mb-3">GDPR Overview</h2>
             <p class="text-slate-600 leading-relaxed">
-              Asira is fully compliant with the General Data Protection Regulation (GDPR), the EU's comprehensive data protection regulation that took effect on May 25, 2018.
+              Our App is fully compliant with the General Data Protection Regulation (GDPR), the EU's comprehensive data protection regulation that took effect on May 25, 2018.
             </p>
           </div>
 
@@ -71,7 +71,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
           <div>
             <h2 class="text-2xl font-bold text-slate-900 mb-3">Exercising Your Rights</h2>
             <p class="text-slate-600 leading-relaxed">
-              To exercise any of your GDPR rights, please contact us at privacy@asira.in with your request. We will respond within 30 days or as required by law.
+              To exercise any of your GDPR rights, please contact us at on support page with your request. We will respond within 30 days or as required by law.
             </p>
           </div>
 

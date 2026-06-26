@@ -28,7 +28,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
             </p>
           </div>
 
-          <!-- What is Asira -->
+          <!-- What is this -->
           <div>
             <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('what_is_appname') }}</h2>
             <p class="text-lg text-slate-600 leading-relaxed mb-8">
@@ -197,7 +197,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
             </div>
           </div>
 
-          <!-- Why Choose Asira -->
+          <!-- Why Choose us -->
           <div>
             <h2 class="text-4xl font-bold text-slate-900 mb-6">{{ $t('why_choose_appname') }}</h2>
             <div class="grid md:grid-cols-2 gap-6">

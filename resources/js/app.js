@@ -9,7 +9,7 @@ import 'tippy.js/dist/tippy.css';
 import { setupCacheInvalidation } from '@/Composables/useCacheInvalidation';
 import i18n from '@/Plugins/i18n';
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Asira';
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Tasqo';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

@@ -123,6 +123,8 @@ class LandingController extends Controller
             ]
         ];
 
+        $appName = config('app.name');
+        
         $testimonials = [
             [
                 'id' => 1,
@@ -130,7 +132,7 @@ class LandingController extends Controller
                 'role' => 'Engineering Manager',
                 'company' => 'TechFlow Solutions',
                 'avatar' => 'JM',
-                'content' => 'Asira transformed how our engineering team works. The timeline view helps us visualize dependencies and the automation saves hours every week. Our sprint velocity increased by 35%.',
+                'content' => "{$appName} transformed how our engineering team works. The timeline view helps us visualize dependencies and the automation saves hours every week. Our sprint velocity increased by 35%.",
                 'rating' => 5
             ],
             [
@@ -139,7 +141,7 @@ class LandingController extends Controller
                 'role' => 'Marketing Director',
                 'company' => 'GrowthCo',
                 'avatar' => 'DP',
-                'content' => 'We manage 15+ campaigns simultaneously and Asira keeps everything organized. The custom fields and templates are game-changers. Our team collaboration has never been better.',
+                'content' => "We manage 15+ campaigns simultaneously and {$appName} keeps everything organized. The custom fields and templates are game-changers. Our team collaboration has never been better.",
                 'rating' => 5
             ],
             [
@@ -148,7 +150,7 @@ class LandingController extends Controller
                 'role' => 'Operations Lead',
                 'company' => 'ServicePro Inc',
                 'avatar' => 'RS',
-                'content' => 'After trying Asana, Jira, and others, Asira is the perfect balance of power and simplicity. Our response time improved by 60% and our team actually enjoys using it.',
+                'content' => "After trying Asana, Jira, and others, {$appName} is the perfect balance of power and simplicity. Our response time improved by 60% and our team actually enjoys using it.",
                 'rating' => 5
             ]
         ];

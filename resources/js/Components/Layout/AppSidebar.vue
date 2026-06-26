@@ -16,8 +16,8 @@
     >
       <Link href="/" class="flex items-center gap-2 min-w-0">
         <img 
-          src="/assets/images/logo/white-logo.png" 
-          alt="Asira Logo"
+          src="/assets/images/logo/default-white-logo.png" 
+          alt="Logo"
           class="h-8 w-auto shrink-0"
           @error="handleLogoError"
         />
@@ -281,8 +281,8 @@ import WorkspaceSwitcher from '@/Components/Layout/WorkspaceSwitcher.vue'
 import { api } from '@/Services/api'
 import { useSidebarData } from '@/Composables/useSidebarData'
 
-const STORAGE_KEY      = 'asira_sidebar_collapsed'
-const PROJECTS_KEY     = 'asira_projects_expanded'
+const STORAGE_KEY      = 'dashbord_project_sidebar_collapsed'
+const PROJECTS_KEY     = 'dashbord_project_projects_expanded'
 const INITIAL_SHOW     = 5
 
 const props = defineProps({

@@ -58,7 +58,7 @@ onMounted(() => {
         <div class="flex items-center justify-between h-14">
           <!-- Logo -->
           <Link href="/" class="flex items-center space-x-3 cursor-pointer">
-            <img src="/assets/images/logo/asira-logo-main.png" alt="Asira Logo" class="h-8 w-auto" />
+            <img src="/assets/images/logo/default-logo-main.png" alt="Logo" class="h-8 w-auto" />
           </Link>
 
           <!-- Desktop Navigation -->
@@ -118,7 +118,7 @@ onMounted(() => {
           <!-- Company Info -->
           <div>
             <Link href="/" class="flex items-center space-x-3 mb-4 cursor-pointer">
-              <img src="/assets/images/logo/asira-logo-main.png" alt="Asira Logo" class="h-8 w-auto" />
+              <img src="/assets/images/logo/default-logo-main.png" alt="Logo" class="h-8 w-auto" />
             </Link>
             <p class="text-sm text-slate-600 dark:text-slate-400">
               {{ $t('project_management_tagline') }}
@@ -158,7 +158,7 @@ onMounted(() => {
 
         <div class="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p class="text-sm text-slate-500 dark:text-slate-400">
-            © {{ new Date().getFullYear() }} Asira. {{ $t('all_rights_reserved') }}
+            © {{ new Date().getFullYear() }}  {{ $t('tasqo') }}. {{ $t('all_rights_reserved') }}
           </p>
           <div class="flex gap-6">
             <a href="#" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer" :aria-label="$t('follow_facebook')">

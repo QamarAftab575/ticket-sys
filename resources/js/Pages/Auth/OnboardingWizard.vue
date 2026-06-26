@@ -3,15 +3,15 @@
     <div class="w-full max-w-2xl">
       <!-- Header -->
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Welcome to Asira</h1>
-        <p class="text-gray-600 mt-2">Let's set up your workspace in just a few steps</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ $t('welcome') }} Tasqo</h1>
+        <p class="text-gray-600 mt-2">{{ $t('lets_set_up_workspace') }}</p>
       </div>
 
       <!-- Progress Indicator -->
       <StepProgressIndicator 
         :current-step="currentStep"
         :total-steps="2"
-        :step-labels="['Workspace Setup', 'Invite Members']"
+        :step-labels="[$t('workspace_setup'), $t('invite_members')]"
       />
 
       <!-- Content Card -->
@@ -19,7 +19,7 @@
         <!-- Step 1: Workspace Setup -->
         <div v-if="currentStep === 1" class="space-y-6">
           <div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Set Up Your Workspace</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $t('set_up_workspace') }}</h2>
           </div>
 
           <WorkspaceFormStep
@@ -27,12 +27,12 @@
             :is-name-duplicate="false"
             :errors="{}"
             :show-skip="true"
-            name-label="Workspace"
-            name-placeholder="Acme Studio"
-            type-label="What type of work do you do?"
-            description-label="Tell us about your workspace"
-            skip-button-label="Skip"
-            next-button-label="Next"
+            :name-label="$t('workspace')"
+            :name-placeholder="$t('acme_studio')"
+            :type-label="$t('what_type_of_work_do_you_do')"
+            :description-label="$t('tell_us_about_workspace')"
+            :skip-button-label="$t('skip')"
+            :next-button-label="$t('next')"
             @update:workspace="workspace = $event"
             @next="nextStep"
             @skip="skipToStep2"
@@ -42,14 +42,14 @@
         <!-- Step 2: Invite Members -->
         <div v-if="currentStep === 2" class="space-y-6">
           <div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Invite Workspace Members</h2>
-            <p class="text-gray-600">Type an email and press Enter or comma to add. All invited members join as <strong>Member</strong>.</p>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ $t('invite_workspace_members') }}</h2>
+            <p class="text-gray-600">{{ $t('invite_members_instructions') }}</p>
           </div>
 
           <form @submit.prevent="completeOnboarding" class="space-y-6">
             <!-- Email Tag Input -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Email Addresses</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('email_address_label') }}</label>
               <EmailTagInput ref="tagInputRef" v-model="emailTags" />
             </div>
 
@@ -60,21 +60,21 @@
                 @click="previousStep"
                 class="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition"
               >
-                Back
+                {{ $t('back') }}
               </button>
               <button
                 type="button"
                 @click="skipInvites"
                 class="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition"
               >
-                Skip
+                {{ $t('skip') }}
               </button>
               <button
                 type="submit"
                 :disabled="isLoading || invalidCount > 0"
                 class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {{ isLoading ? 'Completing...' : 'Complete Onboarding' }}
+                {{ isLoading ? $t('completing') : $t('complete_onboarding') }}
               </button>
             </div>
           </form>
@@ -128,10 +128,9 @@ const completeOnboarding = async () => {
       }
     })
   } catch (error) {
-    toast.error('An error occurred while completing onboarding', { autoClose: 5000, position: 'top-right' })
+    toast.error($t('error_occurred_onboarding'), { autoClose: 5000, position: 'top-right' })
   } finally {
     isLoading.value = false
   }
 }
 </script>
-

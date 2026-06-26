@@ -26,7 +26,7 @@ return [
      * API information.
      */
     'info' => [
-        'title' => 'Asira Project Management API',
+        'title' => 'Project Management API',
         'description' => 'Complete REST API for project management system with workspaces, projects, tasks, and more.',
         'version' => '1.0.0',
     ],

@@ -2,7 +2,7 @@
   <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
     <!-- Logo -->
     <div class="px-6 py-4 border-b border-gray-200">
-      <Link href="/" class="text-xl font-bold text-blue-600">Asira</Link>
+      <Link href="/" class="text-xl font-bold text-blue-600">{{ $t('tasqo') }}</Link>
     </div>
 
     <!-- Navigation -->

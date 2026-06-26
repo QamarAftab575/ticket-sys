@@ -58,7 +58,7 @@ const handleSubmit = () => {
                 <h3 class="text-xl font-bold text-slate-900">{{ $t('email_label') }}</h3>
               </div>
               <p class="text-slate-600 mb-2">{{ $t('send_email_anytime') }}</p>
-              <a href="mailto:support@asira.in" class="text-orange-600 font-semibold hover:text-orange-700 transition-colors">support@asira.in</a>
+              <a href="mailto:support@example.in" class="text-orange-600 font-semibold hover:text-orange-700 transition-colors">support@example.in</a>
             </div>
 
             <!-- Phone Card -->

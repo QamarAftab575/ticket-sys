@@ -4,7 +4,7 @@
       <!-- Logo -->
       <div class="mb-8">
         <Link href="/" class="inline-flex items-center gap-3 group cursor-pointer">
-          <img src="/assets/images/logo/asira-logo-main.png" alt="Asira" class="h-8 w-auto" />
+          <img src="/assets/images/logo/default-logo-main.png" alt="tasqo" class="h-8 w-auto" />
         </Link>
       </div>
 
@@ -12,8 +12,8 @@
       <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Set your password</h1>
-          <p class="text-slate-600 dark:text-slate-400">Welcome, <span class="font-medium text-slate-900 dark:text-white">{{ name }}</span>! Please set your password to continue.</p>
+          <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">{{ $t('set_password_title') }}</h1>
+          <p class="text-slate-600 dark:text-slate-400">{{ $t('welcome_set_password', { name: name }) }}</p>
         </div>
 
         <!-- Form -->
@@ -26,7 +26,7 @@
           <!-- Password Field -->
           <div class="space-y-2">
             <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Password
+              {{ $t('password') }}
             </label>
             <div class="relative">
               <input
@@ -63,14 +63,14 @@
             <!-- Password Strength -->
             <PasswordStrengthIndicator :password="form.password" />
             <p class="text-xs text-slate-500 dark:text-slate-400">
-              Must be at least 8 characters with uppercase, lowercase, and number
+              {{ $t('password_requirements') }}
             </p>
           </div>
 
           <!-- Confirm Password Field -->
           <div class="space-y-2">
             <label for="password_confirmation" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
-              Confirm password
+              {{ $t('confirm_password') }}
             </label>
             <div class="relative">
               <input
@@ -97,7 +97,7 @@
               </button>
             </div>
             <p v-if="form.password_confirmation && form.password !== form.password_confirmation" class="text-red-600 dark:text-red-400 text-sm">
-              Passwords do not match
+              {{ $t('passwords_do_not_match') }}
             </p>
           </div>
 
@@ -107,13 +107,13 @@
             :disabled="isLoading || form.password !== form.password_confirmation"
             class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <span v-if="!isLoading">Set password</span>
+            <span v-if="!isLoading">{{ $t('set_password') }}</span>
             <span v-else class="flex items-center gap-2">
               <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Setting password...
+              {{ $t('setting_password') }}
             </span>
           </button>
         </form>
@@ -121,7 +121,7 @@
         <!-- Logout Link -->
         <div class="mt-6 text-center">
           <Link href="/logout" method="post" as="button" class="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
-            Logout
+            {{ $t('logout') }}
           </Link>
         </div>
       </div>

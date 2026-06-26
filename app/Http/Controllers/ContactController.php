@@ -33,7 +33,7 @@ class ContactController extends Controller
                 "Subject: {$validated['subject']}\n\n" .
                 "Message:\n{$validated['message']}",
                 function ($message) use ($validated) {
-                    $message->to(config('mail.from.address', 'support@asira.in'))
+                    $message->to(config('mail.from.address'))
                         ->subject("Contact Form: {$validated['subject']}")
                         ->replyTo($validated['email']);
                 }
@@ -45,14 +45,15 @@ class ContactController extends Controller
 
         // Send confirmation email to user (silently fails if mail config not set)
         try {
+            $appName = config('app.name');
             Mail::raw(
-                "Thank you for reaching out to Asira!\n\n" .
+                "Thank you for reaching out to {$appName}!\n\n" .
                 "We received your message and will get back to you as soon as possible.\n\n" .
                 "Best regards,\n" .
-                "The Asira Team",
-                function ($message) use ($validated) {
+                "The {$appName} Team",
+                function ($message) use ($validated, $appName) {
                     $message->to($validated['email'])
-                        ->subject('We received your message - Asira');
+                        ->subject("We received your message - {$appName}");
                 }
             );
         } catch (\Exception $e) {

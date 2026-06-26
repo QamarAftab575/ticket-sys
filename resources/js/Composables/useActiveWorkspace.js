@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 
-const STORAGE_KEY = 'asira_active_workspace'
+const STORAGE_KEY = 'dashbord_project_active_workspace'
 
 /**
  * Single source of truth for active workspace management

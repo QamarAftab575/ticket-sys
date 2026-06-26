@@ -6,7 +6,7 @@
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center space-x-8">
             <Link href="/dashboard" class="text-xl font-bold text-blue-600">
-              {{ $t('asira') }}
+              {{ $t('tasqo') }}
             </Link>
             
             <!-- Navigation Links -->

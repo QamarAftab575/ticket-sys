@@ -1,7 +1,7 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "Asira",
+        "title": "API Documentation",
         "version": "1.0.0",
         "description": "Complete REST API for project management system with workspaces, projects, tasks, and more."
     },
