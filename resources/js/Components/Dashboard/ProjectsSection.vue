@@ -12,6 +12,7 @@
     <div v-if="sortedProjects.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <!-- Create Project Button -->
       <Link
+        v-if="canEdit"
         href="/projects/create"
         class="flex items-center gap-3 px-4 py-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-150 cursor-pointer group"
       >
@@ -196,6 +197,10 @@ const props = defineProps({
   projects: {
     type: Array,
     default: () => [],
+  },
+  canEdit: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -8,12 +8,15 @@ use App\Models\ProjectInvitation;
 use App\Models\ProjectMember;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ProjectInvitationService
 {
-    public function __construct(private ProjectMemberService $memberService)
-    {
+    public function __construct(
+        private ProjectMemberService $memberService,
+        private OrganizationService  $organizationService,
+    ) {
     }
 
     /**
@@ -109,6 +112,12 @@ class ProjectInvitationService
     /**
      * Accept a project invitation for an existing user.
      *
+     * Note: The main entry point for URL /invitation/accept uses InvitationService::process(), 
+     * but this method IS currently used by:
+     * - App\Http\Controllers\ProjectInvitationController::showAccept()
+     * - App\Http\Controllers\ProjectInvitationController::accept()
+     * - App\Http\Controllers\AuthController::savePassword() and login()
+     *
      * If the user is not yet a workspace member, they are added as a workspace member first.
      * The project role from the invitation is applied independently (overrides/supplements
      * any existing collaborator role).
@@ -124,6 +133,22 @@ class ProjectInvitationService
         $project = $invitation->project;
 
         return DB::transaction(function () use ($invitation, $project, $user) {
+            $organization = $project->organization;
+
+            // If user is not yet a workspace member, add them as workspace_guest
+            if (!$organization->hasMember($user)) {
+                try {
+                    $this->organizationService->addMember($organization, $user, 'workspace_guest');
+                } catch (\Exception $e) {
+                    Log::warning('Failed to add workspace_guest membership on project invite accept', [
+                        'user_id'         => $user->id,
+                        'organization_id' => $organization->id,
+                        'error'           => $e->getMessage(),
+                    ]);
+                }
+            }
+
+
             $projectMember = ProjectMember::where('project_id', $project->id)
                 ->where('user_id', $user->id)
                 ->first();
@@ -136,7 +161,7 @@ class ProjectInvitationService
                     'invited_by'  => $invitation->invited_by,
                 ]);
             } else {
-                // New project member — no workspace membership required
+                // New project member
                 $projectMember = ProjectMember::create([
                     'project_id'  => $project->id,
                     'user_id'     => $user->id,

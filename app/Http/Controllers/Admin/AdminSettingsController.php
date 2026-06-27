@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
 use App\Helpers\EnvHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use App\Services\MailTestService;
 
 class AdminSettingsController extends Controller
 {
@@ -22,6 +24,19 @@ class AdminSettingsController extends Controller
                 'workspace_for_trial_users' => EnvHelper::getEnvValue('WORKSPACE_FOR_TRIAL_USERS', '1'),
                 'project_per_workspace_for_trial_users' => EnvHelper::getEnvValue('PROJECT_PER_WORKSPACE_FOR_TRIAL_USERS', '5'),
                 'members_per_project_for_trial_users' => EnvHelper::getEnvValue('MEMBERS_PER_PROJECT_FOR_TRIAL_USERS', '20'),
+            ],
+            'mailSettings' => [
+                'mail_mailer' => EnvHelper::getEnvValue('MAIL_MAILER', 'smtp'),
+                'mail_host' => EnvHelper::getEnvValue('MAIL_HOST', '127.0.0.1'),
+                'mail_port' => EnvHelper::getEnvValue('MAIL_PORT', '2525'),
+                'mail_username' => EnvHelper::getEnvValue('MAIL_USERNAME', ''),
+                'mail_password' => EnvHelper::getEnvValue('MAIL_PASSWORD', ''),
+                'mail_encryption' => EnvHelper::getEnvValue('MAIL_ENCRYPTION', 'tls'),
+                'mail_from_address' => EnvHelper::getEnvValue('MAIL_FROM_ADDRESS', 'hello@example.com'),
+                'mail_from_name' => EnvHelper::getEnvValue('MAIL_FROM_NAME', 'Example'),
+            ],
+            'queueSettings' => [
+                'queue_connection' => EnvHelper::getEnvValue('QUEUE_CONNECTION', 'database'),
             ],
             'googleSettings' => BusinessSetting::get('google_oauth'),
             'googleStatus' => $this->getGoogleSettingsStatus(),
@@ -124,6 +139,92 @@ class AdminSettingsController extends Controller
             \Illuminate\Support\Facades\Cache::forget('google_oauth_credentials');
         }
 
+        // Validate and save Mail Settings if present
+        if ($request->has('mail_mailer')) {
+            $request->validate([
+                'mail_mailer' => 'required|string',
+                'mail_host' => 'required|string',
+                'mail_port' => 'required|numeric',
+                'mail_username' => 'nullable|string|required_if:mail_mailer,smtp',
+                'mail_password' => 'nullable|string',
+                'mail_encryption' => 'nullable|string|in:none,ssl,tls',
+                'mail_from_address' => 'required|email',
+                'mail_from_name' => 'required|string',
+            ], [
+                'mail_username.required_if' => 'Username cannot be empty when SMTP is selected.',
+            ]);
+
+            $envUpdates = [
+                'MAIL_MAILER' => $request->mail_mailer,
+                'MAIL_HOST' => $request->mail_host,
+                'MAIL_PORT' => $request->mail_port,
+                'MAIL_USERNAME' => $request->mail_username ?? '',
+                'MAIL_PASSWORD' => $request->mail_password ?? '',
+                'MAIL_ENCRYPTION' => $request->mail_encryption === 'none' ? 'null' : ($request->mail_encryption ?? 'null'),
+                'MAIL_FROM_ADDRESS' => $request->mail_from_address,
+                'MAIL_FROM_NAME' => $request->mail_from_name,
+            ];
+
+            EnvHelper::updateMultipleEnvKeys($envUpdates);
+
+            // Clear config cache to apply new settings
+            Artisan::call('optimize:clear');
+        }
+
+        // Validate and save Queue Settings if present
+        if ($request->has('queue_connection')) {
+            $request->validate([
+                'queue_connection' => 'required|string|in:database,sync',
+            ]);
+
+            EnvHelper::updateEnvFile('QUEUE_CONNECTION', $request->queue_connection);
+
+            // Clear config cache so the new connection takes effect immediately
+            Artisan::call('optimize:clear');
+        }
+
         return back()->with('success', 'Settings saved.');
+    }
+
+    /**
+     * Test the SMTP connection without sending an email.
+     */
+    public function testMailConnection(Request $request, MailTestService $mailTestService)
+    {
+        $request->validate([
+            'host' => 'required|string',
+            'port' => 'required|numeric',
+            'username' => 'nullable|string',
+            'password' => 'nullable|string',
+            'encryption' => 'nullable|string|in:none,ssl,tls',
+        ]);
+
+        $config = $request->only(['host', 'port', 'username', 'password', 'encryption']);
+        $result = $mailTestService->testConnection($config);
+
+        return response()->json($result, $result['success'] ? 200 : 400);
+    }
+
+    /**
+     * Send a test email using the provided configuration.
+     */
+    public function sendTestEmail(Request $request, MailTestService $mailTestService)
+    {
+        $request->validate([
+            'to' => 'required|email',
+            'message' => 'nullable|string',
+            'config' => 'required|array',
+            'config.host' => 'required|string',
+            'config.port' => 'required|numeric',
+            'config.encryption' => 'nullable|string|in:none,ssl,tls',
+        ]);
+
+        $config = $request->input('config');
+        $to = $request->input('to');
+        $message = $request->input('message');
+
+        $result = $mailTestService->sendTestEmail($config, $to, $message);
+
+        return response()->json($result, $result['success'] ? 200 : 400);
     }
 }

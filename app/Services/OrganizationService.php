@@ -32,18 +32,37 @@ class OrganizationService
 
     /**
      * Add a member to an organization and assign their Spatie workspace role.
+     *
+     * Uses withTrashed so that a soft-deleted membership row (which still holds
+     * the unique constraint slot) is restored instead of triggering a duplicate-key error.
      */
     public function addMember(Organization $organization, User $user, string $role = 'member'): OrganizationMembership
     {
-        // DB stores 'owner' or 'member' (without prefix)
+        // DB stores role without workspace_ prefix (e.g. 'guest', 'member', 'owner')
         $dbRole = str_starts_with($role, 'workspace_') ? substr($role, 10) : $role;
 
-        $membership = $organization->memberships()->updateOrCreate(
-            ['user_id' => $user->id],
-            ['role' => $dbRole, 'joined_at' => now()]
-        );
+        // Find any existing row including soft-deleted ones to avoid unique constraint violation
+        $existing = OrganizationMembership::withTrashed()
+            ->where('organization_id', $organization->id)
+            ->where('user_id', $user->id)
+            ->first();
 
-        // Spatie role uses workspace_ prefix, scoped to this workspace
+        if ($existing) {
+            // Restore if soft-deleted, then update role
+            if ($existing->trashed()) {
+                $existing->restore();
+            }
+            $existing->update(['role' => $dbRole, 'joined_at' => now()]);
+            $membership = $existing->fresh();
+        } else {
+            $membership = $organization->memberships()->create([
+                'user_id'   => $user->id,
+                'role'      => $dbRole,
+                'joined_at' => now(),
+            ]);
+        }
+
+        // Assign Spatie role scoped to this workspace
         $spatieRole = str_starts_with($role, 'workspace_') ? $role : "workspace_{$role}";
         setPermissionsTeamId($organization->id);
         $user->syncRoles([$spatieRole]);
@@ -66,7 +85,9 @@ class OrganizationService
     {
         setPermissionsTeamId($organization->id);
         $user->removeRole('workspace_owner');
+        $user->removeRole('workspace_admin');
         $user->removeRole('workspace_member');
+        $user->removeRole('workspace_guest');
 
         return $organization->removeMember($user);
     }

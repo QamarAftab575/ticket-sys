@@ -19,8 +19,6 @@ Broadcast::channel('user.{userId}', function ($user, $userId) {
 });
 
 // Private per-project channel — task events, comments
-Broadcast::channel('project.{projectId}', function ($user, $projectId) {
-    return $user->projects()
-        ->where('projects.id', $projectId)
-        ->exists();
-});
+// Broadcast::channel('project.{projectId}', function ($user, $projectId) {
+//     return true;
+// });

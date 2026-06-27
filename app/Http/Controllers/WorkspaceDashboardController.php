@@ -32,6 +32,7 @@ class WorkspaceDashboardController extends Controller
 
         // Get projects in this workspace
         $projects = $organization->projects()
+            ->visibleTo($user)
             ->with('members')
             ->limit(10)
             ->get();
@@ -67,6 +68,7 @@ class WorkspaceDashboardController extends Controller
             'setupProgress' => $setupProgress,
             'canEdit' => in_array($userRole, ['owner', 'admin']),
             'canInvite' => in_array($userRole, ['owner', 'admin']),
+            'isOwner' => $userRole === 'owner',
         ]);
     }
 

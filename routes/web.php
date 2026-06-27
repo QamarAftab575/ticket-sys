@@ -360,6 +360,8 @@ Route::prefix('admin')
         Route::get('/settings', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'index'])->name('settings');
         Route::post('/settings', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'update'])->name('settings.update');
         Route::post('/settings/google/test', [GoogleSettingsController::class, 'testCredentials'])->name('settings.google.test');
+        Route::post('/settings/mail/test-connection', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'testMailConnection'])->name('settings.mail.test-connection');
+        Route::post('/settings/mail/test-email', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'sendTestEmail'])->name('settings.mail.test-email');
 
         // Plans management
         Route::get('/settings/plans', [\App\Http\Controllers\Admin\AdminPlanController::class, 'index'])->name('plans.index');

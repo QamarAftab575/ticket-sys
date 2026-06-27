@@ -119,11 +119,14 @@ class CheckSubscriptionStatus
         
         // Try common parameter names
         if ($request->route('workspace')) {
-            $workspace = Organization::findOrFail($request->route('workspace'));
+            $param = $request->route('workspace');
+            $workspace = $param instanceof Organization ? $param : Organization::findOrFail($param);
         } elseif ($request->route('organization')) {
-            $workspace = Organization::findOrFail($request->route('organization'));
+            $param = $request->route('organization');
+            $workspace = $param instanceof Organization ? $param : Organization::findOrFail($param);
         } elseif ($request->route('org')) {
-            $workspace = Organization::findOrFail($request->route('org'));
+            $param = $request->route('org');
+            $workspace = $param instanceof Organization ? $param : Organization::findOrFail($param);
         } elseif ($request->route('project')) {
             // Also check project's workspace
             $project = $request->route('project');

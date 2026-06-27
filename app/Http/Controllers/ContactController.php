@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactAdminMail;
+use App\Mail\ContactConfirmationMail;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Contact;
 
 class ContactController extends Controller
 {
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|email|max:255',
             'subject' => 'required|string|max:255',
             'message' => 'required|string|min:10|max:5000',
         ]);
@@ -25,47 +27,34 @@ class ContactController extends Controller
             // Continue anyway, still return success to user
         }
 
-        // Send email to admin (silently fails if mail config not set)
+        // Queue admin notification email
         try {
-            Mail::raw(
-                "Name: {$validated['name']}\n" .
-                "Email: {$validated['email']}\n" .
-                "Subject: {$validated['subject']}\n\n" .
-                "Message:\n{$validated['message']}",
-                function ($message) use ($validated) {
-                    $message->to(config('mail.from.address'))
-                        ->subject("Contact Form: {$validated['subject']}")
-                        ->replyTo($validated['email']);
-                }
-            );
+            Mail::queue(new ContactAdminMail(
+                name: $validated['name'],
+                email: $validated['email'],
+                subject: $validated['subject'],
+                body: $validated['message'],
+            ));
         } catch (\Exception $e) {
-            \Log::warning('Contact form admin email failed: ' . $e->getMessage());
-            // Silently fail - don't throw error
+            \Log::warning('Contact form admin email queuing failed: ' . $e->getMessage());
         }
 
-        // Send confirmation email to user (silently fails if mail config not set)
+        // Queue confirmation email to the user
         try {
-            $appName = config('app.name');
-            Mail::raw(
-                "Thank you for reaching out to {$appName}!\n\n" .
-                "We received your message and will get back to you as soon as possible.\n\n" .
-                "Best regards,\n" .
-                "The {$appName} Team",
-                function ($message) use ($validated, $appName) {
-                    $message->to($validated['email'])
-                        ->subject("We received your message - {$appName}");
-                }
-            );
+            Mail::queue(new ContactConfirmationMail(
+                name: $validated['name'],
+                email: $validated['email'],
+                subject: $validated['subject'],
+            ));
         } catch (\Exception $e) {
-            \Log::warning('Contact form confirmation email failed: ' . $e->getMessage());
-            // Silently fail - don't throw error
+            \Log::warning('Contact form confirmation email queuing failed: ' . $e->getMessage());
         }
 
         // Always return success to user
         if ($request->wantsJson() || $request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Message sent successfully! We will get back to you soon.'
+                'message' => 'Message sent successfully! We will get back to you soon.',
             ], 200);
         }
 

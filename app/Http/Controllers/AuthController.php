@@ -566,18 +566,7 @@ class AuthController extends Controller
             }
         }
 
-        $workspace = $user->organizations()
-            ->where('organizations.is_active', true)
-            ->wherePivot('is_active', true)
-            ->first();
-
-        if ($workspace) {
-            return redirect()->route('workspace.dashboard', $workspace)
-                ->with('status', 'Password set successfully! Welcome to your workspace.');
-        }
-
-        // External project-only user — redirect to their projects list
-        return redirect()->route('projects.index')
+        return redirect()->route('dashboard')
             ->with('status', 'Password set successfully!');
     }
 }

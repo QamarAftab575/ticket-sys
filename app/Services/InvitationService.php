@@ -175,17 +175,26 @@ class InvitationService
 
     /**
      * Attach user to project.
-     * External users (not workspace members) are added as project-only members.
-     * They are NOT added to the workspace.
+     * External users (not workspace members) are added as workspace_guest
+     * in organization_memberships so they can access the workspace, then
+     * added to the project with the invited role.
      */
     private function attachToProject($invitation, User $user): void
     {
-        $project = $invitation->project;
+        $project      = $invitation->project;
+        $organization = $project->organization;
 
-        $existingMember = $project->members()->where('user_id', $user->id)->first();
+        // Ensure user is a workspace member (as guest) if not already
+        if (!$organization->hasMember($user)) {
+            $this->organizationService->addMember($organization, $user, 'workspace_guest');
+        }
+
+        $existingMember = \App\Models\ProjectMember::where('project_id', $project->id)
+            ->where('user_id', $user->id)
+            ->first();
 
         if ($existingMember) {
-            $existingMember->pivot->update([
+            $existingMember->update([
                 'role'        => $invitation->role,
                 'access_type' => 'direct_invite',
                 'invited_by'  => $invitation->invited_by,

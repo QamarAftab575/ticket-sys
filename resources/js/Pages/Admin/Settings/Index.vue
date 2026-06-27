@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <AdminLayout>
     <template #header>
       <h1 class="text-3xl font-bold text-gray-900">{{ $t('admin_settings') }}</h1>
@@ -50,6 +50,34 @@
             </svg>
             {{ $t('social_login_tab') }}
           </button>
+          <button
+            @click="activeTab = 'mail-settings'"
+            :class="[
+              'flex items-center gap-2 px-6 py-4 font-medium text-sm border-b-2 transition cursor-pointer',
+              activeTab === 'mail-settings'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-600 hover:text-gray-900'
+            ]"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Mail Settings
+          </button>
+          <button
+            @click="activeTab = 'queue-settings'"
+            :class="[
+              'flex items-center gap-2 px-6 py-4 font-medium text-sm border-b-2 transition cursor-pointer',
+              activeTab === 'queue-settings'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-600 hover:text-gray-900'
+            ]"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            Queue Settings
+          </button>
         </div>
       </div>
 
@@ -58,6 +86,8 @@
         <BillingSettings v-if="activeTab === 'billing'" :settings="settings" />
         <PlansSettings v-if="activeTab === 'plans'" :plans="plans" />
         <SocialLoginSettings v-if="activeTab === 'social-login'" :google-settings="googleSettings" :google-status="googleStatus" />
+        <MailSettings v-if="activeTab === 'mail-settings'" :mail-settings="mailSettings" />
+        <QueueSettings v-if="activeTab === 'queue-settings'" :queue-settings="queueSettings" />
       </div>
     </div>
   </AdminLayout>
@@ -69,12 +99,16 @@ import AdminLayout from '@/Layouts/AdminLayout.vue'
 import BillingSettings from './Billing.vue'
 import PlansSettings from './Plans.vue'
 import SocialLoginSettings from './SocialLogin.vue'
+import MailSettings from './Mail.vue'
+import QueueSettings from './QueueSettings.vue'
 
 defineProps({
   settings: Object,
   plans: Array,
   googleSettings: Object,
   googleStatus: Object,
+  mailSettings: Object,
+  queueSettings: Object,
 })
 
 const activeTab = ref('billing')

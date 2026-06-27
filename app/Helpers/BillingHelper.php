@@ -443,6 +443,10 @@ class BillingHelper
      */
     public static function isAccountSuspended(User $user): bool
     {
+        if ($user->isSuperAdmin()) {
+            return false;
+        }
+
         $status = self::getExpiryStatus($user);
         return $status['status'] === 'suspended';
     }

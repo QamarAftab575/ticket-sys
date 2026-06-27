@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="workspace" :user-role="userRole">
     <!-- Notification Toast -->
     <div
@@ -129,7 +129,7 @@
                   </div>
                 </div>
 
-                <ProjectsSection :projects="projects" />
+                <ProjectsSection :projects="projects" :can-edit="canEdit" />
               </div>
 
               <div class="space-y-6">
@@ -183,7 +183,7 @@
                   </div>
                 </div>
 
-                <PrivateNotesSection />
+                <PrivateNotesSection v-if="isOwner" />
               </div>
             </div>
           </div>
@@ -427,6 +427,7 @@ const props = defineProps({
   setupProgress: Object,
   canEdit: Boolean,
   canInvite: Boolean,
+  isOwner: Boolean,
 })
 
 const activeTab = ref('overview')
