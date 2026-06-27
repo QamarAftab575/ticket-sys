@@ -38,12 +38,15 @@ export function useRealtimeListeners() {
      * Call this inside onMounted of a project page.
      */
     function listenToProject(projectId: string, handlers: ProjectHandlers = {}) {
+        // reverb functionality disabled
+        /*
         joinProject(projectId, {
             onTaskCreated: handlers.onTaskCreated ?? (() => {}),
             onTaskUpdated: handlers.onTaskUpdated ?? (() => {}),
             onTaskMoved:   handlers.onTaskMoved   ?? (() => {}),
             onCommentCreated: handlers.onCommentCreated ?? (() => {}),
         });
+        */
     }
 
     /**
@@ -55,6 +58,8 @@ export function useRealtimeListeners() {
         const myTasksStore      = useMyTasksStore();
         const notificationStore = useNotificationStore();
 
+        // reverb functionality disabled
+        /*
         joinUser(userId, {
             // Tasks assigned to this user come through the user channel
             onTaskCreated({ task }) {
@@ -70,6 +75,7 @@ export function useRealtimeListeners() {
                 notificationStore.setUnreadCount(unread_count);
             },
         });
+        */
     }
 
     return { listenToProject, listenToUser };

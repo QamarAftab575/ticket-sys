@@ -112,7 +112,8 @@ class TaskService
 
             // Broadcast real-time event (silently fail if broadcasting unavailable)
             try {
-                broadcast(new TaskCreatedEvent($task->fresh()->load('project')))->toOthers();
+                // reverb functionality disabled
+                // broadcast(new TaskCreatedEvent($task->fresh()->load('project')))->toOthers();
             } catch (\Exception $e) {
                 // Silently fail - don't break the response
                 \Log::warning('Failed to broadcast task created event', [
@@ -230,7 +231,8 @@ class TaskService
 
             // Broadcast real-time event (silently fail if broadcasting unavailable)
             try {
-                broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+                // reverb functionality disabled
+                // broadcast(new TaskUpdatedEvent($fresh))->toOthers();
             } catch (\Exception $e) {
                 // Silently fail - don't break the response
                 \Log::warning('Failed to broadcast task update event', [
@@ -318,7 +320,8 @@ class TaskService
             
             // Broadcast real-time event (silently fail if broadcasting unavailable)
             try {
-                broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+                // reverb functionality disabled
+                // broadcast(new TaskUpdatedEvent($fresh))->toOthers();
             } catch (\Exception $e) {
                 // Silently fail - don't break the response
                 \Log::warning('Failed to broadcast task updated event', [
@@ -371,7 +374,8 @@ class TaskService
             
             // Broadcast real-time event (silently fail if broadcasting unavailable)
             try {
-                broadcast(new TaskUpdatedEvent($fresh))->toOthers();
+                // reverb functionality disabled
+                // broadcast(new TaskUpdatedEvent($fresh))->toOthers();
             } catch (\Exception $e) {
                 // Silently fail - don't break the response
                 \Log::warning('Failed to broadcast task updated event', [
@@ -803,7 +807,8 @@ class TaskService
             
             // Broadcast real-time event (silently fail if broadcasting unavailable)
             try {
-                broadcast(new TaskMovedEvent($fresh))->toOthers();
+                // reverb functionality disabled
+                // broadcast(new TaskMovedEvent($fresh))->toOthers();
             } catch (\Exception $e) {
                 // Silently fail - don't break the response
                 \Log::warning('Failed to broadcast task moved event', [
@@ -892,7 +897,8 @@ class TaskService
             
             // Broadcast real-time event (silently fail if broadcasting unavailable)
             try {
-                broadcast(new TaskMovedEvent($fresh))->toOthers();
+                // reverb functionality disabled
+                // broadcast(new TaskMovedEvent($fresh))->toOthers();
             } catch (\Exception $e) {
                 // Silently fail - don't break the response
                 \Log::warning('Failed to broadcast task moved event', [

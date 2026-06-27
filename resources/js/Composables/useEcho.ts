@@ -20,23 +20,12 @@ type EchoChannel = {
 const subscribedChannels: Map<string, EchoChannel> = new Map();
 
 function privateChannel(name: string): EchoChannel {
-    if (!window.Echo) {
-        console.warn('[useEcho] Echo is not initialised yet.');
-        return { listen: () => ({ listen: () => ({ listen: () => ({} as any), stopListening: () => ({} as any) }), stopListening: () => ({} as any) }), stopListening: () => ({} as any) };
-    }
-
-    if (!subscribedChannels.has(name)) {
-        subscribedChannels.set(name, window.Echo.private(name) as EchoChannel);
-    }
-
-    return subscribedChannels.get(name)!;
+    // reverb functionality disabled
+    return { listen: () => ({ listen: () => ({ listen: () => ({} as any), stopListening: () => ({} as any) }), stopListening: () => ({} as any) }), stopListening: () => ({} as any) };
 }
 
 function leaveChannel(name: string) {
-    if (window.Echo && subscribedChannels.has(name)) {
-        window.Echo.leave(name);
-        subscribedChannels.delete(name);
-    }
+    // reverb functionality disabled
 }
 
 /**

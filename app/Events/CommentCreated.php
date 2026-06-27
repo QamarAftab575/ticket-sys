@@ -9,7 +9,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CommentCreated implements ShouldBroadcastNow
+// reverb functionality disabled
+// class CommentCreated implements ShouldBroadcastNow
+class CommentCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

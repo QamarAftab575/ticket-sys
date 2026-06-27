@@ -229,7 +229,8 @@ class NotificationService
             $notification->organization_id
         );
 
-        broadcast(new NotificationCreatedEvent($notification, $unreadCount));
+        // reverb functionality disabled
+        // broadcast(new NotificationCreatedEvent($notification, $unreadCount));
     }
 
     /**

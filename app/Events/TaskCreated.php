@@ -9,7 +9,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TaskCreated implements ShouldBroadcastNow
+// reverb functionality disabled
+// class TaskCreated implements ShouldBroadcastNow
+class TaskCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="flex h-screen bg-white">
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden bg-white">
@@ -172,7 +172,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const myTasksStore = useMyTasksStore();
-const { listenToProject } = useRealtimeListeners();
+// reverb functionality disabled
+// const { listenToProject } = useRealtimeListeners();
 const currentPage = usePage();
 const currentUser = computed(() => currentPage.props.auth?.user || null);
 const currentView = ref<'list' | 'board' | 'calendar' | 'files'>('list');
@@ -258,12 +259,15 @@ onMounted(async () => {
     ),
   ];
 
+  // reverb functionality disabled
+  /*
   projectIds.forEach((projectId) => {
     listenToProject(projectId, {
       onTaskUpdated({ task }) { myTasksStore.patchTask(task); },
       onTaskMoved({ task })   { myTasksStore.patchTaskMove(task); },
     });
   });
+  */
 
   // Check for task in URL and open it
   const taskId = getQueryParam('task');

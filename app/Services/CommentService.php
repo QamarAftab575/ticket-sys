@@ -40,7 +40,8 @@ class CommentService
             $this->notificationService->notifyMentionsInComment($comment, $user);
 
             // Broadcast real-time event
-            broadcast(new CommentCreatedEvent($comment->load('task')))->toOthers();
+            // reverb functionality disabled
+            // broadcast(new CommentCreatedEvent($comment->load('task')))->toOthers();
 
             return $comment;
         });

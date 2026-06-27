@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="flex h-screen bg-white">
     <!-- Mobile overlay -->
     <div
@@ -105,7 +105,8 @@ const handleInviteSent = () => {
 
 // Subscribe to the authenticated user's private channel for notifications
 // and personal task updates. Runs once; channel is cleaned up on unmount.
-const { listenToUser } = useRealtimeListeners()
+// reverb functionality disabled
+// const { listenToUser } = useRealtimeListeners()
 
 // Fetch subscription status on mount
 const fetchSubscriptionStatus = async () => {
@@ -122,7 +123,8 @@ const fetchSubscriptionStatus = async () => {
 onMounted(() => {
   const userId = page.props.auth?.user?.id
   if (userId) {
-    listenToUser(userId)
+    // reverb functionality disabled
+    // listenToUser(userId)
     fetchSubscriptionStatus()
   }
 })

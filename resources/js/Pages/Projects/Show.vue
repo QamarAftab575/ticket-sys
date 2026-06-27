@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <AppLayout :user-workspaces="userWorkspaces" :current-workspace="currentWorkspace">
     <ToastContainer />
 
@@ -897,8 +897,8 @@ const handleCalendarUpdateDueDate = async (data) => {
 }
 
 // Real-time: subscribe to this project's channel.
-// useRealtimeListeners handles cleanup on unmount via useEcho.
-const { listenToProject } = useRealtimeListeners()
+// reverb functionality disabled
+// const { listenToProject } = useRealtimeListeners()
 
 onMounted(async () => {
   // Load view data first
@@ -906,6 +906,8 @@ onMounted(async () => {
 
   // Subscribe to real-time events for this project.
   // Events patch the local `tasks` array directly   no page refresh.
+  // reverb functionality disabled
+  /*
   listenToProject(props.project.id, {
     onTaskCreated({ task: incoming }) {
       const exists = tasks.value.some(t => t.id === incoming.id)
@@ -928,6 +930,7 @@ onMounted(async () => {
       }
     },
   })
+  */
 
   // Then check for task in URL
   const taskId = getQueryParam('task')
