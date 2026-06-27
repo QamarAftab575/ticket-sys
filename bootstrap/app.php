@@ -53,4 +53,21 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json(['message' => $e->getMessage()], 422);
             }
         });
+
+        // Render custom Inertia error pages for web requests
+        $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return null; // Let default JSON handling take over
+            }
+
+            $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+
+            $renderableStatuses = [401, 403, 404, 419, 500, 503];
+
+            if (in_array($status, $renderableStatuses)) {
+                return \Inertia\Inertia::render('Error', ['status' => $status])
+                    ->toResponse($request)
+                    ->setStatusCode($status);
+            }
+        });
     })->create();
