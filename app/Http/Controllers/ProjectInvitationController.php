@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\BillingHelper;
 use App\Models\Project;
 use App\Models\ProjectInvitation;
 use App\Services\ProjectInvitationService;
@@ -28,6 +29,14 @@ class ProjectInvitationController extends Controller
             'email' => 'required|email',
             'role'  => 'required|in:project_admin,editor,commenter,viewer',
         ]);
+
+        // Check if user can add a member (workspace quota check)
+        if (!BillingHelper::canAddMember($project->organization)) {
+            return response()->json([
+                'message' => 'Your member quota has been reached. Please upgrade your plan to add more members.',
+                'error' => 'MEMBER_QUOTA_EXCEEDED',
+            ], 403);
+        }
 
         try {
             $result = $this->invitationService->createInvitation(

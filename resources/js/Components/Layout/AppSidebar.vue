@@ -280,7 +280,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import SidebarNavItem from '@/Components/Layout/SidebarNavItem.vue'
 import WorkspaceSwitcher from '@/Components/Layout/WorkspaceSwitcher.vue'
@@ -307,7 +307,10 @@ const collapsed        = ref(false)
 const projectsExpanded = ref(true)
 const unreadCount      = ref(0)
 
-const { userWorkspaces, currentWorkspaceId } = useSidebarData()
+const { userWorkspaces, currentWorkspaceId, currentWorkspace, isLoading } = useSidebarData()
+
+// Debug current workspace
+console.log('AppSidebar initialized - URL:', page.url)
 
 onMounted(() => {
   collapsed.value        = localStorage.getItem(STORAGE_KEY)  === 'true'
@@ -316,7 +319,15 @@ onMounted(() => {
   fetchUnreadCount()
   
   setInterval(fetchUnreadCount, 30000)
+  
+  // Debug logging
+  console.log('AppSidebar mounted')
 })
+
+// Watch for workspace changes
+watch([currentWorkspaceId, userWorkspaces], ([wsId, workspaces]) => {
+  console.log('Workspace changed - ID:', wsId, 'workspaces:', workspaces?.length || 0)
+}, { immediate: true, deep: true })
 
 async function fetchUnreadCount() {
   try {
@@ -369,7 +380,32 @@ const mainNav = computed(() => {
     },
   ]
 
-  if (props.userRole === 'admin' || props.userRole === 'owner') {
+  // Check if user is owner or admin
+  // Priority: 1. In current active workspace (if on workspace page)
+  // Priority: 2. In any workspace (for non-workspace pages)
+  let showReports = false
+  
+  const workspace = currentWorkspace.value
+  const workspaces = userWorkspaces.value
+  
+  console.log('mainNav computed - workspaces:', workspaces?.length || 0, 'currentWorkspace:', workspace?.name || 'null')
+  
+  // If we're on a workspace page, only show if admin/owner in that workspace
+  if (page.url.includes('/workspace/') && workspace) {
+    showReports = workspace.is_owner || workspace.is_admin
+    console.log('On workspace page - showReports:', showReports, 'is_owner:', workspace.is_owner, 'is_admin:', workspace.is_admin)
+  } 
+  // Otherwise, show if admin/owner in any workspace
+  else if (workspaces && workspaces.length > 0) {
+    showReports = workspaces.some(ws => ws.is_owner || ws.is_admin)
+    console.log('Not on workspace page - showReports:', showReports)
+    if (showReports) {
+      console.log('User has admin/owner role in:', workspaces.filter(ws => ws.is_owner || ws.is_admin).map(ws => ws.name))
+    }
+  }
+
+  if (showReports) {
+    console.log('Adding reports to nav')
     nav.push({
       route: 'reports', href: '/reports', label: page.props.translations?.reports || 'Reports',
       icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',

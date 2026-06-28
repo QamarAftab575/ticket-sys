@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helpers\BillingHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\User;
@@ -34,7 +35,7 @@ class WorkspaceApiController extends Controller
         $user = Auth::user();
         $workspaces = $this->organizationService->getOrganizationsForUser($user);
 
-        $data = $workspaces->map(function ($workspace) {
+        $data = $workspaces->map(function ($workspace) use ($user) {
             return [
                 'id' => $workspace->id,
                 'name' => $workspace->name,
@@ -42,6 +43,9 @@ class WorkspaceApiController extends Controller
                 'types' => $workspace->types,
                 'avatar_color' => $workspace->avatar_color,
                 'is_active' => $workspace->is_active,
+                'role' => $user->getWorkspaceRole($workspace->id),
+                'is_owner' => $user->isWorkspaceOwner($workspace->id),
+                'is_admin' => $user->isWorkspaceAdmin($workspace->id),
                 'created_at' => $workspace->created_at->toIso8601String(),
                 'updated_at' => $workspace->updated_at->toIso8601String(),
             ];
@@ -107,6 +111,14 @@ class WorkspaceApiController extends Controller
             'email' => ['required', 'email'],
             'role' => ['required', 'in:owner,member'],
         ]);
+
+        // Check if user can add a member (quota check)
+        if (!BillingHelper::canAddMember($organization)) {
+            return response()->json([
+                'message' => 'Your member quota has been reached. Please upgrade your plan to add more members.',
+                'error' => 'MEMBER_QUOTA_EXCEEDED',
+            ], 403);
+        }
 
         try {
             $invitation = $this->invitationService->createInvitation(

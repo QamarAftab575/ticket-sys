@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helpers\BillingHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Organization;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\ActivityLogService;
@@ -101,6 +103,16 @@ class ProjectApiController extends Controller
             'member_ids' => ['sometimes', 'array'],
             'member_ids.*' => ['uuid', 'exists:users,id'],
         ]);
+
+        $organization = Organization::find($validated['organization_id']);
+
+        // Check if user has quota to create a project
+        if (!\BillingHelper::canCreateProject($organization)) {
+            return response()->json([
+                'message' => 'Your project quota has been reached. Please upgrade your plan to create more projects.',
+                'error' => 'QUOTA_EXCEEDED',
+            ], 403);
+        }
 
         $user = Auth::user();
         $project = $this->projectService->createProject($validated, $user);
@@ -211,6 +223,14 @@ class ProjectApiController extends Controller
             'copy_tasks' => ['sometimes', 'boolean'],
             'copy_members' => ['sometimes', 'boolean'],
         ]);
+
+        // Check if user has quota to create a project
+        if (!\BillingHelper::canCreateProject($project->organization)) {
+            return response()->json([
+                'message' => 'Your project quota has been reached. Please upgrade your plan to create more projects.',
+                'error' => 'QUOTA_EXCEEDED',
+            ], 403);
+        }
 
         $newProject = $this->projectService->duplicateProject(
             $project,

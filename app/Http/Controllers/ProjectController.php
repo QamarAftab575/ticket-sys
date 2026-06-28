@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\BillingHelper;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
@@ -56,6 +57,19 @@ class ProjectController extends Controller
         Gate::authorize('create', Project::class);
 
         $user = auth()->user();
+        $organization = BillingHelper::getActiveWorkspace($user);
+
+        if (!$organization) {
+            return redirect()->back()
+                ->with('error', 'You must belong to an organization to create a project.');
+        }
+
+        // Check if user has quota to create a project
+        if (!BillingHelper::canCreateProject($organization)) {
+            return redirect()->route('projects.index')
+                ->with('error', 'Your project quota has been reached. Please upgrade your plan to create more projects.');
+        }
+
         $data = array_merge($request->validated(), [
             'manager_id' => $user->id,
             'status'     => 'on_track',
@@ -125,13 +139,16 @@ class ProjectController extends Controller
         Gate::authorize('create', Project::class);
 
         $user = auth()->user();
-        $organization = $user->organizations()
-            ->where('organizations.is_active', true)
-            ->whereNull('organization_memberships.deleted_at')
-            ->first();
+        $organization = BillingHelper::getActiveWorkspace($user);
 
         if (!$organization) {
             abort(403, 'You must belong to an organization to create a project.');
+        }
+
+        // Check if user has quota to create a project
+        if (!BillingHelper::canCreateProject($organization)) {
+            return redirect()->route('projects.index')
+                ->with('error', 'Your project quota has been reached. Please upgrade your plan to create more projects.');
         }
 
         $teamMembers = $organization->members()

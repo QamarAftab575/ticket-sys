@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\BillingHelper;
 use App\Http\Requests\InviteMemberRequest;
 use App\Models\Organization;
 use App\Models\OrganizationInvitation;
@@ -105,6 +106,14 @@ class OrganizationInvitationController extends Controller
 
             if (!$organization->isAdmin(auth()->user())) {
                 return response()->json(['message' => 'You do not have permission to invite members.'], 403);
+            }
+
+            // Check if user can add a member (quota check)
+            if (!BillingHelper::canAddMember($organization)) {
+                return response()->json([
+                    'message' => 'Your member quota has been reached. Please upgrade your plan to add more members.',
+                    'error' => 'MEMBER_QUOTA_EXCEEDED',
+                ], 403);
             }
 
             $invitation = $this->invitationService->createInvitation(

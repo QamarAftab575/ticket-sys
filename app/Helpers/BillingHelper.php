@@ -26,6 +26,88 @@ class BillingHelper
     }
 
     /**
+     * Get the current active workspace for the authenticated user.
+     * Returns the workspace stored in user's active_workspace_id field.
+     * If no active workspace is set, returns the first available workspace.
+     * Returns null if user has no workspaces.
+     * 
+     * @param User|null $user - User instance (defaults to authenticated user)
+     * @return Organization|null
+     */
+    public static function getActiveWorkspace(?User $user = null): ?Organization
+    {
+        $user = $user ?? auth()->user();
+
+        if (!$user) {
+            return null;
+        }
+
+        // First, try to get the workspace set as active_workspace_id
+        if ($user->active_workspace_id) {
+            $workspace = Organization::find($user->active_workspace_id);
+            
+            // Verify user still has access to this workspace
+            if ($workspace && $user->organizationMemberships()
+                ->where('organization_id', $workspace->id)
+                ->whereNull('deleted_at')
+                ->exists()) {
+                return $workspace;
+            }
+        }
+
+        // If no active workspace or access revoked, get first available workspace
+        return $user->organizations()
+            ->where('organizations.is_active', true)
+            ->whereNull('organization_memberships.deleted_at')
+            ->first();
+    }
+
+    /**
+     * Check if user is a member of a workspace.
+     * 
+     * @param Organization $workspace
+     * @param User|null $user - User instance (defaults to authenticated user)
+     * @return bool
+     */
+    public static function isWorkspaceMember(Organization $workspace, ?User $user = null): bool
+    {
+        $user = $user ?? auth()->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        return $user->organizationMemberships()
+            ->where('organization_id', $workspace->id)
+            ->whereNull('deleted_at')
+            ->exists();
+    }
+
+    /**
+     * Check if user is a trial member of a workspace (owner's trial affects all members).
+     * 
+     * @param Organization $workspace
+     * @return bool
+     */
+    public static function isWorkspaceOnTrial(Organization $workspace): bool
+    {
+        $owner = $workspace->creator;
+        return $owner && self::isOnTrial($owner);
+    }
+
+    /**
+     * Check if user is a paid member of a workspace (owner has active paid plan).
+     * 
+     * @param Organization $workspace
+     * @return bool
+     */
+    public static function isWorkspacePaid(Organization $workspace): bool
+    {
+        $owner = $workspace->creator;
+        return $owner && self::hasActivePlan($owner);
+    }
+
+    /**
      * Check if user's trial is still active.
      * Trial is only active if:
      * 1. trial_ends_at is set and in the future

@@ -67,18 +67,21 @@ Route::middleware(['auth', 'password.set'])->group(function () {
         Route::get('/dashboard', function () {
             $user = auth()->user();
             
-            // Get user's workspaces
+            // Get user's workspaces with their roles
             $workspaces = $user->organizations()
                 ->where('organizations.is_active', true)
                 ->whereNull('organization_memberships.deleted_at')
                 ->get()
-                ->map(function ($workspace) {
+                ->map(function ($workspace) use ($user) {
                     return [
                         'id' => $workspace->id,
                         'name' => $workspace->name,
                         'description' => $workspace->description,
                         'avatar_color' => $workspace->avatar_color,
                         'members_count' => $workspace->members()->count(),
+                        'role' => $user->getWorkspaceRole($workspace->id),
+                        'is_owner' => $user->isWorkspaceOwner($workspace->id),
+                        'is_admin' => $user->isWorkspaceAdmin($workspace->id),
                     ];
                 });
             
@@ -255,6 +258,28 @@ Route::middleware(['auth', 'password.set'])->group(function () {
 
 // Authenticated routes (organization, projects, etc.)
 Route::middleware(['auth', 'password.set'])->group(function () {
+    // API route for sidebar to fetch workspaces
+    Route::get('/api/get-user-workspaces', function () {
+        $user = auth()->user();
+        $workspaces = $user->organizations()
+            ->where('organizations.is_active', true)
+            ->whereNull('organization_memberships.deleted_at')
+            ->get()
+            ->map(function ($workspace) use ($user) {
+                return [
+                    'id' => $workspace->id,
+                    'name' => $workspace->name,
+                    'description' => $workspace->description,
+                    'avatar_color' => $workspace->avatar_color,
+                    'role' => $user->getWorkspaceRole($workspace->id),
+                    'is_owner' => $user->isWorkspaceOwner($workspace->id),
+                    'is_admin' => $user->isWorkspaceAdmin($workspace->id),
+                ];
+            });
+        
+        return response()->json(['data' => $workspaces]);
+    })->name('api.user-workspaces');
+
     // Organization routes
     Route::resource('organizations', OrganizationController::class);
     Route::resource('organizations.members', OrganizationMemberController::class, [
