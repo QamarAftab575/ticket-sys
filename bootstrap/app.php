@@ -54,8 +54,13 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // Render custom Inertia error pages for web requests
+        // Render custom Inertia error pages for web requests (only when debug mode is off)
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
+            // Skip custom error pages when debug mode is enabled (show detailed errors)
+            if (config('app.debug')) {
+                return null; // Let Laravel's default error handler show detailed errors
+            }
+
             if ($request->expectsJson() || $request->is('api/*')) {
                 return null; // Let default JSON handling take over
             }
