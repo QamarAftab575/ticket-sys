@@ -363,8 +363,21 @@ class InstallController extends Controller
                 return redirect()->route('installer.done');
             }
 
-            // Run migrations
-            Artisan::call('migrate', ['--force' => true]);
+            // Check for partial migration state and clean if needed
+            $this->handlePartialMigrations();
+
+            // Run migrations with proper error handling
+            try {
+                Artisan::call('migrate', ['--force' => true]);
+            } catch (\Exception $e) {
+                // If migration fails, check if it's a partial migration issue
+                if (str_contains($e->getMessage(), 'already exists') || str_contains($e->getMessage(), 'Failed to open the referenced table')) {
+                    // Rollback and retry
+                    $this->rollbackAndRetryMigrations();
+                } else {
+                    throw $e;
+                }
+            }
 
             // Seed the database
             Artisan::call('db:seed', ['--force' => true]);
@@ -396,7 +409,65 @@ class InstallController extends Controller
 
             return redirect()->route('installer.done');
         } catch (\Exception $e) {
-            return view('installer::error', ['error' => $e->getMessage()]);
+            \Log::error('Installation failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return view('installer::error', [
+                'error' => $e->getMessage(),
+                'suggestion' => 'The database may contain partial data from a previous installation attempt. Please drop all tables and try again.'
+            ]);
+        }
+    }
+
+    /**
+     * Handle partial migrations from failed installation attempts.
+     */
+    private function handlePartialMigrations(): void
+    {
+        try {
+            // Check if migrations table exists
+            if (DB::table('information_schema.tables')
+                ->where('table_schema', config('database.connections.mysql.database'))
+                ->where('table_name', 'migrations')
+                ->exists()) {
+                
+                // Check for partial migration state
+                $migrationCount = DB::table('migrations')->count();
+                
+                // If migrations table exists but has few entries, it's likely a partial migration
+                if ($migrationCount > 0 && $migrationCount < 10) {
+                    \Log::warning('Partial migration detected, rolling back...');
+                    Artisan::call('migrate:reset', ['--force' => true]);
+                }
+            }
+        } catch (\Exception $e) {
+            // If there's any error checking, just continue
+            \Log::debug('Could not check for partial migrations: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Rollback failed migrations and retry.
+     */
+    private function rollbackAndRetryMigrations(): void
+    {
+        try {
+            \Log::info('Migration failed, attempting rollback and retry...');
+            
+            // Reset all migrations
+            Artisan::call('migrate:reset', ['--force' => true]);
+            
+            // Wait a moment for database to stabilize
+            usleep(500000); // 500ms
+            
+            // Retry migrations
+            Artisan::call('migrate', ['--force' => true]);
+            
+            \Log::info('Migration retry successful');
+        } catch (\Exception $e) {
+            \Log::error('Migration retry failed: ' . $e->getMessage());
+            throw new \Exception('Migration failed even after rollback. Please manually drop all tables and try again. Error: ' . $e->getMessage());
         }
     }
 

@@ -44,6 +44,9 @@
     <div>
         <strong>Troubleshooting Tips</strong>
         <ul style="margin-top: 8px;">
+            @if(isset($suggestion))
+                <li style="color: var(--error); font-weight: 600;">{{ $suggestion }}</li>
+            @endif
             <li>Check your database credentials are correct</li>
             <li>Ensure the database exists and is accessible</li>
             <li>Verify your server meets all requirements</li>
@@ -74,5 +77,13 @@
         </svg>
         <strong>Need help?</strong> Contact your hosting provider or check the documentation for assistance.
     </p>
+    @if(str_contains($error ?? '', 'already exists') || str_contains($error ?? '', 'Failed to open'))
+        <div style="margin-top: 16px; padding: 12px; background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px;">
+            <p style="font-size: 13px; color: #92400E; margin: 0;">
+                <strong>Quick Fix:</strong> Run this command to reset the installation: 
+                <code style="background: #FDE68A; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace;">php artisan install:reset</code>
+            </p>
+        </div>
+    @endif
 </div>
 @endsection

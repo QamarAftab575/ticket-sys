@@ -231,4 +231,29 @@ class InstallationService
 
         return true;
     }
+
+    /**
+     * Drop all tables in the database (for clean retry after failed installation).
+     */
+    public function dropAllTables(): bool
+    {
+        try {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            
+            $tables = DB::select('SHOW TABLES');
+            $databaseName = config('database.connections.mysql.database');
+            
+            foreach ($tables as $table) {
+                $tableName = $table->{"Tables_in_{$databaseName}"};
+                DB::statement("DROP TABLE IF EXISTS `{$tableName}`");
+            }
+            
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            
+            return true;
+        } catch (\Exception $e) {
+            \Log::error('Failed to drop all tables: ' . $e->getMessage());
+            return false;
+        }
+    }
 }
