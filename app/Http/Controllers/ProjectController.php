@@ -66,8 +66,12 @@ class ProjectController extends Controller
 
         // Check if user has quota to create a project
         if (!BillingHelper::canCreateProject($organization)) {
+            $errorMessage = BillingHelper::isTemplateMode() 
+                ? 'This application is in demo mode. Creating projects is restricted.'
+                : 'Your project quota has been reached. Please upgrade your plan to create more projects.';
+            
             return redirect()->route('projects.index')
-                ->with('error', 'Your project quota has been reached. Please upgrade your plan to create more projects.');
+                ->with('error', $errorMessage);
         }
 
         $data = array_merge($request->validated(), [
@@ -139,8 +143,12 @@ class ProjectController extends Controller
 
         // Check if user has quota to create a project
         if (!BillingHelper::canCreateProject($organization)) {
+            $errorMessage = BillingHelper::isTemplateMode() 
+                ? 'This application is in demo mode. Creating projects is restricted.'
+                : 'Your project quota has been reached. Please upgrade your plan to create more projects.';
+            
             return redirect()->route('projects.index')
-                ->with('error', 'Your project quota has been reached. Please upgrade your plan to create more projects.');
+                ->with('error', $errorMessage);
         }
 
         $teamMembers = $organization->members()

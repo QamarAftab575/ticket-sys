@@ -44,6 +44,17 @@ class OrganizationController extends Controller
     public function store(StoreOrganizationRequest $request)
     {
         $user = auth()->user();
+        
+        // Check if user can create workspace (including template mode check)
+        if (!BillingHelper::canCreateWorkspace($user)) {
+            $errorMessage = BillingHelper::isTemplateMode()
+                ? 'This application is in demo mode. Creating workspaces is restricted.'
+                : 'Your workspace quota has been reached. Please upgrade your plan to create more workspaces.';
+            
+            return redirect()->back()
+                ->with('error', $errorMessage);
+        }
+        
         $validated = $request->validated();
 
         $organization = $this->organizationService->createOrganization($validated, $user);

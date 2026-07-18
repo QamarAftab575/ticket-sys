@@ -116,4 +116,14 @@ class EnvHelper
     {
         return env($key, $default);
     }
+
+    /**
+     * Check if application is in template mode
+     *
+     * @return bool
+     */
+    public static function isTemplateMode(): bool
+    {
+        return filter_var(env('APP_TEMPLATE_MODE', false), FILTER_VALIDATE_BOOLEAN);
+    }
 }

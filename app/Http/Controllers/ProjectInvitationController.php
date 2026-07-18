@@ -32,9 +32,13 @@ class ProjectInvitationController extends Controller
 
         // Check if user can add a member (workspace quota check)
         if (!BillingHelper::canAddMember($project->organization)) {
+            $errorMessage = BillingHelper::isTemplateMode()
+                ? 'This application is in demo mode. Inviting members is restricted.'
+                : 'Your member quota has been reached. Please upgrade your plan to add more members.';
+            
             return response()->json([
-                'message' => 'Your member quota has been reached. Please upgrade your plan to add more members.',
-                'error' => 'MEMBER_QUOTA_EXCEEDED',
+                'message' => $errorMessage,
+                'error' => BillingHelper::isTemplateMode() ? 'TEMPLATE_MODE_RESTRICTION' : 'MEMBER_QUOTA_EXCEEDED',
             ], 403);
         }
 

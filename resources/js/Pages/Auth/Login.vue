@@ -147,6 +147,25 @@
           </div>
         </form>
 
+        <!-- Template Mode - Demo Credentials -->
+        <div v-if="templateMode" class="mt-6 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div class="flex-1">
+              <h4 class="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-2">Demo Mode - Test Credentials</h4>
+              <div class="space-y-1 text-sm text-blue-700 dark:text-blue-400">
+                <p><span class="font-medium">Email:</span> admin@example.com</p>
+                <p><span class="font-medium">Password:</span> 12345678</p>
+              </div>
+              <p class="text-xs text-blue-600 dark:text-blue-500 mt-2">
+                This site is in template mode. Use the credentials above to explore the application.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <!-- Sign Up Link -->
         <div class="mt-8 text-center">
           <p class="text-sm text-slate-600 dark:text-slate-400">
@@ -270,6 +289,7 @@ const isLoading = ref(false)
 const showPassword = ref(false)
 const googleLoginEnabled = ref(page.props.googleLoginEnabled || false)
 const googleLoginError = ref(null)
+const templateMode = ref(page.props.templateMode || false)
 
 const handleLogin = async () => {
   isLoading.value = true

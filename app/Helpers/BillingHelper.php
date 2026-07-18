@@ -266,10 +266,26 @@ class BillingHelper
     }
 
     /**
+     * Check if application is in template mode.
+     * In template mode, certain actions are restricted to prevent data modification.
+     * 
+     * @return bool
+     */
+    public static function isTemplateMode(): bool
+    {
+        return \App\Helpers\EnvHelper::isTemplateMode();
+    }
+
+    /**
      * Check if user can create a new workspace.
      */
     public static function canCreateWorkspace(User $user): bool
     {
+        // Template mode restriction - prevent workspace creation
+        if (self::isTemplateMode()) {
+            return false;
+        }
+
         // Super admin can always create workspace
         if ($user->is_super_admin) {
             return true;
@@ -302,6 +318,11 @@ class BillingHelper
      */
     public static function canAddMember(Organization $workspace): bool
     {
+        // Template mode restriction - prevent adding members
+        if (self::isTemplateMode()) {
+            return false;
+        }
+
         $owner = $workspace->creator;
         if (!$owner) {
             return false;
@@ -339,6 +360,11 @@ class BillingHelper
      */
     public static function canCreateProject(Organization $workspace): bool
     {
+        // Template mode restriction - prevent project creation
+        if (self::isTemplateMode()) {
+            return false;
+        }
+
         $owner = $workspace->creator;
         if (!$owner) {
             return false;

@@ -88,6 +88,13 @@
           <Link href="/settings" class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 cursor-pointer">
             {{ $t('settings') }}
           </Link>
+          <Link 
+            v-if="isSuperAdmin" 
+            href="/admin/dashboard" 
+            class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 border-t border-gray-200 cursor-pointer"
+          >
+            {{ $t('admin_dashboard') }}
+          </Link>
           <Link href="/logout" method="post" class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 border-t border-gray-200 cursor-pointer">
             {{ $t('logout') }}
           </Link>
@@ -117,6 +124,7 @@ function openMobileSearch() {
 const page = usePage()
 const userName = computed(() => page.props.auth?.user?.name || '')
 const userAvatar = computed(() => page.props.auth?.user?.avatar || null)
+const isSuperAdmin = computed(() => page.props.auth?.user?.is_super_admin || false)
 
 // Toggle sidebar and emit event
 const toggleSidebar = () => {

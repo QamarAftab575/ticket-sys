@@ -62,6 +62,13 @@
                 >
                   {{ $t('settings') }}
                 </Link>
+                <Link
+                  v-if="isSuperAdmin"
+                  href="/admin/dashboard"
+                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100 border-t border-gray-200"
+                >
+                  {{ $t('admin_dashboard') }}
+                </Link>
                 <button
                   @click="logout"
                   class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 last:rounded-b-lg"
@@ -111,6 +118,7 @@ const page = usePage()
 
 const userName = computed(() => page.props.auth?.user?.name || 'User')
 const userAvatar = computed(() => page.props.auth?.user?.avatar || null)
+const isSuperAdmin = computed(() => page.props.auth?.user?.is_super_admin || false)
 
 const logout = () => {
   router.post('/logout')

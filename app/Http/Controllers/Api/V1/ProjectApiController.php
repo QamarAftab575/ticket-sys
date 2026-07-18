@@ -108,9 +108,13 @@ class ProjectApiController extends Controller
 
         // Check if user has quota to create a project
         if (!\BillingHelper::canCreateProject($organization)) {
+            $errorMessage = \BillingHelper::isTemplateMode()
+                ? 'This application is in demo mode. Creating projects is restricted.'
+                : 'Your project quota has been reached. Please upgrade your plan to create more projects.';
+            
             return response()->json([
-                'message' => 'Your project quota has been reached. Please upgrade your plan to create more projects.',
-                'error' => 'QUOTA_EXCEEDED',
+                'message' => $errorMessage,
+                'error' => \BillingHelper::isTemplateMode() ? 'TEMPLATE_MODE_RESTRICTION' : 'QUOTA_EXCEEDED',
             ], 403);
         }
 
@@ -226,9 +230,13 @@ class ProjectApiController extends Controller
 
         // Check if user has quota to create a project
         if (!\BillingHelper::canCreateProject($project->organization)) {
+            $errorMessage = \BillingHelper::isTemplateMode()
+                ? 'This application is in demo mode. Duplicating projects is restricted.'
+                : 'Your project quota has been reached. Please upgrade your plan to create more projects.';
+            
             return response()->json([
-                'message' => 'Your project quota has been reached. Please upgrade your plan to create more projects.',
-                'error' => 'QUOTA_EXCEEDED',
+                'message' => $errorMessage,
+                'error' => \BillingHelper::isTemplateMode() ? 'TEMPLATE_MODE_RESTRICTION' : 'QUOTA_EXCEEDED',
             ], 403);
         }
 

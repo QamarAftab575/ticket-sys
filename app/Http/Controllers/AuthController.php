@@ -92,6 +92,7 @@ class AuthController extends Controller
         
         return Inertia::render('Auth/Login', [
             'googleLoginEnabled' => $googleAuthService->isEnabled(),
+            'templateMode' => \App\Helpers\EnvHelper::isTemplateMode(),
         ]);
     }
 
@@ -118,7 +119,8 @@ class AuthController extends Controller
             }
 
             // Check if user is super admin - redirect to admin dashboard
-            if ($user->is_super_admin) {
+            // In template mode, redirect everyone (including admin) to regular dashboard
+            if ($user->is_super_admin && !\App\Helpers\EnvHelper::isTemplateMode()) {
                 return redirect()->route('admin.dashboard');
             }
 
@@ -362,6 +364,11 @@ class AuthController extends Controller
 
     public function updateProfile(Request $request)
     {
+        // Template mode restriction
+        if (\App\Helpers\EnvHelper::isTemplateMode()) {
+            return back()->withErrors(['profile' => 'This application is in demo mode. Profile updates are restricted.']);
+        }
+
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
             'timezone' => ['nullable', 'string', 'max:100', function ($attribute, $value, $fail) {
@@ -391,6 +398,11 @@ class AuthController extends Controller
 
     public function uploadAvatar(Request $request)
     {
+        // Template mode restriction
+        if (\App\Helpers\EnvHelper::isTemplateMode()) {
+            return back()->withErrors(['avatar' => 'This application is in demo mode. Avatar changes are restricted.']);
+        }
+
         $request->validate([
             'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
         ]);
@@ -431,6 +443,11 @@ class AuthController extends Controller
 
     public function removeAvatar(Request $request)
     {
+        // Template mode restriction
+        if (\App\Helpers\EnvHelper::isTemplateMode()) {
+            return back()->withErrors(['avatar' => 'This application is in demo mode. Avatar changes are restricted.']);
+        }
+
         $user = auth()->user();
 
         try {
@@ -452,6 +469,11 @@ class AuthController extends Controller
 
     public function changePassword(Request $request)
     {
+        // Template mode restriction
+        if (\App\Helpers\EnvHelper::isTemplateMode()) {
+            return back()->withErrors(['password' => 'This application is in demo mode. Password changes are restricted.']);
+        }
+
         $validated = $request->validate([
             'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/',
             'password_confirmation' => 'required|same:password',
@@ -480,6 +502,11 @@ class AuthController extends Controller
 
     public function deleteAccount(Request $request)
     {
+        // Template mode restriction
+        if (\App\Helpers\EnvHelper::isTemplateMode()) {
+            return back()->withErrors(['deleteAccount' => 'This application is in demo mode. Account deletion is restricted.']);
+        }
+
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',

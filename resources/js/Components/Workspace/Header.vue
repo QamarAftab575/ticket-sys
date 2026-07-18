@@ -58,6 +58,13 @@
             <Link href="/settings" class="block px-4 py-2 hover:bg-gray-50 text-sm">
               Settings
             </Link>
+            <Link 
+              v-if="isSuperAdmin" 
+              href="/admin/dashboard" 
+              class="block px-4 py-2 hover:bg-gray-50 text-sm border-t border-gray-200"
+            >
+              Admin Dashboard
+            </Link>
             <Link href="/logout" method="post" class="block px-4 py-2 hover:bg-gray-50 text-sm border-t border-gray-200">
               Logout
             </Link>
@@ -79,5 +86,6 @@ const showProfileMenu = ref(false)
 const page = usePage()
 const userName = computed(() => page.props.auth?.user?.name || '')
 const userAvatar = computed(() => page.props.auth?.user?.avatar || null)
+const isSuperAdmin = computed(() => page.props.auth?.user?.is_super_admin || false)
 </script>
 
