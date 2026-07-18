@@ -364,6 +364,7 @@ return array (
   'legal' => 'Юридическая информация',
   'privacy' => 'Конфиденциальность',
   'terms' => 'Условия',
+ 'admin_dashboard' => 'Панель администратора',
   'security' => 'Безопасность',
   'project_management_tagline' => 'Управление проектами для современных команд.',
   'all_rights_reserved' => 'Все права защищены.',

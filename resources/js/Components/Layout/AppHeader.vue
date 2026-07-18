@@ -90,7 +90,7 @@
           </Link>
           <Link 
             v-if="isSuperAdmin" 
-            href="/admin/dashboard" 
+            href="/admin" 
             class="block px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700 border-t border-gray-200 cursor-pointer"
           >
             {{ $t('admin_dashboard') }}

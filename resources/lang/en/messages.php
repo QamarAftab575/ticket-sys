@@ -1091,6 +1091,7 @@ return array (
   'set_password' => 'Set password',
   'setting_password' => 'Setting password...',
   'verify_email' => 'Verify your email',
+  'admin_dashboard' => 'Admin Dashboard',
   'verify_email_description' => 'We\'ve sent a verification link to your email address. Please check your inbox and click the link to verify your email.',
   'verification_email_sent' => 'Verification email sent!',
   'check_inbox' => 'Please check your inbox.',

@@ -64,7 +64,7 @@
                 </Link>
                 <Link
                   v-if="isSuperAdmin"
-                  href="/admin/dashboard"
+                  href="/admin"
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-100 border-t border-gray-200"
                 >
                   {{ $t('admin_dashboard') }}
