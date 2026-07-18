@@ -26,55 +26,56 @@ class ResetInstallation extends Command
         // Safety check - only allow if APP_INSTALLED is false or this is explicitly forced
         if (config('app.installed', false) && !$this->option('force')) {
             $this->error('Application is marked as installed. Use --force to reset anyway.');
+            $this->info('To reset: php artisan install:reset --force');
             return 1;
         }
 
         // Confirm with user
         if (!$this->option('force')) {
-            if (!$this->confirm('This will drop ALL tables in the database. Are you sure?')) {
+            $this->warn('⚠️  This will drop ALL tables in the database and reset the installation.');
+            $this->info('Database: ' . config('database.connections.mysql.database'));
+            
+            if (!$this->confirm('Are you sure you want to continue?')) {
                 $this->info('Reset cancelled.');
                 return 0;
             }
         }
 
         try {
-            $this->info('Resetting installation...');
+            $this->info('🔄 Resetting installation...');
+            $this->newLine();
 
-            // Drop all tables
-            $this->dropAllTables();
+            // Drop all tables using migrate:fresh
+            $this->info('📦 Dropping all tables...');
+            \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true, '--drop-views' => true]);
+            $this->info('✓ All tables dropped');
 
             // Update .env to mark as not installed
+            $this->info('📝 Updating .env file...');
             $this->updateEnv(['APP_INSTALLED' => 'false']);
-
-            $this->info('✓ All tables dropped');
             $this->info('✓ APP_INSTALLED set to false');
-            $this->info('');
-            $this->info('Installation has been reset. You can now visit /install to start fresh.');
+
+            // Clear all caches
+            $this->info('🧹 Clearing caches...');
+            \Illuminate\Support\Facades\Artisan::call('config:clear');
+            \Illuminate\Support\Facades\Artisan::call('cache:clear');
+            $this->info('✓ Caches cleared');
+
+            $this->newLine();
+            $this->info('✅ Installation has been reset successfully!');
+            $this->newLine();
+            $this->info('👉 You can now visit /install to start fresh.');
 
             return 0;
         } catch (\Exception $e) {
-            $this->error('Failed to reset installation: ' . $e->getMessage());
+            $this->error('❌ Failed to reset installation: ' . $e->getMessage());
+            $this->newLine();
+            $this->warn('Manual reset required:');
+            $this->info('1. Drop all tables in your database');
+            $this->info('2. Set APP_INSTALLED=false in .env');
+            $this->info('3. Visit /install');
             return 1;
         }
-    }
-
-    /**
-     * Drop all tables in the database.
-     */
-    private function dropAllTables(): void
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-        $tables = DB::select('SHOW TABLES');
-        $databaseName = config('database.connections.mysql.database');
-
-        foreach ($tables as $table) {
-            $tableName = $table->{"Tables_in_{$databaseName}"};
-            DB::statement("DROP TABLE IF EXISTS `{$tableName}`");
-            $this->line("  Dropped table: {$tableName}");
-        }
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 
     /**

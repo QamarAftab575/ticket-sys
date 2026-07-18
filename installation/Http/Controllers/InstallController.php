@@ -363,41 +363,56 @@ class InstallController extends Controller
                 return redirect()->route('installer.done');
             }
 
-            // Check for partial migration state and clean if needed
-            $this->handlePartialMigrations();
+            \Log::info('Starting installation finalization...');
 
-            // Run migrations with proper error handling
+            // Use migrate:fresh to drop all tables and run migrations from scratch
+            // This ensures clean installation even if previous attempt failed
             try {
-                Artisan::call('migrate', ['--force' => true]);
+                \Log::info('Running migrate:fresh to ensure clean installation...');
+                Artisan::call('migrate:fresh', ['--force' => true, '--seed' => false]);
+                \Log::info('Migrations completed successfully');
             } catch (\Exception $e) {
-                // If migration fails, check if it's a partial migration issue
-                if (str_contains($e->getMessage(), 'already exists') || str_contains($e->getMessage(), 'Failed to open the referenced table')) {
-                    // Rollback and retry
-                    $this->rollbackAndRetryMigrations();
-                } else {
-                    throw $e;
-                }
+                \Log::error('Migration failed: ' . $e->getMessage());
+                throw new \Exception('Database migration failed: ' . $e->getMessage() . '. Please ensure your database credentials are correct and the database is accessible.');
             }
 
             // Seed the database
-            Artisan::call('db:seed', ['--force' => true]);
+            try {
+                \Log::info('Seeding database...');
+                Artisan::call('db:seed', ['--force' => true]);
+                \Log::info('Database seeded successfully');
+            } catch (\Exception $e) {
+                \Log::error('Database seeding failed: ' . $e->getMessage());
+                throw new \Exception('Database seeding failed: ' . $e->getMessage());
+            }
 
             // Create admin user only if not already exists
             $adminCredentials = session('admin_credentials', []);
             if ($adminCredentials) {
-                // Check if admin user already exists
-                $existingUser = User::where('email', $adminCredentials['email'])->where('is_super_admin', true)->first();
-                
-                if (!$existingUser) {
-                    $adminUser = $this->installationService->createAdminUser(
-                        $adminCredentials['name'],
-                        $adminCredentials['email'],
-                        $adminCredentials['password']
-                    );
+                try {
+                    \Log::info('Creating admin user...');
+                    
+                    // Check if admin user already exists
+                    $existingUser = User::where('email', $adminCredentials['email'])->where('is_super_admin', true)->first();
+                    
+                    if (!$existingUser) {
+                        $adminUser = $this->installationService->createAdminUser(
+                            $adminCredentials['name'],
+                            $adminCredentials['email'],
+                            $adminCredentials['password']
+                        );
 
-                    // Create the first workspace for the admin
-                    $workspaceName = $adminCredentials['workspace_name'] ?? 'Main Workspace';
-                    $this->installationService->createFirstWorkspace($adminUser, $workspaceName);
+                        // Create the first workspace for the admin
+                        $workspaceName = $adminCredentials['workspace_name'] ?? 'Main Workspace';
+                        $this->installationService->createFirstWorkspace($adminUser, $workspaceName);
+                        
+                        \Log::info('Admin user and workspace created successfully');
+                    } else {
+                        \Log::info('Admin user already exists, skipping creation');
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Failed to create admin user: ' . $e->getMessage());
+                    throw new \Exception('Failed to create admin user: ' . $e->getMessage());
                 }
             }
 
@@ -407,6 +422,8 @@ class InstallController extends Controller
             // Clear session data
             session()->forget(['installer_data', 'admin_credentials']);
 
+            \Log::info('Installation completed successfully');
+
             return redirect()->route('installer.done');
         } catch (\Exception $e) {
             \Log::error('Installation failed: ' . $e->getMessage(), [
@@ -415,59 +432,8 @@ class InstallController extends Controller
             
             return view('installer::error', [
                 'error' => $e->getMessage(),
-                'suggestion' => 'The database may contain partial data from a previous installation attempt. Please drop all tables and try again.'
+                'suggestion' => 'If this error persists, try running: php artisan install:reset'
             ]);
-        }
-    }
-
-    /**
-     * Handle partial migrations from failed installation attempts.
-     */
-    private function handlePartialMigrations(): void
-    {
-        try {
-            // Check if migrations table exists
-            if (DB::table('information_schema.tables')
-                ->where('table_schema', config('database.connections.mysql.database'))
-                ->where('table_name', 'migrations')
-                ->exists()) {
-                
-                // Check for partial migration state
-                $migrationCount = DB::table('migrations')->count();
-                
-                // If migrations table exists but has few entries, it's likely a partial migration
-                if ($migrationCount > 0 && $migrationCount < 10) {
-                    \Log::warning('Partial migration detected, rolling back...');
-                    Artisan::call('migrate:reset', ['--force' => true]);
-                }
-            }
-        } catch (\Exception $e) {
-            // If there's any error checking, just continue
-            \Log::debug('Could not check for partial migrations: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Rollback failed migrations and retry.
-     */
-    private function rollbackAndRetryMigrations(): void
-    {
-        try {
-            \Log::info('Migration failed, attempting rollback and retry...');
-            
-            // Reset all migrations
-            Artisan::call('migrate:reset', ['--force' => true]);
-            
-            // Wait a moment for database to stabilize
-            usleep(500000); // 500ms
-            
-            // Retry migrations
-            Artisan::call('migrate', ['--force' => true]);
-            
-            \Log::info('Migration retry successful');
-        } catch (\Exception $e) {
-            \Log::error('Migration retry failed: ' . $e->getMessage());
-            throw new \Exception('Migration failed even after rollback. Please manually drop all tables and try again. Error: ' . $e->getMessage());
         }
     }
 
