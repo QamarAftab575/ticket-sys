@@ -96,18 +96,10 @@ class ProjectController extends Controller
             ->where('user_id', $user->id)
             ->value('role');
 
-        $userWorkspaces = $user->organizations()
-            ->where('organizations.is_active', true)
-            ->whereNull('organization_memberships.deleted_at')
-            ->select('organizations.id', 'organizations.name', 'organizations.avatar_color')
-            ->get();
-
         return Inertia::render('Projects/Show', [
             'project'           => $project,
             'canEdit'           => in_array($role, ['project_admin', 'editor']),
             'canManageMembers'  => $role === 'project_admin',
-            'userWorkspaces'    => $userWorkspaces,
-            'currentWorkspace'  => $project->organization?->only('id', 'name', 'avatar_color'),
             'currentUser'       => $user->only('id', 'name', 'email', 'avatar'),
         ]);
     }
@@ -215,9 +207,7 @@ class ProjectController extends Controller
 
     /**
      * Return share modal data: members, pending invitations, workspace member count.
-     * - workspace_owner is always returned as a fixed project_admin entry
      * - Only direct_invite members are listed individually
-     * - Workspace members with access via public_to_team are shown as the "My workspace" row
      */
     public function shareData(Project $project)
     {
