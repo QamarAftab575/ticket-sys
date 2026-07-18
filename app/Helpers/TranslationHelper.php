@@ -46,6 +46,11 @@ class TranslationHelper
      */
     public static function getSiteLanguage(): string
     {
+        // During installation, use English as default to avoid database queries
+        if (!config('app.installed', false)) {
+            return 'en';
+        }
+
         return Cache::remember('site_language', self::SITE_LANGUAGE_CACHE_TTL, function () {
             // Get language from business_settings table
             $languageCode = \App\Models\BusinessSetting::get('default_selected_language');
@@ -97,6 +102,12 @@ class TranslationHelper
      */
     public static function getSiteTranslations(): array
     {
+        // During installation, return English translations without database query
+        if (!config('app.installed', false)) {
+            $englishPath = resource_path('lang/en/messages.php');
+            return file_exists($englishPath) ? require $englishPath : [];
+        }
+
         $languageCode = self::getSiteLanguage();
         
         return Cache::remember("translations.{$languageCode}", self::TRANSLATIONS_CACHE_TTL, function () use ($languageCode) {
@@ -118,6 +129,17 @@ class TranslationHelper
      */
     public static function getActiveLanguages(): array
     {
+        // During installation, return default English only
+        if (!config('app.installed', false)) {
+            return [
+                [
+                    'code' => 'en',
+                    'name' => 'English',
+                    'direction' => 'ltr',
+                ]
+            ];
+        }
+
         return Cache::remember('active_languages', self::LANGUAGES_LIST_CACHE_TTL, function () {
             return Language::where('is_active', true)
                 ->select('code', 'name', 'direction')
